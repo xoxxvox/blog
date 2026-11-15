@@ -441,12 +441,12 @@
     .content-panel {
       width: 100%;
       height: 614px;
-      padding: 18px;
+      padding: 16px 18px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
-    .panel-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .panel-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
     .panel-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
     .panel-count { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
 
@@ -458,8 +458,8 @@
       border: 1px solid var(--hairline);
       background-color: var(--bg-subcard);
       width: 100%;
-      height: 210px;
-      padding: 24px 52px;
+      height: 194px;
+      padding: 20px 52px;
       display: grid;
       grid-template-columns: 1.25fr 0.75fr;
       align-items: center;
@@ -468,7 +468,7 @@
       transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
     }
     .carousel-box:hover { border-color: var(--hairline-strong); background-color: var(--bg-card-solid); }
-    .carousel-content { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; }
+    .carousel-content { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; }
     .carousel-badge {
       padding: 3px 10px;
       border-radius: 99px;
@@ -479,10 +479,10 @@
       color: var(--accent);
     }
     .carousel-title { margin: 0; font-size: 20px; font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; }
-    .carousel-desc { margin: 0; font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+    .carousel-desc { margin: 0; font-size: 13px; line-height: 1.55; color: var(--text-secondary); }
     .carousel-meta { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
     .carousel-visual {
-      height: 148px;
+      height: 140px;
       border-radius: 10px;
       background-color: var(--bg-card-solid);
       border: 1px solid var(--hairline);
@@ -501,9 +501,14 @@
     .articles-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 16px;
+      gap: 12px;
+      margin-top: 14px;
       overflow-y: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .articles-grid::-webkit-scrollbar {
+      display: none;
     }
     .article-card {
       position: relative;
@@ -713,7 +718,10 @@
 
     /* Auth */
     .auth-trigger-btn { height: 36px; padding: 0 14px; border-radius: 99px; font-size: 13px; font-weight: 500; }
-    .auth-trigger-btn.is-logged-in { color: var(--accent); border-color: var(--accent-soft); }
+    .auth-trigger-btn.is-logged-in { color: var(--accent); border-color: var(--accent-soft); padding-left: 8px; }
+    .auth-btn-avatar { width: 22px; height: 22px; border-radius: 99px; object-fit: cover; border: 1px solid var(--hairline-strong); display: none; flex-shrink: 0; }
+    .contact-modal.is-admin-account { width: 820px; max-width: 94vw; height: 590px; align-items: stretch; overflow: hidden; }
+    .admin-contact-head { font-size: 11px; color: var(--text-muted); font-weight: 500; padding: 0 2px; }
     .auth-tabs { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 3px; border-radius: 12px; background-color: var(--bg-raised); border: 1px solid var(--hairline); }
     .auth-tab { height: 30px; border: none; border-radius: 9px; background: transparent; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; }
     .auth-tab.is-active { background-color: var(--bg-card-solid); color: var(--text-primary); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); }
@@ -843,11 +851,12 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
           </svg>
-          <span>管理后台</span>
+          <span>写文章</span>
         </button>
 
         <button class="tactile-btn auth-trigger-btn" id="authTriggerBtn" type="button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <img class="auth-btn-avatar" id="authTriggerAvatar" alt="用户头像" style="display: none;" />
+          <svg id="authTriggerIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="8" r="4"></circle><path d="M20 21a8 8 0 0 0-16 0"></path>
           </svg>
           <span id="authTriggerText">登录 / 注册</span>
@@ -1060,9 +1069,16 @@
 
   <!-- Auth Modal -->
   <div class="contact-modal-backdrop" id="authModalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="contact-modal">
+    <div class="contact-modal" id="authModalCard">
       <div class="modal-head">
-        <h3 class="modal-title" id="authModalTitle">账号登录</h3>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <h3 class="modal-title" id="authModalTitle">账号登录</h3>
+          <div class="admin-tabs" id="accountAdminTabs" role="tablist" style="display: none;">
+            <button class="admin-tab is-active" type="button" data-account-tab="account">账号信息</button>
+            <button class="admin-tab" type="button" data-account-tab="profile">资料与二维码</button>
+            <button class="admin-tab" type="button" data-account-tab="invites">邀请码</button>
+          </div>
+        </div>
         <button class="tactile-btn modal-close" id="authModalClose" type="button" aria-label="关闭弹窗">✕</button>
       </div>
       <div id="authGuestView" style="width: 100%; display: flex; flex-direction: column; gap: 14px;">
@@ -1092,11 +1108,72 @@
           <button class="modal-btn modal-btn-primary auth-submit" id="authSubmitBtn" type="submit">登录</button>
         </form>
       </div>
-      <div class="auth-profile-box" id="authUserView" style="display: none;">
-        <div class="modal-account-box"><span class="modal-account-label">当前账号</span><span class="modal-account-value" id="authUserName">-</span></div>
-        <div class="modal-account-box"><span class="modal-account-label">账号权限</span><span class="modal-account-value" id="authUserRole">普通用户</span></div>
-        <div class="modal-account-box"><span class="modal-account-label">绑定邮箱</span><span class="modal-account-value" id="authUserEmail">-</span></div>
-        <button class="tactile-btn auth-submit" id="authLogoutBtn" type="button">退出登录</button>
+      <div class="auth-profile-box" id="authUserView" style="display: none; min-height: 0; flex: 1;">
+        <div class="admin-panel is-active" data-account-panel="account" style="gap: 10px;">
+          <div class="modal-account-box"><span class="modal-account-label">当前账号</span><span class="modal-account-value" id="authUserName">-</span></div>
+          <div class="modal-account-box"><span class="modal-account-label">账号权限</span><span class="modal-account-value" id="authUserRole">普通用户</span></div>
+          <div class="modal-account-box"><span class="modal-account-label">绑定邮箱</span><span class="modal-account-value" id="authUserEmail">-</span></div>
+          <button class="tactile-btn auth-submit" id="authLogoutBtn" type="button">退出登录</button>
+        </div>
+
+        <div class="admin-panel" data-account-panel="profile">
+          <form class="admin-scroll-box" id="adminProfileForm">
+            <div class="admin-row-3">
+              <div class="auth-field"><label for="profSiteTitle">站点名称</label><input class="auth-input" id="profSiteTitle" type="text" required /></div>
+              <div class="auth-field"><label for="profSiteSub">站点副标</label><input class="auth-input" id="profSiteSub" type="text" required /></div>
+              <div class="auth-field"><label for="profHeroKicker">Hero 标签</label><input class="auth-input" id="profHeroKicker" type="text" required /></div>
+            </div>
+            <div class="admin-row-2">
+              <div class="auth-field"><label for="profHeroTitle">Hero 主标题</label><input class="auth-input" id="profHeroTitle" type="text" required /></div>
+              <div class="auth-field"><label for="profName">个人昵称</label><input class="auth-input" id="profName" type="text" required /></div>
+            </div>
+            <div class="auth-field"><label for="profHeroSub">Hero 简介</label><input class="auth-input" id="profHeroSub" type="text" required /></div>
+            <div class="admin-row-3">
+              <div class="auth-field"><label for="profInfoName">姓名</label><input class="auth-input" id="profInfoName" type="text" required /></div>
+              <div class="auth-field"><label for="profInfoGender">性别</label><input class="auth-input" id="profInfoGender" type="text" required /></div>
+              <div class="auth-field"><label for="profInfoAge">年龄</label><input class="auth-input" id="profInfoAge" type="text" required /></div>
+            </div>
+            <div class="auth-field">
+              <div class="admin-toolbar">
+                <label for="profAvatar">头像图片链接</label>
+                <div>
+                  <input type="file" id="profAvatarFileInput" accept="image/*" style="display: none;" />
+                  <button class="tactile-btn copy-btn" id="profAvatarUploadBtn" type="button">上传新头像</button>
+                </div>
+              </div>
+              <input class="auth-input" id="profAvatar" type="text" required />
+            </div>
+            <div class="auth-field">
+              <label>联系方式与二维码配置（支持直接上传真实二维码图片，留空则按内容自动生成）</label>
+              <input type="file" id="contactQrFileInput" accept="image/*" style="display: none;" />
+              <div class="admin-contact-row admin-contact-head">
+                <span>平台名称</span>
+                <span>展示账号</span>
+                <span>第3列：一键跳转链接</span>
+                <span>第4列：二维码图片URL或文本</span>
+                <span>操作</span>
+              </div>
+              <div id="adminContactsEditor" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; padding-top: 6px;">
+              <button class="modal-btn modal-btn-primary" id="adminSaveProfileBtn" type="submit" style="padding: 0 20px; height: 36px;">保存资料并提交到 GitHub</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="admin-panel" data-account-panel="invites">
+          <div class="admin-scroll-box">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <input class="auth-input" id="inviteCustomInput" type="text" placeholder="可选：自定义邀请码（留空自动生成）" style="max-width: 280px;" />
+              <select class="auth-input" id="inviteRoleSelect" style="width: 130px;">
+                <option value="user">普通用户码</option>
+                <option value="admin">管理员码</option>
+              </select>
+              <button class="modal-btn modal-btn-primary" id="adminCreateInviteBtn" type="button" style="padding: 0 18px; height: 38px; flex-shrink: 0;">生成邀请码</button>
+            </div>
+            <div id="adminInviteList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1106,14 +1183,9 @@
     <div class="admin-modal">
       <div class="modal-head">
         <div style="display: flex; align-items: center; gap: 16px;">
-          <h3 class="modal-title">管理后台</h3>
-          <div class="admin-tabs" role="tablist">
-            <button class="admin-tab is-active" type="button" data-admin-tab="posts">文章管理 (Markdown)</button>
-            <button class="admin-tab" type="button" data-admin-tab="profile">资料与二维码</button>
-            <button class="admin-tab" type="button" data-admin-tab="invites">邀请码</button>
-          </div>
+          <h3 class="modal-title">文章管理 (Markdown)</h3>
         </div>
-        <button class="tactile-btn modal-close" id="adminModalClose" type="button" aria-label="关闭管理后台">✕</button>
+        <button class="tactile-btn modal-close" id="adminModalClose" type="button" aria-label="关闭文章管理">✕</button>
       </div>
 
       <div class="admin-body">
@@ -1162,58 +1234,6 @@
                 <button class="modal-btn modal-btn-primary" id="adminSavePostBtn" type="submit" style="padding: 0 20px; height: 36px;">保存并提交到 GitHub</button>
               </div>
             </form>
-          </div>
-        </div>
-
-        <div class="admin-panel" data-admin-panel="profile">
-          <form class="admin-scroll-box" id="adminProfileForm">
-            <div class="admin-row-3">
-              <div class="auth-field"><label for="profSiteTitle">站点名称</label><input class="auth-input" id="profSiteTitle" type="text" required /></div>
-              <div class="auth-field"><label for="profSiteSub">站点副标</label><input class="auth-input" id="profSiteSub" type="text" required /></div>
-              <div class="auth-field"><label for="profHeroKicker">Hero 标签</label><input class="auth-input" id="profHeroKicker" type="text" required /></div>
-            </div>
-            <div class="admin-row-2">
-              <div class="auth-field"><label for="profHeroTitle">Hero 主标题</label><input class="auth-input" id="profHeroTitle" type="text" required /></div>
-              <div class="auth-field"><label for="profName">个人昵称</label><input class="auth-input" id="profName" type="text" required /></div>
-            </div>
-            <div class="auth-field"><label for="profHeroSub">Hero 简介</label><input class="auth-input" id="profHeroSub" type="text" required /></div>
-            <div class="admin-row-3">
-              <div class="auth-field"><label for="profInfoName">姓名</label><input class="auth-input" id="profInfoName" type="text" required /></div>
-              <div class="auth-field"><label for="profInfoGender">性别</label><input class="auth-input" id="profInfoGender" type="text" required /></div>
-              <div class="auth-field"><label for="profInfoAge">年龄</label><input class="auth-input" id="profInfoAge" type="text" required /></div>
-            </div>
-            <div class="auth-field">
-              <div class="admin-toolbar">
-                <label for="profAvatar">头像图片链接</label>
-                <div>
-                  <input type="file" id="profAvatarFileInput" accept="image/*" style="display: none;" />
-                  <button class="tactile-btn copy-btn" id="profAvatarUploadBtn" type="button">上传新头像</button>
-                </div>
-              </div>
-              <input class="auth-input" id="profAvatar" type="text" required />
-            </div>
-            <div class="auth-field">
-              <label>联系方式与二维码配置（支持直接上传微信/QQ真实二维码图片，留空则按链接自动生成）</label>
-              <input type="file" id="contactQrFileInput" accept="image/*" style="display: none;" />
-              <div id="adminContactsEditor" style="display: flex; flex-direction: column; gap: 8px;"></div>
-            </div>
-            <div style="display: flex; justify-content: flex-end; padding-top: 6px;">
-              <button class="modal-btn modal-btn-primary" id="adminSaveProfileBtn" type="submit" style="padding: 0 20px; height: 36px;">保存资料并提交到 GitHub</button>
-            </div>
-          </form>
-        </div>
-
-        <div class="admin-panel" data-admin-panel="invites">
-          <div class="admin-scroll-box">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <input class="auth-input" id="inviteCustomInput" type="text" placeholder="可选：自定义邀请码（留空自动生成）" style="max-width: 280px;" />
-              <select class="auth-input" id="inviteRoleSelect" style="width: 130px;">
-                <option value="user">普通用户码</option>
-                <option value="admin">管理员码</option>
-              </select>
-              <button class="modal-btn modal-btn-primary" id="adminCreateInviteBtn" type="button" style="padding: 0 18px; height: 38px; flex-shrink: 0;">生成邀请码</button>
-            </div>
-            <div id="adminInviteList" style="display: flex; flex-direction: column; gap: 8px;"></div>
           </div>
         </div>
       </div>
@@ -1454,6 +1474,8 @@
       document.getElementById("heroSubEl").textContent = profile.heroSub || "";
       document.getElementById("profileAvatarImg").src = profile.avatar || "";
       document.getElementById("brandLogoImg").src = profile.avatar || "";
+      const triggerAvatarEl = document.getElementById("authTriggerAvatar");
+      if (triggerAvatarEl) triggerAvatarEl.src = profile.avatar || "";
       document.getElementById("profileNameEl").textContent = profile.profileName || "";
       document.getElementById("infoNameVal").textContent = profile.info?.name || "";
       document.getElementById("infoGenderVal").textContent = profile.info?.gender || "";
@@ -1796,24 +1818,40 @@
     function syncAuthUI() {
       const commentGuestBar = document.getElementById("commentGuestBar");
       const commentForm = document.getElementById("commentForm");
+      const authTriggerAvatar = document.getElementById("authTriggerAvatar");
+      const authTriggerIcon = document.getElementById("authTriggerIcon");
+      const authModalCard = document.getElementById("authModalCard");
+      const accountAdminTabs = document.getElementById("accountAdminTabs");
       if (currentUser) {
+        const isAdmin = currentUser.role === "admin";
         authTriggerText.textContent = currentUser.username;
         authTriggerBtn.classList.add("is-logged-in");
-        adminTriggerBtn.style.display = currentUser.role === "admin" ? "inline-flex" : "none";
+        if (authTriggerAvatar) {
+          authTriggerAvatar.src = currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
+          authTriggerAvatar.style.display = "block";
+        }
+        if (authTriggerIcon) authTriggerIcon.style.display = "none";
+        adminTriggerBtn.style.display = isAdmin ? "inline-flex" : "none";
         authGuestView.style.display = "none";
         authUserView.style.display = "flex";
-        authModalTitle.textContent = "账号信息";
+        authModalCard?.classList.toggle("is-admin-account", isAdmin);
+        if (accountAdminTabs) accountAdminTabs.style.display = isAdmin ? "flex" : "none";
+        authModalTitle.textContent = isAdmin ? "账号管理" : "账号信息";
         document.getElementById("authUserName").textContent = currentUser.username;
-        document.getElementById("authUserRole").textContent = currentUser.role === "admin" ? "管理员" : "普通用户";
+        document.getElementById("authUserRole").textContent = isAdmin ? "管理员" : "普通用户";
         document.getElementById("authUserEmail").textContent = currentUser.email || "未填写";
         if (commentGuestBar) commentGuestBar.style.display = "none";
         if (commentForm) commentForm.style.display = "flex";
       } else {
         authTriggerText.textContent = "登录 / 注册";
         authTriggerBtn.classList.remove("is-logged-in");
+        if (authTriggerAvatar) authTriggerAvatar.style.display = "none";
+        if (authTriggerIcon) authTriggerIcon.style.display = "block";
         adminTriggerBtn.style.display = "none";
         authGuestView.style.display = "flex";
         authUserView.style.display = "none";
+        authModalCard?.classList.remove("is-admin-account");
+        if (accountAdminTabs) accountAdminTabs.style.display = "none";
         authModalTitle.textContent = authMode === "login" ? "账号登录" : "邀请码注册";
         if (commentGuestBar) commentGuestBar.style.display = "flex";
         if (commentForm) commentForm.style.display = "none";
@@ -1854,6 +1892,10 @@
       setAppearanceOpen(false);
       authError.textContent = "";
       syncAuthUI();
+      if (currentUser) {
+        switchAccountTab("account");
+        if (currentUser.role === "admin") fillProfileEditor();
+      }
       authModalBackdrop.classList.add("is-open");
       authModalBackdrop.setAttribute("aria-hidden", "false");
     }
@@ -1993,10 +2035,10 @@
       if (res.ok) { showToast("评论已删除"); loadComments(state.currentPostId); }
     });
 
-    // Admin Console
+    // Admin Console & Account Management Tabs
     const adminModalBackdrop = document.getElementById("adminModalBackdrop");
-    const adminTabs = document.querySelectorAll("[data-admin-tab]");
-    const adminPanels = document.querySelectorAll("[data-admin-panel]");
+    const accountTabs = document.querySelectorAll("[data-account-tab]");
+    const accountPanels = document.querySelectorAll("[data-account-panel]");
     const adminPostListEl = document.getElementById("adminPostList");
     const postBodyInput = document.getElementById("postBodyInput");
     const postBodyPreview = document.getElementById("postBodyPreview");
@@ -2005,12 +2047,12 @@
     let isPreviewMode = false;
     let pendingQrIdx = null;
 
-    function switchAdminTab(tabName) {
-      adminTabs.forEach((t) => t.classList.toggle("is-active", t.dataset.adminTab === tabName));
-      adminPanels.forEach((p) => p.classList.toggle("is-active", p.dataset.adminPanel === tabName));
-      if (tabName === "invites") loadAdminInvites();
+    function switchAccountTab(tabName) {
+      accountTabs.forEach((t) => t.classList.toggle("is-active", t.dataset.accountTab === tabName));
+      accountPanels.forEach((p) => p.classList.toggle("is-active", p.dataset.accountPanel === tabName));
+      if (tabName === "invites" && currentUser?.role === "admin") loadAdminInvites();
     }
-    adminTabs.forEach((t) => t.addEventListener("click", () => switchAdminTab(t.dataset.adminTab)));
+    accountTabs.forEach((t) => t.addEventListener("click", () => switchAccountTab(t.dataset.accountTab)));
 
     function setMarkdownPreview(preview) {
       isPreviewMode = preview;
@@ -2088,8 +2130,6 @@
     function openAdminModal() {
       if (!currentUser || currentUser.role !== "admin") return;
       fillPostEditor(POSTS[0] || null);
-      fillProfileEditor();
-      switchAdminTab("posts");
       adminModalBackdrop.classList.add("is-open");
       adminModalBackdrop.setAttribute("aria-hidden", "false");
     }
