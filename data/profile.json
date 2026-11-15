@@ -1,0 +1,56 @@
+{
+  "siteTitle": "XXOXOVX · Blog",
+  "siteSub": "Notes & Tech",
+  "heroKicker": "Tech Archive · 2026",
+  "heroTitle": "xxoxovx 的个人技术档案",
+  "heroSub": "记录软路由折腾、网络自动化与云原生 Serverless 实践，在纯净通透的秩序感中保持克制而高效的数字生活。",
+  "avatar": "https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/836ce0fa-8ecc-4d16-a805-6ce2860ae4ab.webp",
+  "profileName": "XXOXOVX",
+  "info": {
+    "name": "SoxMoox",
+    "gender": "男",
+    "age": "27 岁"
+  },
+  "contacts": [
+    {
+      "label": "QQ",
+      "modalTitle": "QQ 联系方式",
+      "fieldLabel": "QQ 号码",
+      "value": "10086001",
+      "url": "tencent://message/?uin=10086001&Site=&Menu=yes",
+      "qr": "https://qm.qq.com/q/10086001"
+    },
+    {
+      "label": "WeChat",
+      "modalTitle": "WeChat 联系方式",
+      "fieldLabel": "微信号",
+      "value": "soxmoox_wx",
+      "url": "weixin://",
+      "qr": "soxmoox_wx"
+    },
+    {
+      "label": "Telegram",
+      "modalTitle": "Telegram 联系方式",
+      "fieldLabel": "用户名",
+      "value": "@xxoxovx",
+      "url": "https://t.me/xxoxovx",
+      "qr": "https://t.me/xxoxovx"
+    },
+    {
+      "label": "Twitter / X",
+      "modalTitle": "Twitter / X 联系方式",
+      "fieldLabel": "账号",
+      "value": "@xxoxovx_dev",
+      "url": "https://x.com/xxoxovx_dev",
+      "qr": "https://x.com/xxoxovx_dev"
+    },
+    {
+      "label": "Email",
+      "modalTitle": "Email 联系方式",
+      "fieldLabel": "邮箱",
+      "value": "hi@xxoxovx.dev",
+      "url": "mailto:hi@xxoxovx.dev",
+      "qr": "mailto:hi@xxoxovx.dev"
+    }
+  ]
+}

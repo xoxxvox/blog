@@ -1,0 +1,42 @@
+[
+  {
+    "id": "minimal-sites",
+    "title": "优质极简站点与轻量工具推荐",
+    "category": "网站推荐",
+    "date": "2026-11-03",
+    "readTime": "6 分钟",
+    "featured": true,
+    "excerpt": "精选兼具美学质感与高效实用性的 Web 应用程序与设计灵感库。",
+    "body": "<p>日常工作里，一个界面安静、打开即用的小工具往往比庞大臃肿的套件更顺手。这里整理了近期长期留在书签栏里的几个轻量站点。</p><h2>排版与颜色参考</h2><p>在选色时尽量避免高饱和渐变，优先采用低饱和莫兰迪中性色阶，让内容本身承担视觉重心。</p><h2>离线优先的剪贴板与文档</h2><p>支持本地存储与键盘快捷键（如 <code>Ctrl + K</code>）的 Web 工具，在多设备切换时能显著减少上下文打断。</p>"
+  },
+  {
+    "id": "nanopi-r5c",
+    "title": "NanoPi R5C 旁路分流与固件编译手记",
+    "category": "技术手记",
+    "date": "2026-11-01",
+    "readTime": "10 分钟",
+    "featured": true,
+    "excerpt": "基于 Rockchip armv8 架构的固件编译、apk 软件源配置及旁路分流经验总结。",
+    "body": "<p>NanoPi R5C 配备双 2.5G 网口与 RK3568B2 处理器，功耗控制极佳，非常适合作为家庭网络的旁路网关。</p><h2>精简固件包选择</h2><p>只保留核心网络转发、DNS 缓存与基础监控组件，避免在有限的 eMMC 空间里堆积不必要的后台服务。</p><div class=\"code-wrap\"><button class=\"tactile-btn code-copy\" type=\"button\">复制</button><pre><code>opkg update && opkg install luci-app-sqm nftables</code></pre></div><blockquote>把复杂度隔离在旁路设备里，主路由永远保持最小可用配置。</blockquote><h2>分流规则维护</h2><p>通过定时任务每周自动拉取并校验规则集，配合 <code>nftables</code> 实现低延迟的本地直连与分流。</p>"
+  },
+  {
+    "id": "serverless-cron",
+    "title": "用 Serverless Worker 替代传统常驻脚本",
+    "category": "网络自动化",
+    "date": "2026-10-22",
+    "readTime": "8 分钟",
+    "featured": false,
+    "excerpt": "把域名证书监测、RSS 汇总与状态巡检迁移到无服务器定时任务，零机器维护成本。",
+    "body": "<p>以前为了跑几个每天只执行一次的 Python 巡检脚本，总要维护一台最低配的 VPS。迁到无服务器定时触发器后，几乎不再需要关心系统更新。</p><h2>单文件无状态设计</h2><p>将密钥放入环境变量，把巡检结果通过 Webhook 推送到常用通讯工具，整个函数不超过 80 行。</p><div class=\"code-wrap\"><button class=\"tactile-btn code-copy\" type=\"button\">复制</button><pre><code>export default {\n  async scheduled(event, env) {\n    await checkCertificates(env.DOMAINS);\n  }\n};</code></pre></div>"
+  },
+  {
+    "id": "mac-minimal-apps",
+    "title": "2026 桌面轻量效率软件清单",
+    "category": "软件推荐",
+    "date": "2026-10-10",
+    "readTime": "5 分钟",
+    "featured": false,
+    "excerpt": "克制、无常驻弹窗的终端、窗口管理与本地笔记工具整理。",
+    "body": "<p>挑选桌面软件的唯一标准：启动足够快、不弹推广、配置文件能用纯文本备份。</p><h2>终端与编辑器</h2><p>统一使用等宽字体与一致的配色方案，让切换窗口时的视觉落差降到最低。</p>"
+  }
+]
