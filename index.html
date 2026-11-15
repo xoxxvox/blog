@@ -6,14 +6,14 @@
   <title>XXOXOVX · Blog</title>
   <style>
     :root {
-      --bg-page: #f6f6f8;
+      --bg-page: #f4f5f7;
       --bg-card: #ffffff;
       --bg-card-solid: #ffffff;
-      --bg-popover: rgba(255, 255, 255, 0.92);
-      --bg-raised: rgba(15, 23, 42, 0.05);
-      --bg-subcard: #fafafc;
-      --hairline: rgba(15, 23, 42, 0.08);
-      --hairline-strong: rgba(15, 23, 42, 0.16);
+      --bg-popover: rgba(255, 255, 255, 0.94);
+      --bg-raised: #edeff3;
+      --bg-subcard: #f8f9fb;
+      --hairline: rgba(15, 23, 42, 0.045);
+      --hairline-strong: rgba(15, 23, 42, 0.085);
       --text-primary: #18181b;
       --text-secondary: #52525b;
       --text-muted: #71717a;
@@ -21,8 +21,13 @@
       --accent-soft: rgba(0, 113, 227, 0.10);
       --accent-contrast: #ffffff;
       --positive: #16a34a;
-      --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.03);
-      --shadow-float: 0 12px 32px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.04);
+      --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.03), 0 4px 16px rgba(15, 23, 42, 0.025);
+      --shadow-float: 0 14px 36px rgba(15, 23, 42, 0.11), 0 2px 6px rgba(15, 23, 42, 0.03);
+      --shadow-focus: 0 6px 20px rgba(15, 23, 42, 0.09);
+
+      --fw-regular: 400;
+      --fw-medium: 500;
+      --fw-semibold: 600;
 
       --radius-lg: 16px;
       --radius-md: 12px;
@@ -33,6 +38,7 @@
 
       --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
       --spring: cubic-bezier(0.22, 1, 0.36, 1);
+      --bounce: cubic-bezier(0.34, 1.38, 0.64, 1);
       --t-fast: 150ms;
       --t-mid: 240ms;
     }
@@ -43,20 +49,24 @@
     [data-palette="orange"] { --accent: #d9480f; --accent-soft: rgba(217, 72, 15, 0.10); }
 
     [data-theme="dark"] {
-      --bg-page: #09090b;
-      --bg-card: #131316;
-      --bg-card-solid: #18181b;
-      --bg-popover: rgba(24, 24, 27, 0.92);
-      --bg-raised: rgba(255, 255, 255, 0.07);
-      --bg-subcard: #1a1a1f;
-      --hairline: rgba(255, 255, 255, 0.08);
-      --hairline-strong: rgba(255, 255, 255, 0.16);
+      --bg-page: #101114;
+      --bg-card: #15171b;
+      --bg-card-solid: #181a1f;
+      --bg-popover: rgba(24, 26, 31, 0.94);
+      --bg-raised: #20232a;
+      --bg-subcard: #1a1c22;
+      --hairline: rgba(255, 255, 255, 0.045);
+      --hairline-strong: rgba(255, 255, 255, 0.085);
       --text-primary: #f4f4f5;
       --text-secondary: #a1a1aa;
       --text-muted: #71717a;
       --positive: #22c55e;
-      --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.28);
-      --shadow-float: 0 16px 40px rgba(0, 0, 0, 0.55);
+      --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.28), 0 8px 24px rgba(0, 0, 0, 0.2);
+      --shadow-float: 0 18px 44px rgba(0, 0, 0, 0.52);
+      --shadow-focus: 0 6px 22px rgba(0, 0, 0, 0.48);
+      --fw-regular: 350;
+      --fw-medium: 430;
+      --fw-semibold: 500;
     }
 
     [data-theme="dark"][data-palette="blue"] { --accent: #3b82f6; --accent-soft: rgba(59, 130, 246, 0.16); }
@@ -79,15 +89,25 @@
       color: var(--text-primary);
       font-family: var(--font-sans);
       font-size: 14px;
+      font-weight: var(--fw-regular);
       line-height: 1.6;
       font-variant-numeric: tabular-nums;
+      -moz-osx-font-smoothing: grayscale;
       transition: background-color var(--t-mid) var(--ease), color var(--t-mid) var(--ease);
     }
+    [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3,
+    [data-theme="dark"] .brand-title, [data-theme="dark"] .panel-title,
+    [data-theme="dark"] .profile-name, [data-theme="dark"] .modal-title,
+    [data-theme="dark"] .comment-author { font-weight: var(--fw-semibold); }
+    [data-theme="dark"] .tactile-btn, [data-theme="dark"] .cat-pill,
+    [data-theme="dark"] .info-val, [data-theme="dark"] .contact-left,
+    [data-theme="dark"] .admin-tab, [data-theme="dark"] .auth-tab { font-weight: var(--fw-medium); }
 
     button, input, textarea, select { font: inherit; color: inherit; }
     a { color: inherit; text-decoration: none; }
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-    .tabular { font-variant-numeric: tabular-nums; }
+    .tabular { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .hero-sub, .carousel-desc, .article-card-desc, .reader-body p, .comment-content { text-wrap: pretty; }
 
     .progress-track {
       position: fixed;
@@ -168,14 +188,14 @@
       height: 36px;
       padding: 0 56px 0 36px;
       border-radius: 99px;
-      border: 1px solid var(--hairline);
-      background-color: var(--bg-card);
+      border: 1px solid transparent;
+      background-color: var(--bg-subcard);
       font-size: 13px;
       box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
-      transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+      transition: background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
     }
     .search-input::placeholder { color: var(--text-muted); }
-    .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .search-input:focus { outline: none; background-color: var(--bg-card); box-shadow: var(--shadow-focus); }
 
     .keycap {
       position: absolute;
@@ -197,21 +217,23 @@
     .toast {
       position: fixed;
       left: 50%;
-      bottom: 28px;
-      transform: translateX(-50%) translateY(12px);
-      padding: 8px 16px;
+      top: 22px;
+      transform: translateX(-50%) translateY(-16px) scale(0.96);
+      padding: 9px 18px;
       border-radius: 99px;
       background-color: var(--text-primary);
       color: var(--bg-card-solid);
+      -webkit-backdrop-filter: saturate(180%) blur(16px);
+      backdrop-filter: saturate(180%) blur(16px);
       font-size: 13px;
       font-weight: 500;
       opacity: 0;
       pointer-events: none;
-      z-index: 120;
-      box-shadow: var(--shadow-float);
-      transition: opacity 200ms var(--ease), transform 200ms var(--ease);
+      z-index: 260;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+      transition: opacity 220ms var(--ease), transform 280ms var(--spring);
     }
-    .toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
 
     /* Controls & Tactile Buttons */
     .top-controls { justify-self: end; display: flex; align-items: center; gap: 8px; }
@@ -237,17 +259,19 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+      line-height: 1;
       border: 1px solid var(--hairline);
       background-color: var(--bg-card);
       color: var(--text-secondary);
       cursor: pointer;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
       transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
-        border-color var(--t-fast) var(--ease), transform var(--t-fast) var(--spring);
+        border-color var(--t-fast) var(--ease), transform 220ms var(--bounce);
     }
-    [data-theme="dark"] .tactile-btn { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
-    .tactile-btn:hover { background-color: var(--bg-raised); border-color: var(--hairline-strong); color: var(--text-primary); }
-    .tactile-btn:active { transform: scale(0.97); }
+    .tactile-btn svg, .hero-kicker svg, .contact-icon-badge svg, .back-top svg, .reader-back svg { display: block; flex-shrink: 0; }
+    [data-theme="dark"] .tactile-btn { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); }
+    .tactile-btn:hover { background-color: var(--bg-raised); border-color: transparent; color: var(--text-primary); }
+    .tactile-btn:active { transform: scale(0.96); }
 
     .theme-btn { height: 36px; padding: 0 14px; border-radius: 99px; font-size: 13px; font-weight: 500; }
 
@@ -361,9 +385,12 @@
       line-height: 1.5;
     }
 
-    .info-list { width: 100%; display: flex; flex-direction: column; border-top: 1px solid var(--hairline); }
+    .info-list { width: 100%; display: flex; flex-direction: column; border-top: 1px solid var(--hairline); max-height: 148px; overflow-y: auto; scrollbar-width: none; }
+    .info-list::-webkit-scrollbar { display: none; }
     .info-row {
-      height: 38px;
+      min-height: 35px;
+      height: 35px;
+      flex-shrink: 0;
       padding: 0 2px;
       border-bottom: 1px solid var(--hairline);
       display: flex;
@@ -379,7 +406,7 @@
       width: 268px;
       height: auto;
       flex-shrink: 0;
-      padding: 14px 20px 10px 20px;
+      padding: 14px 18px 10px 18px;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -397,9 +424,16 @@
       font-size: 13px;
     }
     .contact-row:last-child { border-bottom: none; }
-    .contact-left { color: var(--text-primary); font-weight: 500; }
+    .contact-left { display: inline-flex; align-items: center; gap: 9px; color: var(--text-primary); font-weight: 500; min-width: 0; }
+    .contact-icon-badge {
+      width: 22px; height: 22px; border-radius: 7px;
+      background-color: var(--bg-raised); border: 1px solid var(--hairline);
+      color: var(--text-secondary); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+      transition: color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+    }
+    .contact-row:hover .contact-icon-badge { color: var(--accent); background-color: var(--accent-soft); border-color: transparent; }
 
-    .copy-btn { height: 26px; padding: 0 10px; border-radius: 7px; font-size: 11px; font-weight: 500; background-color: var(--bg-subcard); }
+    .copy-btn { height: 25px; padding: 0 11px; border-radius: 99px; font-size: 11px; font-weight: 500; background-color: var(--bg-subcard); }
     .copy-btn.is-copied { color: var(--positive); border-color: var(--positive); background-color: var(--bg-card); }
     .copy-btn.is-copied svg { animation: checkPop 200ms var(--ease) both; }
     @keyframes checkPop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
@@ -470,8 +504,8 @@
       border: 1px solid var(--hairline);
       background-color: var(--bg-subcard);
       width: 100%;
-      height: 178px;
-      padding: 16px 52px;
+      height: 186px;
+      padding: 18px 52px;
       display: grid;
       grid-template-columns: 1.25fr 0.75fr;
       align-items: center;
@@ -494,7 +528,7 @@
     .carousel-desc { margin: 0; font-size: 13px; line-height: 1.55; color: var(--text-secondary); }
     .carousel-meta { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
     .carousel-visual {
-      height: 128px;
+      height: 134px;
       border-radius: 10px;
       background-color: var(--bg-card-solid);
       border: 1px solid var(--hairline);
@@ -511,8 +545,11 @@
 
     /* Article Grid */
     .articles-grid {
+      flex: 1;
+      min-height: 0;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-content: start;
       gap: 10px;
       margin-top: 12px;
       overflow-y: auto;
@@ -526,8 +563,8 @@
       position: relative;
       overflow: hidden;
       width: 100%;
-      height: 138px;
-      padding: 15px 16px;
+      height: 146px;
+      padding: 16px;
       border-radius: var(--radius-md);
       background-color: var(--bg-subcard);
       border: 1px solid var(--hairline);
@@ -571,7 +608,8 @@
     }
     .pagination-bar {
       margin-top: auto;
-      padding-top: 8px;
+      padding-top: 10px;
+      border-top: 1px solid var(--hairline);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -581,28 +619,31 @@
       flex-shrink: 0;
     }
     .pagination-group { display: flex; align-items: center; gap: 8px; }
-    .page-btn { height: 28px; padding: 0 12px; border-radius: 8px; font-size: 12px; font-weight: 500; }
+    .page-btn { height: 28px; padding: 0 13px; border-radius: 99px; font-size: 12px; font-weight: 500; }
     .page-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
     .page-info { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); min-width: 68px; text-align: center; }
     .page-jump-input {
       width: 48px; height: 28px; padding: 0 6px; border-radius: 8px; text-align: center;
-      border: 1px solid var(--hairline-strong); background-color: var(--bg-subcard);
+      border: 1px solid var(--hairline-strong); background-color: var(--bg-raised);
       color: var(--text-primary); font-family: var(--font-mono); font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      transition: background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
     }
-    .page-jump-input:focus { outline: none; border-color: var(--accent); }
+    .page-jump-input:focus { outline: none; border-color: transparent; background-color: var(--bg-card-solid); box-shadow: var(--shadow-focus); }
     .article-tag { color: var(--accent); font-weight: 500; }
     .empty-state { grid-column: 1 / -1; padding: 36px 16px; text-align: center; color: var(--text-muted); font-size: 13px; }
 
     /* Standalone Reader Page */
-    .home-page { display: flex; flex-direction: column; gap: 20px; transition: opacity 180ms var(--ease), transform 180ms var(--ease); }
-    .home-page.is-leaving { opacity: 0; transform: translateY(-6px); pointer-events: none; }
-    .home-page.is-entering { animation: fadeRise 260ms var(--ease) both; }
+    .home-page { display: flex; flex-direction: column; gap: 20px; transition: opacity 180ms cubic-bezier(0.32, 0.72, 0, 1), transform 180ms cubic-bezier(0.32, 0.72, 0, 1); will-change: opacity, transform; }
+    .home-page.is-leaving { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+    .home-page.is-entering { animation: pageEnterRise 250ms cubic-bezier(0.22, 1, 0.36, 1) both; }
     .home-page.is-hidden { display: none; }
-    @keyframes fadeRise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pageEnterRise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .reader-page { display: none; width: 100%; transition: opacity 180ms var(--ease), transform 180ms var(--ease); }
+    .reader-page { display: none; width: 100%; transition: opacity 180ms cubic-bezier(0.32, 0.72, 0, 1), transform 180ms cubic-bezier(0.32, 0.72, 0, 1); will-change: opacity, transform; }
     .reader-page.is-open { display: block; }
-    .reader-page.is-leaving { opacity: 0; transform: translateY(8px); pointer-events: none; }
+    .reader-page.is-entering { animation: pageEnterRise 250ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+    .reader-page.is-leaving { opacity: 0; transform: translateY(-10px); pointer-events: none; }
     .reader-shell { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 24px; align-items: start; margin: 4px auto 32px auto; }
 
     .toc-aside { order: -1; position: sticky; top: 24px; padding: 18px 14px; border-radius: 18px; }
@@ -633,15 +674,90 @@
     .reader-body blockquote { margin: 24px 0; padding: 4px 0 4px 16px; border-left: 2px solid var(--accent); color: var(--text-secondary); }
     .reader-body img { max-width: 100%; height: auto; display: block; margin: 18px 0; border-radius: 10px; border: 1px solid var(--hairline); }
 
-    .code-wrap { position: relative; margin: 20px 0; }
-    .code-copy { position: absolute; top: 10px; right: 10px; height: 26px; padding: 0 8px; border-radius: 6px; font-family: var(--font-mono); font-size: 11px; }
+    .code-wrap { position: relative; margin: 20px 0; border-radius: 12px; background-color: var(--bg-subcard); border: 1px solid var(--hairline); overflow: hidden; }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 12px; border-bottom: 1px solid var(--hairline); background-color: var(--bg-raised);
+    }
+    .code-lang { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .code-copy { height: 24px; padding: 0 9px; border-radius: 99px; font-family: var(--font-mono); font-size: 11px; }
     .reader-body pre {
-      margin: 0; padding: 16px 20px; border-radius: 12px;
-      background-color: var(--bg-subcard); border: 1px solid var(--hairline);
-      font-family: var(--font-mono); font-size: 13px; overflow-x: auto; line-height: 1.6;
+      margin: 0; padding: 14px 18px; background: transparent; border: none;
+      font-family: var(--font-mono); font-size: 13px; overflow-x: auto; line-height: 1.65;
     }
     .reader-body code { font-family: var(--font-mono); font-size: 13px; padding: 2px 6px; border-radius: 4px; background-color: var(--bg-raised); }
-    .reader-body pre code { padding: 0; background: transparent; }
+    .reader-body pre code { padding: 0; background: transparent; color: var(--text-primary); }
+    .tok-kw { color: #ad3da4; font-weight: 500; }
+    .tok-str { color: #c41a16; }
+    .tok-num { color: #1c00cf; }
+    .tok-cmt { color: #707f8c; font-style: italic; }
+    .tok-fn { color: #2b6e78; }
+    [data-theme="dark"] .tok-kw { color: #ff7ab2; font-weight: 450; }
+    [data-theme="dark"] .tok-str { color: #ff8170; }
+    [data-theme="dark"] .tok-num { color: #d9c97c; }
+    [data-theme="dark"] .tok-cmt { color: #7f8c98; }
+    [data-theme="dark"] .tok-fn { color: #6bdfff; }
+
+    /* Reader Actions Bar (Like / Comment / Share) */
+    .reader-actions-bar {
+      margin-top: 28px; padding: 14px 16px; border-radius: 14px;
+      background-color: var(--bg-subcard); border: 1px solid var(--hairline);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .reader-actions-group { display: flex; align-items: center; gap: 10px; }
+    .action-pill-btn {
+      position: relative;
+      height: 34px; padding: 0 14px; border-radius: 99px; font-size: 13px; font-weight: 500;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .action-pill-btn.is-liked {
+      color: #ef4444; background-color: rgba(239, 68, 68, 0.10); border-color: rgba(239, 68, 68, 0.22);
+    }
+    .action-pill-btn.is-liked svg { fill: #ef4444; stroke: #ef4444; }
+    .action-pill-btn.is-faved {
+      color: #d97706; background-color: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.28);
+    }
+    .action-pill-btn.is-faved svg { fill: #f59e0b; stroke: #f59e0b; }
+    .action-icon-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+    .action-pill-btn.is-bursting .action-icon-wrap svg { animation: iconPopBurst 420ms var(--bounce) both; }
+    @keyframes iconPopBurst {
+      0% { transform: scale(1); }
+      35% { transform: scale(1.42); }
+      68% { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+    .burst-particle {
+      position: absolute; left: 50%; top: 50%; width: 5px; height: 5px;
+      border-radius: 99px; pointer-events: none;
+      animation: particleFly 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes particleFly {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.9); }
+      70% { opacity: 0.9; }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.2); }
+    }
+    .action-pill-count { font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+    /* Popconfirm */
+    .comment-del-wrap { position: relative; display: inline-flex; align-items: center; }
+    .popconfirm-box {
+      position: absolute; right: 0; bottom: calc(100% + 8px); width: 204px; padding: 12px;
+      border-radius: 14px; background-color: var(--bg-popover);
+      -webkit-backdrop-filter: saturate(190%) blur(24px); backdrop-filter: saturate(190%) blur(24px);
+      border: 1px solid var(--hairline-strong); box-shadow: var(--shadow-float);
+      z-index: 45; display: flex; flex-direction: column; gap: 10px;
+      animation: fadeRise 160ms var(--spring) both;
+    }
+    .popconfirm-box::after {
+      content: ""; position: absolute; right: 14px; top: 100%; width: 8px; height: 8px;
+      background-color: var(--bg-popover); border-right: 1px solid var(--hairline-strong); border-bottom: 1px solid var(--hairline-strong);
+      transform: translateY(-4px) rotate(45deg);
+    }
+    .popconfirm-msg { font-size: 12px; font-weight: 500; color: var(--text-primary); line-height: 1.4; }
+    .popconfirm-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+    .popconfirm-btn { height: 26px; padding: 0 10px; border-radius: 7px; font-size: 11.5px; font-weight: 500; cursor: pointer; border: 1px solid var(--hairline-strong); background-color: var(--bg-card-solid); color: var(--text-secondary); }
+    .popconfirm-btn.is-danger { background-color: #ef4444; border-color: transparent; color: #ffffff; }
+    .popconfirm-btn.is-danger:hover { filter: brightness(1.08); }
 
     /* Reader Comments */
     .reader-comments { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 16px; }
@@ -652,10 +768,12 @@
     .comment-textarea {
       width: 100%; min-height: 84px; padding: 12px 14px;
       border-radius: var(--radius-md); border: 1px solid var(--hairline-strong);
-      background-color: var(--bg-subcard); color: var(--text-primary);
+      background-color: var(--bg-raised); color: var(--text-primary);
       font-size: 13px; resize: vertical;
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03);
+      transition: background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
     }
-    .comment-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .comment-textarea:focus { outline: none; border-color: transparent; background-color: var(--bg-card-solid); box-shadow: var(--shadow-focus); }
     .comment-form-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .comment-hint { font-size: 12px; color: var(--text-muted); }
     .comment-guest-bar {
@@ -670,7 +788,20 @@
     .comment-right { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
     .comment-del-btn { border: none; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 11px; padding: 2px 6px; border-radius: 6px; }
     .comment-del-btn:hover { color: #ef4444; background-color: var(--bg-raised); }
-    .comment-content { margin: 0; font-size: 13px; line-height: 1.6; color: var(--text-secondary); white-space: pre-wrap; word-break: break-word; }
+    .comment-content { margin: 0; font-size: 13px; line-height: 1.65; color: var(--text-secondary); white-space: pre-wrap; word-break: break-word; text-wrap: pretty; }
+    .wave-char {
+      display: inline-block;
+      animation: waveBlurChar 420ms var(--spring) both;
+      will-change: opacity, filter, transform;
+    }
+    .wave-tail {
+      display: inline;
+      animation: waveBlurChar 480ms var(--spring) both;
+    }
+    @keyframes waveBlurChar {
+      0% { opacity: 0; filter: blur(6px); transform: translateY(5px); }
+      100% { opacity: 1; filter: blur(0); transform: translateY(0); }
+    }
 
     .reader-pager { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--hairline); display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .pager-btn { padding: 14px 16px; border-radius: 12px; flex-direction: column; align-items: flex-start; text-align: left; gap: 4px; }
@@ -700,12 +831,12 @@
     .contact-modal-backdrop.is-open { opacity: 1; pointer-events: auto; }
 
     .contact-modal {
-      width: 100%; max-width: 340px; padding: 22px; border-radius: 20px;
+      width: 100%; max-width: 340px; padding: 20px 22px; border-radius: 22px;
       background-color: var(--bg-popover);
-      -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(190%) blur(26px); backdrop-filter: saturate(190%) blur(26px);
       border: 1px solid var(--hairline-strong);
-      box-shadow: var(--shadow-float);
-      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.14), inset 0 0.5px 0 rgba(255, 255, 255, 0.55);
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
       transform: scale(0.95) translateY(8px);
       transition: transform 220ms var(--spring);
     }
@@ -753,37 +884,90 @@
     .auth-trigger-btn { height: 36px; padding: 0 14px; border-radius: 99px; font-size: 13px; font-weight: 500; }
     .auth-trigger-btn.is-logged-in { color: var(--accent); border-color: var(--accent-soft); padding-left: 8px; }
     .auth-btn-avatar { width: 22px; height: 22px; border-radius: 99px; object-fit: cover; border: 1px solid var(--hairline-strong); display: none; flex-shrink: 0; }
-    .contact-modal.is-admin-account { width: 460px; max-width: 94vw; height: auto; align-items: stretch; overflow: hidden; transition: width 220ms ease, height 220ms ease, transform 220ms var(--spring); }
-    .contact-modal.is-admin-account.is-wide { width: 840px; height: 600px; }
+    .contact-modal.is-admin-account { width: 420px; max-width: 94vw; height: auto; align-items: stretch; overflow: hidden; transition: width 220ms ease, height 220ms ease, transform 220ms var(--spring); }
+    .contact-modal.is-admin-account.is-wide { width: 840px; height: 610px; }
     .account-hero-card {
-      width: 100%; padding: 14px 16px; border-radius: 14px; background-color: var(--bg-subcard);
+      width: 100%; padding: 14px 16px; border-radius: 16px; background-color: var(--bg-subcard);
       border: 1px solid var(--hairline); display: flex; align-items: center; gap: 12px;
     }
-    .account-hero-avatar { width: 44px; height: 44px; border-radius: 99px; object-fit: cover; border: 1px solid var(--hairline-strong); flex-shrink: 0; }
+    .account-hero-avatar { width: 46px; height: 46px; border-radius: 99px; object-fit: cover; border: 1px solid var(--hairline-strong); flex-shrink: 0; }
     .account-hero-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
-    .account-hero-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
-    .account-hero-sub { font-size: 12px; color: var(--text-muted); }
+    .account-hero-name { font-size: 15px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.01em; }
+    .account-hero-sub { font-size: 12px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .account-role-badge {
-      padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 500;
+      padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 500;
       background-color: var(--accent-soft); color: var(--accent); flex-shrink: 0;
     }
+    .ios-grouped-list {
+      width: 100%; border-radius: 14px; background-color: var(--bg-subcard);
+      border: 1px solid var(--hairline); overflow: hidden; display: flex; flex-direction: column;
+    }
+    .ios-grouped-row {
+      height: 40px; padding: 0 14px; display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; font-size: 13px; border-bottom: 1px solid var(--hairline);
+    }
+    .ios-grouped-row:last-child { border-bottom: none; }
+    .ios-grouped-label { color: var(--text-secondary); }
+    .ios-grouped-value { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--text-primary); }
     .account-quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; }
-    .account-quick-btn { height: 34px; border-radius: 10px; font-size: 12px; font-weight: 500; }
+    .account-quick-btn { height: 34px; border-radius: 10px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+    .ios-logout-btn {
+      width: 100%; height: 38px; border-radius: 12px; font-size: 13px; font-weight: 500; color: #ef4444;
+      background-color: rgba(239, 68, 68, 0.06); border-color: rgba(239, 68, 68, 0.14);
+    }
+    .ios-logout-btn:hover { background-color: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.25); }
     .admin-contact-head { font-size: 11px; color: var(--text-muted); font-weight: 500; padding: 0 2px; }
     .auth-tabs { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 3px; border-radius: 12px; background-color: var(--bg-raised); border: 1px solid var(--hairline); }
     .auth-tab { height: 30px; border: none; border-radius: 9px; background: transparent; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; }
     .auth-tab.is-active { background-color: var(--bg-card-solid); color: var(--text-primary); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); }
-    .auth-form { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+    .auth-form { width: 100%; display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
     .auth-field { display: flex; flex-direction: column; gap: 5px; }
     .auth-field label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
     .auth-input {
-      width: 100%; height: 36px; padding: 0 12px; border-radius: 10px;
-      border: 1px solid var(--hairline-strong); background-color: var(--bg-subcard);
+      width: 100%; height: 38px; padding: 0 12px; border-radius: 10px;
+      border: 1px solid var(--hairline-strong); background-color: var(--bg-raised);
       font-size: 13px; color: var(--text-primary);
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.035);
+      transition: background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
     }
-    .auth-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .auth-input::placeholder { color: var(--text-muted); opacity: 0.72; }
+    .auth-input:focus { outline: none; border-color: transparent; background-color: var(--bg-card-solid); box-shadow: var(--shadow-focus); }
+    .app-avatar-editor {
+      display: flex; align-items: center; gap: 14px; padding: 12px 14px;
+      border-radius: 14px; background-color: var(--bg-subcard); border: 1px solid var(--hairline);
+    }
+    .app-avatar-preview {
+      width: 52px; height: 52px; border-radius: 99px; object-fit: cover;
+      border: 1px solid var(--hairline-strong); background-color: var(--bg-raised); flex-shrink: 0;
+      cursor: pointer; transition: transform 180ms var(--bounce);
+    }
+    .app-avatar-preview:hover { transform: scale(1.04); }
     .auth-input-wrap { position: relative; display: flex; align-items: center; }
     .auth-input-wrap .auth-input { padding-right: 38px; }
+    .float-field { position: relative; display: flex; flex-direction: column; }
+    .float-input-wrap { position: relative; display: flex; align-items: center; width: 100%; }
+    .float-input {
+      width: 100%; height: 42px; padding: 0 13px; border-radius: 10px;
+      border: 1px solid var(--hairline-strong); background-color: var(--bg-card-solid);
+      font-size: 13px; color: var(--text-primary);
+      transition: background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+    }
+    .float-input-wrap .float-input { padding-right: 38px; }
+    .float-input:focus { outline: none; border-color: var(--text-primary); box-shadow: var(--shadow-focus); }
+    .float-label {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+      padding: 0 5px; border-radius: 4px;
+      font-size: 13px; color: var(--text-muted); font-weight: 400; line-height: 1.2;
+      pointer-events: none;
+      transition: top 180ms var(--spring), font-size 180ms var(--spring), color 180ms var(--ease), background-color 180ms var(--ease);
+    }
+    .float-input:focus + .float-label,
+    .float-input:not(:placeholder-shown) + .float-label,
+    .float-input:-webkit-autofill + .float-label {
+      top: 0; font-size: 11px; font-weight: 500; color: var(--text-secondary);
+      background-color: var(--bg-card-solid);
+    }
+    .float-input:focus + .float-label { color: var(--text-primary); }
     .pwd-toggle { position: absolute; right: 6px; width: 28px; height: 28px; border: none; border-radius: 7px; background: transparent; color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
     .pwd-toggle:hover { color: var(--text-primary); background-color: var(--bg-raised); }
     .auth-error { min-height: 18px; font-size: 12px; color: #ef4444; text-align: center; }
@@ -799,9 +983,18 @@
       transform: scale(0.96) translateY(8px); transition: transform 220ms var(--spring); overflow: hidden;
     }
     .contact-modal-backdrop.is-open .admin-modal { transform: scale(1) translateY(0); }
-    .admin-tabs { display: flex; align-items: center; gap: 6px; padding: 4px; border-radius: 12px; background-color: var(--bg-raised); border: 1px solid var(--hairline); width: fit-content; }
-    .admin-tab { height: 30px; padding: 0 14px; border: none; border-radius: 8px; background: transparent; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; }
-    .admin-tab.is-active { background-color: var(--bg-card-solid); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); }
+    .admin-tabs {
+      width: 100%; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; padding: 3px;
+      border-radius: 11px; background-color: var(--bg-raised); border: 1px solid var(--hairline);
+      align-items: center;
+    }
+    .admin-tab {
+      width: 100%; height: 30px; padding: 0 12px; border: none; border-radius: 8px; background: transparent;
+      display: flex; align-items: center; justify-content: center; line-height: 1;
+      font-size: 12.5px; font-weight: 500; color: var(--text-secondary); cursor: pointer; white-space: nowrap;
+      transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+    }
+    .admin-tab.is-active { background-color: var(--bg-card-solid); color: var(--text-primary); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); }
     .admin-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     .admin-panel { display: none; flex: 1; flex-direction: column; min-height: 0; }
     .admin-panel.is-active { display: flex; }
@@ -816,13 +1009,16 @@
     .admin-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .admin-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
     .admin-contact-row { display: grid; grid-template-columns: 100px 130px 1fr 1fr 92px; gap: 8px; align-items: center; }
+    .admin-extra-row { display: grid; grid-template-columns: 140px 1fr 64px; gap: 8px; align-items: center; }
 
     .admin-textarea {
       width: 100%; min-height: 170px; padding: 10px 12px; border-radius: 10px;
-      border: 1px solid var(--hairline-strong); background-color: var(--bg-subcard);
+      border: 1px solid var(--hairline-strong); background-color: var(--bg-raised);
       color: var(--text-primary); font-family: var(--font-mono); font-size: 12px; line-height: 1.6; resize: vertical;
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.035);
+      transition: background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
     }
-    .admin-textarea:focus { outline: none; border-color: var(--accent); }
+    .admin-textarea:focus { outline: none; border-color: transparent; background-color: var(--bg-card-solid); box-shadow: var(--shadow-focus); }
     .admin-md-preview {
       width: 100%; min-height: 170px; max-height: 240px; overflow-y: auto;
       padding: 12px 14px; border-radius: 10px; border: 1px solid var(--hairline-strong);
@@ -895,13 +1091,6 @@
           </div>
         </div>
 
-        <button class="tactile-btn auth-trigger-btn admin-trigger-btn" id="adminTriggerBtn" type="button" style="display: none;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
-          </svg>
-          <span>写文章</span>
-        </button>
-
         <button class="tactile-btn auth-trigger-btn" id="authTriggerBtn" type="button">
           <img class="auth-btn-avatar" id="authTriggerAvatar" alt="用户头像" style="display: none;" />
           <svg id="authTriggerIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -957,7 +1146,7 @@
               <div class="profile-name" id="profileNameEl">XXOXOVX</div>
               <div class="profile-tags" id="profileTagsEl"></div>
             </div>
-            <div class="info-list">
+            <div class="info-list" id="profileInfoList">
               <div class="info-row"><span class="info-key">姓名</span><span class="info-val" id="infoNameVal">SoxMoox</span></div>
               <div class="info-row"><span class="info-key">性别</span><span class="info-val" id="infoGenderVal">男</span></div>
               <div class="info-row"><span class="info-key">年龄</span><span class="info-val tabular" id="infoAgeVal">27 岁</span></div>
@@ -1073,6 +1262,35 @@
           <p class="reader-lead" id="readerLead"></p>
           <div class="reader-body" id="readerBody"></div>
 
+          <div class="reader-actions-bar" id="readerActionsBar" aria-label="文章互动">
+            <div class="reader-actions-group">
+              <button class="tactile-btn action-pill-btn" id="likePostBtn" type="button">
+                <span class="action-icon-wrap">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                </span>
+                <span>点赞</span>
+                <span class="action-pill-count" id="likeCountText">0</span>
+              </button>
+              <button class="tactile-btn action-pill-btn" id="favPostBtn" type="button">
+                <span class="action-icon-wrap">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </span>
+                <span>收藏</span>
+                <span class="action-pill-count" id="favCountText">0</span>
+              </button>
+              <button class="tactile-btn action-pill-btn" id="jumpCommentBtn" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span>评论</span>
+                <span class="action-pill-count" id="actionCommentCount">0</span>
+              </button>
+            </div>
+            <button class="tactile-btn action-pill-btn" id="sharePostBtn" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+              <span>转发分享</span>
+              <span class="action-pill-count" id="shareCountText">0</span>
+            </button>
+          </div>
+
           <section class="reader-comments" id="readerComments" aria-label="文章评论">
             <div class="comments-head">
               <h2 class="comments-title">评论交流</h2>
@@ -1133,15 +1351,13 @@
   <div class="contact-modal-backdrop" id="authModalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="contact-modal" id="authModalCard">
       <div class="modal-head">
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <h3 class="modal-title" id="authModalTitle">账号登录</h3>
-          <div class="admin-tabs" id="accountAdminTabs" role="tablist" style="display: none;">
-            <button class="admin-tab is-active" type="button" data-account-tab="account">账号信息</button>
-            <button class="admin-tab" type="button" data-account-tab="profile">资料与二维码</button>
-            <button class="admin-tab" id="accountTabInvites" type="button" data-account-tab="invites">邀请码</button>
-          </div>
-        </div>
+        <h3 class="modal-title" id="authModalTitle">账号登录</h3>
         <button class="tactile-btn modal-close" id="authModalClose" type="button" aria-label="关闭弹窗">✕</button>
+      </div>
+      <div class="admin-tabs" id="accountAdminTabs" role="tablist" style="display: none;">
+        <button class="admin-tab is-active" type="button" data-account-tab="account">账号信息</button>
+        <button class="admin-tab" id="accountTabProfile" type="button" data-account-tab="profile">资料与二维码</button>
+        <button class="admin-tab" id="accountTabInvites" type="button" data-account-tab="invites">邀请码</button>
       </div>
       <div id="authGuestView" style="width: 100%; display: flex; flex-direction: column; gap: 14px;">
         <div class="auth-tabs" role="tablist">
@@ -1149,20 +1365,29 @@
           <button class="auth-tab" id="tabRegister" type="button">注册</button>
         </div>
         <form class="auth-form" id="authForm" novalidate>
-          <div class="auth-field"><label for="authUsername">用户名</label><input class="auth-input" id="authUsername" type="text" placeholder="请输入用户名" required /></div>
-          <div class="auth-field" id="authEmailField" style="display: none;"><label for="authEmail">邮箱</label><input class="auth-input" id="authEmail" type="email" placeholder="name@example.com" /></div>
-          <div class="auth-field" id="authInviteField" style="display: none;"><label for="authInviteCode">邀请码</label><input class="auth-input" id="authInviteCode" type="text" placeholder="请输入有效邀请码" autocomplete="off" /></div>
-          <div class="auth-field">
-            <label for="authPassword">密码</label>
-            <div class="auth-input-wrap">
-              <input class="auth-input" id="authPassword" type="password" placeholder="至少 6 位密码" required />
+          <div class="float-field">
+            <input class="float-input" id="authUsername" type="text" placeholder=" " required />
+            <label class="float-label" for="authUsername">用户名</label>
+          </div>
+          <div class="float-field" id="authEmailField" style="display: none;">
+            <input class="float-input" id="authEmail" type="email" placeholder=" " />
+            <label class="float-label" for="authEmail">邮箱（如 name@example.com）</label>
+          </div>
+          <div class="float-field" id="authInviteField" style="display: none;">
+            <input class="float-input" id="authInviteCode" type="text" placeholder=" " autocomplete="off" />
+            <label class="float-label" for="authInviteCode">邀请码</label>
+          </div>
+          <div class="float-field">
+            <div class="float-input-wrap">
+              <input class="float-input" id="authPassword" type="password" placeholder=" " required />
+              <label class="float-label" for="authPassword">密码（至少 6 位）</label>
               <button class="pwd-toggle" type="button" data-target="authPassword" aria-label="显示密码">👁</button>
             </div>
           </div>
-          <div class="auth-field" id="authConfirmField" style="display: none;">
-            <label for="authConfirm">确认密码</label>
-            <div class="auth-input-wrap">
-              <input class="auth-input" id="authConfirm" type="password" placeholder="再次输入密码" />
+          <div class="float-field" id="authConfirmField" style="display: none;">
+            <div class="float-input-wrap">
+              <input class="float-input" id="authConfirm" type="password" placeholder=" " />
+              <label class="float-label" for="authConfirm">确认密码</label>
               <button class="pwd-toggle" type="button" data-target="authConfirm" aria-label="显示密码">👁</button>
             </div>
           </div>
@@ -1172,7 +1397,7 @@
         </form>
       </div>
       <div class="auth-profile-box" id="authUserView" style="display: none; min-height: 0; flex: 1;">
-        <div class="admin-panel is-active" data-account-panel="account" style="gap: 10px;">
+        <div class="admin-panel is-active" data-account-panel="account" style="gap: 12px;">
           <div class="account-hero-card">
             <img class="account-hero-avatar" id="accountCardAvatar" alt="账号头像" />
             <div class="account-hero-meta">
@@ -1181,15 +1406,18 @@
             </div>
             <span class="account-role-badge" id="accountCardBadge">普通用户</span>
           </div>
-          <div class="modal-account-box"><span class="modal-account-label">当前账号</span><span class="modal-account-value" id="authUserName">-</span></div>
-          <div class="modal-account-box"><span class="modal-account-label">账号权限</span><span class="modal-account-value" id="authUserRole">普通用户</span></div>
-          <div class="modal-account-box"><span class="modal-account-label">绑定邮箱</span><span class="modal-account-value" id="authUserEmail">-</span></div>
-          <div class="account-quick-actions" id="accountQuickActions" style="display: none;">
-            <button class="tactile-btn account-quick-btn" type="button" id="quickToProfileBtn">编辑资料与二维码</button>
-            <button class="tactile-btn account-quick-btn" type="button" id="quickToInvitesBtn">管理邀请码</button>
-            <button class="tactile-btn account-quick-btn" type="button" id="quickToWriteBtn" style="color: var(--accent);">去写文章</button>
+          <div class="ios-grouped-list">
+            <div class="ios-grouped-row"><span class="ios-grouped-label">当前账号</span><span class="ios-grouped-value" id="authUserName">-</span></div>
+            <div class="ios-grouped-row"><span class="ios-grouped-label">账号权限</span><span class="ios-grouped-value" id="authUserRole">普通用户</span></div>
+            <div class="ios-grouped-row"><span class="ios-grouped-label">数据同步</span><span class="ios-grouped-value" id="authSyncMode">云端 D1 + GitHub</span></div>
+            <span id="authUserEmail" style="display: none;">-</span>
           </div>
-          <button class="tactile-btn auth-submit" id="authLogoutBtn" type="button" style="color: #ef4444;">退出登录</button>
+          <div class="account-quick-actions" id="accountQuickActions" style="display: none;">
+            <button class="tactile-btn account-quick-btn" type="button" id="quickToProfileBtn">编辑资料</button>
+            <button class="tactile-btn account-quick-btn" type="button" id="quickToInvitesBtn">管理邀请码</button>
+            <button class="tactile-btn account-quick-btn" type="button" id="quickToWriteBtn" style="color: var(--accent);">写文章</button>
+          </div>
+          <button class="tactile-btn ios-logout-btn" id="authLogoutBtn" type="button">退出登录</button>
         </div>
 
         <div class="admin-panel" data-account-panel="profile">
@@ -1208,21 +1436,33 @@
               <div class="auth-field"><label for="profTags">个人标签（逗号分隔）</label><input class="auth-input" id="profTags" type="text" placeholder="全栈开发, 网络自动化, 极简主义" /></div>
             </div>
             <div class="admin-row-3">
-              <div class="auth-field"><label for="profInfoName">姓名</label><input class="auth-input" id="profInfoName" type="text" required /></div>
-              <div class="auth-field"><label for="profInfoGender">性别</label><input class="auth-input" id="profInfoGender" type="text" required /></div>
-              <div class="auth-field"><label for="profInfoAge">年龄</label><input class="auth-input" id="profInfoAge" type="text" required /></div>
+              <div class="auth-field"><label for="profInfoName">姓名</label><input class="auth-input" id="profInfoName" type="text" placeholder="请输入姓名" /></div>
+              <div class="auth-field"><label for="profInfoGender">性别</label><input class="auth-input" id="profInfoGender" type="text" placeholder="男 / 女 / 保密" /></div>
+              <div class="auth-field"><label for="profInfoAge">年龄</label><input class="auth-input" id="profInfoAge" type="text" placeholder="如：27 岁" /></div>
+            </div>
+            <div class="auth-field">
+              <div class="app-avatar-editor">
+                <img class="app-avatar-preview" id="profAvatarPreview" alt="头像预览" title="点击更换头像" />
+                <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+                  <div class="admin-toolbar">
+                    <label for="profAvatar">头像图片（点击左侧头像或按钮上传）</label>
+                    <div>
+                      <input type="file" id="profAvatarFileInput" accept="image/*" style="display: none;" />
+                      <button class="tactile-btn copy-btn" id="profAvatarUploadBtn" type="button">更换头像</button>
+                    </div>
+                  </div>
+                  <input class="auth-input" id="profAvatar" type="text" placeholder="粘贴头像图片 URL 或点击更换头像" required />
+                </div>
+              </div>
             </div>
             <div class="auth-field">
               <div class="admin-toolbar">
-                <label for="profAvatar">头像图片链接</label>
-                <div>
-                  <input type="file" id="profAvatarFileInput" accept="image/*" style="display: none;" />
-                  <button class="tactile-btn copy-btn" id="profAvatarUploadBtn" type="button">上传新头像</button>
-                </div>
+                <label>更多个人资料（如：爱好、城市、职业等）</label>
+                <button class="tactile-btn copy-btn" id="addExtraInfoBtn" type="button">+ 添加资料项</button>
               </div>
-              <input class="auth-input" id="profAvatar" type="text" required />
+              <div id="adminExtraInfoEditor" style="display: flex; flex-direction: column; gap: 8px;"></div>
             </div>
-            <div class="auth-field">
+            <div class="auth-field" id="contactConfigField">
               <label>联系方式与二维码配置（支持直接上传真实二维码图片，留空则按内容自动生成）</label>
               <input type="file" id="contactQrFileInput" accept="image/*" style="display: none;" />
               <div class="admin-contact-row admin-contact-head">
@@ -1374,7 +1614,7 @@
       avatar: "https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/836ce0fa-8ecc-4d16-a805-6ce2860ae4ab.webp",
       profileName: "XXOXOVX",
       tags: ["全栈开发", "网络自动化", "极简主义"],
-      info: { name: "SoxMoox", gender: "男", age: "27 岁" },
+      info: { name: "SoxMoox", gender: "男", age: "27 岁", extraInfo: [{ label: "爱好", value: "摄影 / 骑行" }] },
       contacts: [
         { label: "QQ", modalTitle: "QQ 联系方式", fieldLabel: "QQ 号码", value: "10086001", url: "tencent://message/?uin=10086001&Site=&Menu=yes", qr: "https://qm.qq.com/q/10086001" },
         { label: "WeChat", modalTitle: "WeChat 联系方式", fieldLabel: "微信号", value: "soxmoox_wx", url: "weixin://", qr: "soxmoox_wx" },
@@ -1409,6 +1649,27 @@
       return String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
 
+    function highlightCode(rawCode, lang = "") {
+      const src = String(rawCode || "").replace(/\r?\n$/, "");
+      const tokenRe = /((?:\/\/|#)[^\n]*|\/\*[\s\S]*?\*\/)|('(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"|`(?:\\.|[^`\\])*`)|\b(const|let|var|function|return|async|await|import|export|from|default|if|else|for|while|switch|case|break|continue|try|catch|finally|throw|new|class|extends|def|elif|pass|with|as|in|not|and|or|true|false|null|undefined|None|True|False|SELECT|FROM|WHERE|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|IF|EXISTS)\b|\b(\d+(?:\.\d+)?)\b|\b([a-zA-Z_]\w*)(?=\s*\()/g;
+      let out = "";
+      let last = 0;
+      let m;
+      while ((m = tokenRe.exec(src)) !== null) {
+        if (m.index > last) out += escapeHtml(src.slice(last, m.index));
+        const [full, cmt, str, kw, num, fn] = m;
+        if (cmt) out += `<span class="tok-cmt">${escapeHtml(cmt)}</span>`;
+        else if (str) out += `<span class="tok-str">${escapeHtml(str)}</span>`;
+        else if (kw) out += `<span class="tok-kw">${escapeHtml(kw)}</span>`;
+        else if (num) out += `<span class="tok-num">${escapeHtml(num)}</span>`;
+        else if (fn) out += `<span class="tok-fn">${escapeHtml(fn)}</span>`;
+        else out += escapeHtml(full);
+        last = tokenRe.lastIndex;
+      }
+      if (last < src.length) out += escapeHtml(src.slice(last));
+      return out;
+    }
+
     // Markdown Renderer (supports legacy HTML + clean Markdown)
     function renderMarkdown(raw) {
       const text = String(raw || "").trim();
@@ -1420,9 +1681,10 @@
       const codeBlocks = [];
       let processed = text.replace(/```([a-zA-Z0-9_-]*)\r?\n([\s\S]*?)```/g, (_, lang, code) => {
         const idx = codeBlocks.length;
-        const safeCode = escapeHtml(code.replace(/\r?\n$/, ""));
+        const langLabel = (lang || "code").toUpperCase();
+        const highlighted = highlightCode(code, lang);
         codeBlocks.push(
-          `<div class="code-wrap"><button class="tactile-btn code-copy" type="button">复制</button><pre><code>${safeCode}</code></pre></div>`
+          `<div class="code-wrap"><div class="code-header"><span class="code-lang">${escapeHtml(langLabel)}</span><button class="tactile-btn code-copy" type="button">复制</button></div><pre><code>${highlighted}</code></pre></div>`
         );
         return `@@CODEBLOCK_${idx}@@`;
       });
@@ -1567,16 +1829,37 @@
         const tags = Array.isArray(profile.tags) ? profile.tags : [];
         tagsEl.innerHTML = tags.map((t) => `<span class="profile-tag">${escapeHtml(t)}</span>`).join("");
       }
-      document.getElementById("infoNameVal").textContent = profile.info?.name || "";
-      document.getElementById("infoGenderVal").textContent = profile.info?.gender || "";
-      document.getElementById("infoAgeVal").textContent = profile.info?.age || "";
+      const baseRows = [
+        { label: "姓名", value: profile.info?.name || "" },
+        { label: "性别", value: profile.info?.gender || "" },
+        { label: "年龄", value: profile.info?.age || "", tabular: true },
+      ];
+      const extraRows = Array.isArray(profile.info?.extraInfo) ? profile.info.extraInfo.filter((x) => x && x.label) : [];
+      const infoListEl = document.getElementById("profileInfoList");
+      if (infoListEl) {
+        infoListEl.innerHTML = [...baseRows, ...extraRows]
+          .map((item) => `<div class="info-row"><span class="info-key">${escapeHtml(item.label)}</span><span class="info-val${item.tabular ? " tabular" : ""}">${escapeHtml(item.value)}</span></div>`)
+          .join("");
+      }
 
       if (Array.isArray(profile.contacts)) {
+        const contactIcon = (label = "") => {
+          const k = label.toLowerCase();
+          if (k.includes("qq")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+          if (k.includes("wechat") || k.includes("微信")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 17C5.9 17 3 14.5 3 11.5S5.9 6 9.5 6 16 8.5 16 11.5"/><circle cx="7.5" cy="10.5" r=".7" fill="currentColor"/><circle cx="11.5" cy="10.5" r=".7" fill="currentColor"/><path d="M21 15.5c0 2-2.2 3.5-5 3.5-.7 0-1.4-.1-2-.3L12 20l.5-1.7c-1-.7-1.5-1.7-1.5-2.8 0-2 2.2-3.5 5-3.5s5 1.5 5 3.5z"/></svg>';
+          if (k.includes("telegram") || k.includes("tg")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>';
+          if (k.includes("twitter") || k.includes("x")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.7 16h4.3L8.3 4H4z"/><path d="M4 20l6.8-6.8"/><path d="M13.2 10.8L20 4"/></svg>';
+          if (k.includes("mail") || k.includes("邮箱")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>';
+          return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>';
+        };
         document.getElementById("contactListEl").innerHTML = profile.contacts
           .map(
             (c) => `
             <div class="contact-row">
-              <span class="contact-left">${escapeHtml(c.label)}</span>
+              <span class="contact-left">
+                <span class="contact-icon-badge" aria-hidden="true">${contactIcon(c.label)}</span>
+                <span>${escapeHtml(c.label)}</span>
+              </span>
               <button class="tactile-btn copy-btn contact-view-btn" type="button"
                 data-title="${escapeHtml(c.modalTitle || c.label + ' 联系方式')}"
                 data-label="${escapeHtml(c.fieldLabel || '账号')}"
@@ -1708,11 +1991,11 @@
     // Toast
     const toastEl = document.getElementById("toast");
     let toastTimer = null;
-    function showToast(msg) {
+    function showToast(msg, duration = 2200) {
       toastEl.textContent = msg;
       toastEl.classList.add("is-visible");
       if (toastTimer) clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toastEl.classList.remove("is-visible"), 1800);
+      toastTimer = setTimeout(() => toastEl.classList.remove("is-visible"), duration);
     }
 
     function triggerCopyFeedback(btn, text) {
@@ -1738,8 +2021,12 @@
       const bodyEl = document.getElementById("readerBody");
       bodyEl.innerHTML = renderMarkdown(post.body);
       bodyEl.querySelectorAll(".code-copy").forEach((btn) => {
-        btn.addEventListener("click", () => triggerCopyFeedback(btn, btn.nextElementSibling.textContent));
+        btn.addEventListener("click", () => {
+          const codeText = btn.closest(".code-wrap")?.querySelector("pre code")?.textContent || "";
+          triggerCopyFeedback(btn, codeText);
+        });
       });
+      syncReaderActionBar(post.id);
 
       const headings = bodyEl.querySelectorAll("h2");
       const tocAside = document.getElementById("tocAside");
@@ -1781,34 +2068,42 @@
       if (transitionTimer) clearTimeout(transitionTimer);
       populateReader(post, idx);
       if (wasOpen) {
+        readerView.classList.remove("is-entering");
+        void readerView.offsetWidth;
+        readerView.classList.add("is-entering");
+        setTimeout(() => readerView.classList.remove("is-entering"), 260);
         window.scrollTo({ top: 0, behavior: "smooth" });
         updateProgress();
         return;
       }
+      listView.classList.remove("is-entering");
       listView.classList.add("is-leaving");
       transitionTimer = setTimeout(() => {
         listView.classList.add("is-hidden");
         listView.classList.remove("is-leaving");
-        readerView.classList.add("is-open");
+        readerView.classList.remove("is-leaving");
+        readerView.classList.add("is-open", "is-entering");
         window.scrollTo({ top: 0, behavior: "instant" });
         updateProgress();
-      }, 170);
+        setTimeout(() => readerView.classList.remove("is-entering"), 260);
+      }, 150);
     }
 
     function closeReader() {
       if (!state.currentPostId) return;
       state.currentPostId = null;
       if (transitionTimer) clearTimeout(transitionTimer);
+      readerView.classList.remove("is-entering");
       readerView.classList.add("is-leaving");
       transitionTimer = setTimeout(() => {
         readerView.classList.remove("is-open", "is-leaving");
-        listView.classList.remove("is-hidden");
+        listView.classList.remove("is-hidden", "is-leaving");
         listView.classList.add("is-entering");
         setTimeout(() => listView.classList.remove("is-entering"), 260);
         window.scrollTo({ top: 0, behavior: "instant" });
         updateProgress();
         requestAnimationFrame(() => moveCatIndicator(document.querySelector(".cat-pill.is-active")));
-      }, 170);
+      }, 150);
     }
 
     document.getElementById("backToListBtn").addEventListener("click", closeReader);
@@ -1921,7 +2216,6 @@
     let currentUser = null;
     const authTriggerBtn = document.getElementById("authTriggerBtn");
     const authTriggerText = document.getElementById("authTriggerText");
-    const adminTriggerBtn = document.getElementById("adminTriggerBtn");
     const authModalBackdrop = document.getElementById("authModalBackdrop");
     const authModalTitle = document.getElementById("authModalTitle");
     const authGuestView = document.getElementById("authGuestView");
@@ -1941,38 +2235,53 @@
     const authSubmitBtn = document.getElementById("authSubmitBtn");
     let authMode = "login";
 
-    function syncAuthUI() {
+    function syncTopAuthBar() {
       const commentGuestBar = document.getElementById("commentGuestBar");
       const commentForm = document.getElementById("commentForm");
       const authTriggerAvatar = document.getElementById("authTriggerAvatar");
       const authTriggerIcon = document.getElementById("authTriggerIcon");
-      const authModalCard = document.getElementById("authModalCard");
-      const accountAdminTabs = document.getElementById("accountAdminTabs");
       if (currentUser) {
         const isAdmin = currentUser.role === "admin";
-        if (!isAdmin && currentUser.profile) {
-          const base = siteProfile || defaultProfile;
-          applyProfile({ ...base, ...currentUser.profile, info: { ...base.info, ...(currentUser.profile.info || {}) } });
-        }
-        authTriggerText.textContent = currentUser.username;
+        authTriggerText.textContent = currentUser.profile?.profileName || currentUser.username;
         authTriggerBtn.classList.add("is-logged-in");
-        const avatarSrc = currentUser.profile?.avatar || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
+        const avatarSrc = (!isAdmin && currentUser.profile?.avatar) || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
         if (authTriggerAvatar) {
           authTriggerAvatar.src = avatarSrc;
           authTriggerAvatar.style.display = "block";
         }
         if (authTriggerIcon) authTriggerIcon.style.display = "none";
-        adminTriggerBtn.style.display = isAdmin ? "inline-flex" : "none";
+        if (commentGuestBar) commentGuestBar.style.display = "none";
+        if (commentForm) commentForm.style.display = "flex";
+      } else {
+        authTriggerText.textContent = "登录 / 注册";
+        authTriggerBtn.classList.remove("is-logged-in");
+        if (authTriggerAvatar) authTriggerAvatar.style.display = "none";
+        if (authTriggerIcon) authTriggerIcon.style.display = "block";
+        if (commentGuestBar) commentGuestBar.style.display = "flex";
+        if (commentForm) commentForm.style.display = "none";
+      }
+    }
+
+    function syncAuthUI() {
+      syncTopAuthBar();
+      const authModalCard = document.getElementById("authModalCard");
+      const accountAdminTabs = document.getElementById("accountAdminTabs");
+      if (currentUser) {
+        const isAdmin = currentUser.role === "admin";
+        const avatarSrc = (!isAdmin && currentUser.profile?.avatar) || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
         authGuestView.style.display = "none";
         authUserView.style.display = "flex";
         authModalCard?.classList.add("is-admin-account");
         if (accountAdminTabs) accountAdminTabs.style.display = "flex";
+        const profileTabBtn = document.getElementById("accountTabProfile");
+        if (profileTabBtn) profileTabBtn.textContent = isAdmin ? "界面与资料" : "我的账号资料";
         const inviteTabBtn = document.getElementById("accountTabInvites");
-        if (inviteTabBtn) inviteTabBtn.style.display = isAdmin ? "inline-flex" : "none";
+        if (inviteTabBtn) inviteTabBtn.style.display = isAdmin ? "flex" : "none";
         const quickBox = document.getElementById("accountQuickActions");
         if (quickBox) {
           quickBox.style.display = "grid";
           quickBox.style.gridTemplateColumns = isAdmin ? "repeat(3, 1fr)" : "1fr";
+          document.getElementById("quickToProfileBtn").textContent = isAdmin ? "编辑界面资料" : "编辑我的资料";
           document.getElementById("quickToInvitesBtn").style.display = isAdmin ? "inline-flex" : "none";
           document.getElementById("quickToWriteBtn").style.display = isAdmin ? "inline-flex" : "none";
         }
@@ -1981,12 +2290,14 @@
           siteCfg.style.display = isAdmin ? "flex" : "none";
           siteCfg.querySelectorAll("input").forEach((inp) => { inp.required = isAdmin; });
         }
+        const contactCfg = document.getElementById("contactConfigField");
+        if (contactCfg) contactCfg.style.display = isAdmin ? "flex" : "none";
         const saveProfBtn = document.getElementById("adminSaveProfileBtn");
-        if (saveProfBtn) saveProfBtn.textContent = isAdmin ? "保存资料并提交到 GitHub" : "保存个人资料";
+        if (saveProfBtn) saveProfBtn.textContent = isAdmin ? "保存界面资料并提交到 GitHub" : "保存我的账号资料";
         const cardAvatar = document.getElementById("accountCardAvatar");
         if (cardAvatar) cardAvatar.src = avatarSrc;
         const cardName = document.getElementById("accountCardName");
-        if (cardName) cardName.textContent = currentUser.username;
+        if (cardName) cardName.textContent = currentUser.profile?.profileName || currentUser.username;
         const cardEmail = document.getElementById("accountCardEmail");
         if (cardEmail) cardEmail.textContent = currentUser.email || "未绑定邮箱";
         const cardBadge = document.getElementById("accountCardBadge");
@@ -1995,21 +2306,14 @@
         document.getElementById("authUserName").textContent = currentUser.username;
         document.getElementById("authUserRole").textContent = isAdmin ? "管理员" : "普通用户";
         document.getElementById("authUserEmail").textContent = currentUser.email || "未填写";
-        if (commentGuestBar) commentGuestBar.style.display = "none";
-        if (commentForm) commentForm.style.display = "flex";
+        const syncModeEl = document.getElementById("authSyncMode");
+        if (syncModeEl) syncModeEl.textContent = isLocalPreview ? "本地预览模式" : (isAdmin ? "D1 + GitHub 同步" : "Cloudflare D1");
       } else {
-        authTriggerText.textContent = "登录 / 注册";
-        authTriggerBtn.classList.remove("is-logged-in");
-        if (authTriggerAvatar) authTriggerAvatar.style.display = "none";
-        if (authTriggerIcon) authTriggerIcon.style.display = "block";
-        adminTriggerBtn.style.display = "none";
         authGuestView.style.display = "flex";
         authUserView.style.display = "none";
         authModalCard?.classList.remove("is-admin-account", "is-wide");
         if (accountAdminTabs) accountAdminTabs.style.display = "none";
         authModalTitle.textContent = authMode === "login" ? "账号登录" : "邀请码注册";
-        if (commentGuestBar) commentGuestBar.style.display = "flex";
-        if (commentForm) commentForm.style.display = "none";
       }
     }
 
@@ -2106,9 +2410,9 @@
           profile: null,
         };
         try { sessionStorage.setItem(LOCAL_ADMIN_KEY, JSON.stringify(currentUser)); } catch {}
-        syncAuthUI();
-        authForm.reset();
+        syncTopAuthBar();
         closeAuthModal();
+        setTimeout(() => { authForm.reset(); syncAuthUI(); }, 230);
         showToast(isDemoAdmin ? "已登录本地预览管理员账号" : "已登录本地预览普通用户账号");
         return;
       }
@@ -2123,9 +2427,9 @@
         const data = await res.json();
         if (!res.ok) { authError.textContent = data.error || "操作失败"; return; }
         currentUser = data.user;
-        syncAuthUI();
-        authForm.reset();
+        syncTopAuthBar();
         closeAuthModal();
+        setTimeout(() => { authForm.reset(); syncAuthUI(); }, 230);
         showToast(authMode === "register" ? `欢迎加入，${currentUser.username}` : `欢迎回来，${currentUser.username}`);
         if (state.currentPostId) loadComments(state.currentPostId);
       } catch {
@@ -2139,10 +2443,9 @@
       try { sessionStorage.removeItem(LOCAL_ADMIN_KEY); } catch {}
       try { await fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "logout" }) }); } catch {}
       currentUser = null;
-      if (siteProfile) applyProfile(siteProfile, true);
-      syncAuthUI();
-      switchAuthMode("login");
+      syncTopAuthBar();
       closeAuthModal();
+      setTimeout(() => { switchAuthMode("login"); syncAuthUI(); }, 230);
       showToast("已退出登录");
       if (state.currentPostId) loadComments(state.currentPostId);
     });
@@ -2160,14 +2463,26 @@
       return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
 
+    function renderWaveText(text) {
+      const chars = Array.from(String(text || ""));
+      const limit = 72;
+      const head = chars.slice(0, limit)
+        .map((ch, i) => ch === " " || ch === "\n"
+          ? ch
+          : `<span class="wave-char" style="animation-delay: ${Math.min(i, limit) * 14}ms">${escapeHtml(ch)}</span>`)
+        .join("");
+      const tail = chars.length > limit
+        ? `<span class="wave-tail" style="animation-delay: ${limit * 14}ms">${escapeHtml(chars.slice(limit).join(""))}</span>`
+        : "";
+      return head + tail;
+    }
+
     async function loadComments(postId) {
       commentListEl.innerHTML = '<div class="empty-state" style="padding: 16px;">正在加载评论...</div>';
-      try {
-        const res = await fetch(`/api/comments?postId=${encodeURIComponent(postId)}`);
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        const list = data.comments || [];
+      const renderList = (list) => {
         commentsCountEl.textContent = `${list.length} 条评论`;
+        const actionCntEl = document.getElementById("actionCommentCount");
+        if (actionCntEl) actionCntEl.textContent = String(list.length);
         if (list.length === 0) {
           commentListEl.innerHTML = '<div class="empty-state" style="padding: 16px;">暂无评论，来抢个沙发吧</div>';
           return;
@@ -2175,20 +2490,32 @@
         commentListEl.innerHTML = list.map((c) => {
           const canDel = currentUser && (currentUser.role === "admin" || currentUser.id === c.user_id);
           return `
-            <div class="comment-item">
+            <div class="comment-item" data-comment-item="${c.id}">
               <div class="comment-meta">
                 <span class="comment-author">${escapeHtml(c.username)}</span>
                 <div class="comment-right">
                   <span>${formatIsoTime(c.created_at)}</span>
-                  ${canDel ? `<button class="comment-del-btn" type="button" data-del-comment="${c.id}">删除</button>` : ""}
+                  ${canDel ? `<div class="comment-del-wrap"><button class="comment-del-btn" type="button" data-del-comment="${c.id}">删除</button></div>` : ""}
                 </div>
               </div>
-              <p class="comment-content">${escapeHtml(c.content)}</p>
+              <p class="comment-content">${renderWaveText(c.content)}</p>
             </div>`;
         }).join("");
+      };
+      try {
+        const res = await fetch(`/api/comments?postId=${encodeURIComponent(postId)}`);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        renderList(data.comments || []);
       } catch {
-        commentsCountEl.textContent = "0 条评论";
-        commentListEl.innerHTML = '<div class="empty-state" style="padding: 16px;">评论服务未连接</div>';
+        if (isLocalPreview) {
+          renderList([
+            { id: 1, user_id: -1, username: "demo_reader", content: "排版和动效都很克制舒服，阅读体验非常流畅！", created_at: new Date().toISOString() },
+          ]);
+        } else {
+          commentsCountEl.textContent = "0 条评论";
+          commentListEl.innerHTML = '<div class="empty-state" style="padding: 16px;">评论服务未连接</div>';
+        }
       }
     }
 
@@ -2217,11 +2544,159 @@
       }
     });
 
+    // Reader Like / Comment / Share Actions
+    const ENGAGE_KEY = "xxoxovx-engage-v1";
+    function getEngageState() {
+      try { return JSON.parse(localStorage.getItem(ENGAGE_KEY) || "{}"); } catch { return {}; }
+    }
+    function saveEngageState(map) {
+      try { localStorage.setItem(ENGAGE_KEY, JSON.stringify(map)); } catch {}
+    }
+    function getPostEngage(postId) {
+      const all = getEngageState();
+      if (!all[postId]) {
+        const seed = Array.from(String(postId || "")).reduce((s, ch) => s + ch.charCodeAt(0), 0);
+        all[postId] = { liked: false, likes: 6 + (seed % 14), faved: false, favs: 3 + (seed % 9), shares: 1 + (seed % 5) };
+      }
+      if (typeof all[postId].faved !== "boolean") {
+        const seed = Array.from(String(postId || "")).reduce((s, ch) => s + ch.charCodeAt(0), 0);
+        all[postId].faved = false;
+        all[postId].favs = 3 + (seed % 9);
+      }
+      return all[postId];
+    }
+    function syncReaderActionBar(postId) {
+      const info = getPostEngage(postId);
+      const likeBtn = document.getElementById("likePostBtn");
+      const likeTxt = document.getElementById("likeCountText");
+      const favBtn = document.getElementById("favPostBtn");
+      const favTxt = document.getElementById("favCountText");
+      const shareTxt = document.getElementById("shareCountText");
+      if (likeBtn) likeBtn.classList.toggle("is-liked", Boolean(info.liked));
+      if (likeTxt) likeTxt.textContent = String(info.likes);
+      if (favBtn) favBtn.classList.toggle("is-faved", Boolean(info.faved));
+      if (favTxt) favTxt.textContent = String(info.favs);
+      if (shareTxt) shareTxt.textContent = String(info.shares);
+    }
+
+    function triggerSuccessBurst(btn, color) {
+      if (!btn) return;
+      const iconWrap = btn.querySelector(".action-icon-wrap");
+      btn.classList.remove("is-bursting");
+      void btn.offsetWidth;
+      btn.classList.add("is-bursting");
+      setTimeout(() => btn.classList.remove("is-bursting"), 450);
+      if (!iconWrap) return;
+      const count = 8;
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count;
+        const dist = 18 + (i % 2) * 5;
+        const p = document.createElement("span");
+        p.className = "burst-particle";
+        p.style.backgroundColor = color;
+        p.style.setProperty("--tx", `${Math.cos(angle) * dist}px`);
+        p.style.setProperty("--ty", `${Math.sin(angle) * dist}px`);
+        iconWrap.appendChild(p);
+        setTimeout(() => p.remove(), 540);
+      }
+    }
+
+    document.getElementById("likePostBtn")?.addEventListener("click", (e) => {
+      if (!state.currentPostId) return;
+      const all = getEngageState();
+      const info = getPostEngage(state.currentPostId);
+      info.liked = !info.liked;
+      info.likes = Math.max(0, info.likes + (info.liked ? 1 : -1));
+      all[state.currentPostId] = info;
+      saveEngageState(all);
+      syncReaderActionBar(state.currentPostId);
+      if (info.liked) triggerSuccessBurst(e.currentTarget, "#ef4444");
+      showToast(info.liked ? "感谢点赞支持" : "已取消点赞");
+    });
+
+    document.getElementById("favPostBtn")?.addEventListener("click", (e) => {
+      if (!state.currentPostId) return;
+      const all = getEngageState();
+      const info = getPostEngage(state.currentPostId);
+      info.faved = !info.faved;
+      info.favs = Math.max(0, info.favs + (info.faved ? 1 : -1));
+      all[state.currentPostId] = info;
+      saveEngageState(all);
+      syncReaderActionBar(state.currentPostId);
+      if (info.faved) triggerSuccessBurst(e.currentTarget, "#f59e0b");
+      showToast(info.faved ? "已加入收藏" : "已取消收藏");
+    });
+
+    document.getElementById("jumpCommentBtn")?.addEventListener("click", () => {
+      document.getElementById("readerComments")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (currentUser) setTimeout(() => commentInputEl?.focus(), 260);
+      else showToast("登录后即可发表评论");
+    });
+
+    document.getElementById("sharePostBtn")?.addEventListener("click", async () => {
+      if (!state.currentPostId) return;
+      const shareUrl = `${location.origin}${location.pathname}#post=${encodeURIComponent(state.currentPostId)}`;
+      const all = getEngageState();
+      const info = getPostEngage(state.currentPostId);
+      info.shares += 1;
+      all[state.currentPostId] = info;
+      saveEngageState(all);
+      syncReaderActionBar(state.currentPostId);
+      if (navigator.share) {
+        try { await navigator.share({ title: document.getElementById("readerTitle")?.textContent || document.title, url: shareUrl }); return; } catch {}
+      }
+      if (navigator.clipboard) navigator.clipboard.writeText(shareUrl).catch(() => {});
+      showToast("已复制文章分享链接");
+    });
+
+    // Popconfirm for comment deletion
+    function closeAllPopconfirms() {
+      document.querySelectorAll(".popconfirm-box").forEach((el) => el.remove());
+    }
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".comment-del-wrap")) closeAllPopconfirms();
+    });
+
     commentListEl.addEventListener("click", async (e) => {
+      const cancelBtn = e.target.closest("[data-popconfirm-cancel]");
+      if (cancelBtn) { closeAllPopconfirms(); return; }
+
+      const confirmBtn = e.target.closest("[data-popconfirm-ok]");
+      if (confirmBtn) {
+        const cid = confirmBtn.dataset.popconfirmOk;
+        closeAllPopconfirms();
+        try {
+          const res = await fetch(`/api/comments?id=${encodeURIComponent(cid)}`, { method: "DELETE" });
+          if (res.ok) { showToast("评论已删除"); loadComments(state.currentPostId); return; }
+        } catch {}
+        if (isLocalPreview) {
+          document.querySelector(`[data-comment-item="${cid}"]`)?.remove();
+          const remain = commentListEl.querySelectorAll(".comment-item").length;
+          commentsCountEl.textContent = `${remain} 条评论`;
+          const actionCntEl = document.getElementById("actionCommentCount");
+          if (actionCntEl) actionCntEl.textContent = String(remain);
+          if (remain === 0) commentListEl.innerHTML = '<div class="empty-state" style="padding: 16px;">暂无评论，来抢个沙发吧</div>';
+          showToast("评论已删除");
+        }
+        return;
+      }
+
       const delBtn = e.target.closest("[data-del-comment]");
       if (!delBtn) return;
-      const res = await fetch(`/api/comments?id=${encodeURIComponent(delBtn.dataset.delComment)}`, { method: "DELETE" });
-      if (res.ok) { showToast("评论已删除"); loadComments(state.currentPostId); }
+      e.stopPropagation();
+      const wrap = delBtn.closest(".comment-del-wrap");
+      const alreadyOpen = wrap?.querySelector(".popconfirm-box");
+      closeAllPopconfirms();
+      if (alreadyOpen || !wrap) return;
+      const box = document.createElement("div");
+      box.className = "popconfirm-box";
+      box.innerHTML = `
+        <div class="popconfirm-msg">确定要删除这条评论吗？</div>
+        <div class="popconfirm-actions">
+          <button class="popconfirm-btn" type="button" data-popconfirm-cancel="1">取消</button>
+          <button class="popconfirm-btn is-danger" type="button" data-popconfirm-ok="${escapeHtml(delBtn.dataset.delComment)}">确认删除</button>
+        </div>`;
+      wrap.appendChild(box);
     });
 
     // Admin Console & Account Management Tabs
@@ -2243,6 +2718,7 @@
       if (modalCard && currentUser) {
         modalCard.classList.toggle("is-wide", tabName !== "account");
       }
+      if (tabName === "profile" && currentUser) fillProfileEditor();
       if (tabName === "invites" && currentUser?.role === "admin") loadAdminInvites();
     }
     accountTabs.forEach((t) => t.addEventListener("click", () => switchAccountTab(t.dataset.accountTab)));
@@ -2304,23 +2780,66 @@
       renderAdminPostList();
     }
 
+    function renderExtraInfoEditor(list = []) {
+      const box = document.getElementById("adminExtraInfoEditor");
+      if (!box) return;
+      box.innerHTML = list.map((item) => `
+        <div class="admin-extra-row">
+          <input class="auth-input" data-exkey="label" value="${escapeHtml(item.label || "")}" placeholder="名称（如：爱好）" />
+          <input class="auth-input" data-exkey="value" value="${escapeHtml(item.value || "")}" placeholder="内容（如：摄影 / 骑行）" />
+          <button class="tactile-btn copy-btn" type="button" data-del-extra="1" style="height: 36px; color: #ef4444;">删除</button>
+        </div>`).join("");
+    }
+
+    document.getElementById("addExtraInfoBtn").addEventListener("click", () => {
+      const box = document.getElementById("adminExtraInfoEditor");
+      const row = document.createElement("div");
+      row.className = "admin-extra-row";
+      row.innerHTML = `
+        <input class="auth-input" data-exkey="label" placeholder="名称（如：爱好）" />
+        <input class="auth-input" data-exkey="value" placeholder="内容（如：摄影 / 骑行）" />
+        <button class="tactile-btn copy-btn" type="button" data-del-extra="1" style="height: 36px; color: #ef4444;">删除</button>`;
+      box.appendChild(row);
+      row.querySelector('[data-exkey="label"]')?.focus();
+    });
+
+    document.getElementById("adminExtraInfoEditor").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-del-extra]");
+      if (btn) btn.closest(".admin-extra-row")?.remove();
+    });
+
     function fillProfileEditor() {
-      const targetProf = (currentUser?.role !== "admin" && currentUser?.profile)
-        ? { ...currentProfile, ...currentUser.profile, info: { ...currentProfile.info, ...(currentUser.profile.info || {}) } }
+      const isUser = currentUser?.role !== "admin";
+      const userProf = currentUser?.profile || {};
+      const targetProf = isUser
+        ? {
+            profileName: userProf.profileName || currentUser.username || "",
+            tags: Array.isArray(userProf.tags) ? userProf.tags : [],
+            avatar: userProf.avatar || currentProfile.avatar || "",
+            info: {
+              name: userProf.info?.name || "",
+              gender: userProf.info?.gender || "",
+              age: userProf.info?.age || "",
+              extraInfo: Array.isArray(userProf.info?.extraInfo) ? userProf.info.extraInfo : [],
+            },
+          }
         : currentProfile;
-      document.getElementById("profSiteTitle").value = targetProf.siteTitle || "";
-      document.getElementById("profSiteSub").value = targetProf.siteSub || "";
-      document.getElementById("profHeroKicker").value = targetProf.heroKicker || "";
-      document.getElementById("profHeroTitle").value = targetProf.heroTitle || "";
-      document.getElementById("profHeroSub").value = targetProf.heroSub || "";
+      document.getElementById("profSiteTitle").value = currentProfile.siteTitle || "";
+      document.getElementById("profSiteSub").value = currentProfile.siteSub || "";
+      document.getElementById("profHeroKicker").value = currentProfile.heroKicker || "";
+      document.getElementById("profHeroTitle").value = currentProfile.heroTitle || "";
+      document.getElementById("profHeroSub").value = currentProfile.heroSub || "";
       document.getElementById("profName").value = targetProf.profileName || "";
       document.getElementById("profTags").value = Array.isArray(targetProf.tags) ? targetProf.tags.join(", ") : "";
       document.getElementById("profInfoName").value = targetProf.info?.name || "";
       document.getElementById("profInfoGender").value = targetProf.info?.gender || "";
       document.getElementById("profInfoAge").value = targetProf.info?.age || "";
       document.getElementById("profAvatar").value = targetProf.avatar || "";
+      const avPreview = document.getElementById("profAvatarPreview");
+      if (avPreview) avPreview.src = targetProf.avatar || "";
+      renderExtraInfoEditor(Array.isArray(targetProf.info?.extraInfo) ? targetProf.info.extraInfo : []);
 
-      const contactsList = Array.isArray(targetProf.contacts) && targetProf.contacts.length ? targetProf.contacts : (currentProfile.contacts || []);
+      const contactsList = currentProfile.contacts || [];
       document.getElementById("adminContactsEditor").innerHTML = contactsList.map((c, idx) => `
         <div class="admin-contact-row" data-contact-idx="${idx}">
           <input class="auth-input" data-ckey="label" value="${escapeHtml(c.label)}" placeholder="名称" />
@@ -2342,8 +2861,10 @@
       adminModalBackdrop.setAttribute("aria-hidden", "true");
     }
 
-    adminTriggerBtn.addEventListener("click", openAdminModal);
     document.getElementById("adminModalClose").addEventListener("click", closeAdminModal);
+    contactModalBackdrop.addEventListener("click", (e) => { if (e.target === contactModalBackdrop) closeContactModal(); });
+    authModalBackdrop.addEventListener("click", (e) => { if (e.target === authModalBackdrop) closeAuthModal(); });
+    adminModalBackdrop.addEventListener("click", (e) => { if (e.target === adminModalBackdrop) closeAdminModal(); });
     adminPostListEl.addEventListener("click", (e) => {
       const item = e.target.closest("[data-edit-post]");
       if (item) fillPostEditor(POSTS.find((p) => p.id === item.dataset.editPost));
@@ -2387,6 +2908,11 @@
     });
 
     document.getElementById("profAvatarUploadBtn").addEventListener("click", () => document.getElementById("profAvatarFileInput").click());
+    document.getElementById("profAvatarPreview")?.addEventListener("click", () => document.getElementById("profAvatarFileInput").click());
+    document.getElementById("profAvatar")?.addEventListener("input", (e) => {
+      const avPreview = document.getElementById("profAvatarPreview");
+      if (avPreview && e.target.value.trim()) avPreview.src = e.target.value.trim();
+    });
     document.getElementById("profAvatarFileInput").addEventListener("change", async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
@@ -2394,7 +2920,9 @@
       try {
         const res = await uploadImageFile(file);
         document.getElementById("profAvatar").value = res.url;
-        showToast("头像上传成功，请记得点击保存资料");
+        const avPreview = document.getElementById("profAvatarPreview");
+        if (avPreview) avPreview.src = res.url;
+        showToast("头像上传成功，请记得点击保存");
       } catch (err) {
         showToast(err.message);
       } finally {
@@ -2499,10 +3027,7 @@
     document.getElementById("adminProfileForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const isAdmin = currentUser?.role === "admin";
-      const baseContacts = (currentUser?.role !== "admin" && currentUser?.profile?.contacts?.length)
-        ? currentUser.profile.contacts
-        : (currentProfile.contacts || []);
-      const updatedContacts = baseContacts.map((c, idx) => {
+      const updatedContacts = (currentProfile.contacts || []).map((c, idx) => {
         const row = document.querySelector(`[data-contact-idx="${idx}"]`);
         if (!row) return c;
         const label = row.querySelector('[data-ckey="label"]').value.trim();
@@ -2511,6 +3036,12 @@
         const qr = row.querySelector('[data-ckey="qr"]').value.trim();
         return { ...c, label, value, url, qr: qr || (url.startsWith("http") ? url : value) };
       });
+      const extraInfo = Array.from(document.querySelectorAll("#adminExtraInfoEditor .admin-extra-row"))
+        .map((row) => ({
+          label: row.querySelector('[data-exkey="label"]').value.trim(),
+          value: row.querySelector('[data-exkey="value"]').value.trim(),
+        }))
+        .filter((item) => item.label && item.value);
       const tags = document.getElementById("profTags").value
         .split(/[,，]/)
         .map((s) => s.trim())
@@ -2524,19 +3055,18 @@
           name: document.getElementById("profInfoName").value.trim(),
           gender: document.getElementById("profInfoGender").value.trim(),
           age: document.getElementById("profInfoAge").value.trim(),
+          extraInfo,
         },
+      };
+      const nextSiteProfile = {
+        siteTitle: document.getElementById("profSiteTitle").value.trim(),
+        siteSub: document.getElementById("profSiteSub").value.trim(),
+        heroKicker: document.getElementById("profHeroKicker").value.trim(),
+        heroTitle: document.getElementById("profHeroTitle").value.trim(),
+        heroSub: document.getElementById("profHeroSub").value.trim(),
+        ...personalPayload,
         contacts: updatedContacts,
       };
-      const nextProfile = isAdmin
-        ? {
-            siteTitle: document.getElementById("profSiteTitle").value.trim(),
-            siteSub: document.getElementById("profSiteSub").value.trim(),
-            heroKicker: document.getElementById("profHeroKicker").value.trim(),
-            heroTitle: document.getElementById("profHeroTitle").value.trim(),
-            heroSub: document.getElementById("profHeroSub").value.trim(),
-            ...personalPayload,
-          }
-        : { ...(siteProfile || currentProfile), ...personalPayload };
 
       const btn = document.getElementById("adminSaveProfileBtn");
       btn.disabled = true; btn.textContent = "正在提交...";
@@ -2545,12 +3075,12 @@
           const res = await fetch("/api/content", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ type: "profile", profile: nextProfile }),
+            body: JSON.stringify({ type: "profile", profile: nextSiteProfile }),
           });
           const data = await res.json();
           if (!res.ok) { showToast(data.error || "保存资料失败"); return; }
-          applyProfile(nextProfile, true);
-          showToast("资料与二维码已保存到 GitHub");
+          applyProfile(nextSiteProfile, true);
+          showToast("界面资料与二维码已保存到 GitHub");
         } else {
           const res = await fetch("/api/auth", {
             method: "POST",
@@ -2558,29 +3088,27 @@
             body: JSON.stringify({ action: "update_profile", profile: personalPayload }),
           });
           const data = await res.json();
-          if (!res.ok) { showToast(data.error || "保存个人资料失败"); return; }
+          if (!res.ok) { showToast(data.error || "保存账号资料失败"); return; }
           currentUser = data.user;
-          applyProfile(nextProfile);
           syncAuthUI();
-          showToast("个人资料已保存");
+          showToast("个人账号资料已保存");
         }
       } catch {
         if (isLocalPreview) {
           if (isAdmin) {
-            applyProfile(nextProfile, true);
-            showToast("本地预览已更新全站资料（线上将同步到 GitHub）");
+            applyProfile(nextSiteProfile, true);
+            showToast("本地预览已更新界面资料（线上将同步到 GitHub）");
           } else {
             currentUser = { ...currentUser, profile: personalPayload };
             try { sessionStorage.setItem(LOCAL_ADMIN_KEY, JSON.stringify(currentUser)); } catch {}
-            applyProfile(nextProfile);
             syncAuthUI();
-            showToast("本地预览已保存个人资料");
+            showToast("本地预览已保存我的账号资料");
           }
         } else {
           showToast("保存失败");
         }
       } finally {
-        btn.disabled = false; btn.textContent = isAdmin ? "保存资料并提交到 GitHub" : "保存个人资料";
+        btn.disabled = false; btn.textContent = isAdmin ? "保存界面资料并提交到 GitHub" : "保存我的账号资料";
       }
     });
 
@@ -2679,6 +3207,10 @@
     syncAuthUI();
     fetchCurrentUser();
     syncContentFromServer();
+    if (location.hash.startsWith("#post=")) {
+      const targetId = decodeURIComponent(location.hash.slice(6));
+      if (POSTS.some((p) => p.id === targetId)) openReader(targetId);
+    }
   </script>
 </body>
 </html>

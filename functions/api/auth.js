@@ -212,6 +212,15 @@ export async function onRequestPost({ request, env }) {
         name: String(body.profile.info?.name || "").trim(),
         gender: String(body.profile.info?.gender || "").trim(),
         age: String(body.profile.info?.age || "").trim(),
+        extraInfo: Array.isArray(body.profile.info?.extraInfo)
+          ? body.profile.info.extraInfo
+              .map((item) => ({
+                label: String(item?.label || "").trim(),
+                value: String(item?.value || "").trim(),
+              }))
+              .filter((item) => item.label && item.value)
+              .slice(0, 12)
+          : [],
       },
       contacts: Array.isArray(body.profile.contacts) ? body.profile.contacts : [],
     };
