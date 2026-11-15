@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="zh-CN" data-theme="light" data-palette="orange">
+<html lang="zh-CN" data-theme="light" data-palette="blue">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -2761,10 +2761,10 @@
             <div class="popover-section">
               <span class="popover-label">系统主题色</span>
               <div class="swatch-row" role="group">
-                <button class="swatch-btn swatch-blue" type="button" data-palette="blue" title="晴空蓝"></button>
+                <button class="swatch-btn swatch-blue is-active" type="button" data-palette="blue" title="晴空蓝"></button>
                 <button class="swatch-btn swatch-purple" type="button" data-palette="purple" title="星辰紫"></button>
                 <button class="swatch-btn swatch-green" type="button" data-palette="green" title="生态绿"></button>
-                <button class="swatch-btn swatch-orange is-active" type="button" data-palette="orange" title="活力橙"></button>
+                <button class="swatch-btn swatch-orange" type="button" data-palette="orange" title="活力橙"></button>
               </div>
               <div class="custom-color-row">
                 <span class="custom-color-dot" id="customColorDot" aria-hidden="true"></span>
@@ -4157,7 +4157,7 @@
       htmlEl.style.removeProperty("--accent");
       htmlEl.style.removeProperty("--accent-soft");
       htmlEl.style.removeProperty("--accent-contrast");
-      const next = VALID_PALETTES.has(palette) ? palette : "orange";
+      const next = VALID_PALETTES.has(palette) ? palette : "blue";
       htmlEl.setAttribute("data-palette", next);
       localStorage.setItem("xxoxovx-palette", next);
       swatchBtns.forEach((btn) => btn.classList.toggle("is-active", btn.dataset.palette === next));
@@ -4186,7 +4186,7 @@
     }
 
     applyThemeMode(localStorage.getItem("xxoxovx-theme") || "system");
-    if (localStorage.getItem("xxoxovx-palette")) applyPalette(localStorage.getItem("xxoxovx-palette"));
+    applyPalette(localStorage.getItem("xxoxovx-palette") || "blue");
 
     (function initIntroSplash() {
       const splash = document.getElementById("introSplash");
