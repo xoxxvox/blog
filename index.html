@@ -37,7 +37,6 @@
       --t-mid: 240ms;
     }
 
-    /* 4 System Palettes */
     [data-palette="blue"] { --accent: #0071e3; --accent-soft: rgba(0, 113, 227, 0.10); }
     [data-palette="purple"] { --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.10); }
     [data-palette="green"] { --accent: #16a34a; --accent-soft: rgba(22, 163, 74, 0.10); }
@@ -65,11 +64,7 @@
     [data-theme="dark"][data-palette="green"] { --accent: #22c55e; --accent-soft: rgba(34, 197, 94, 0.16); }
     [data-theme="dark"][data-palette="orange"] { --accent: #f97316; --accent-soft: rgba(249, 115, 22, 0.16); }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     html {
       font-size: 16px;
@@ -89,32 +84,14 @@
       transition: background-color var(--t-mid) var(--ease), color var(--t-mid) var(--ease);
     }
 
-    button,
-    input {
-      font: inherit;
-      color: inherit;
-    }
+    button, input, textarea, select { font: inherit; color: inherit; }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .tabular { font-variant-numeric: tabular-nums; }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    :focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    .tabular {
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* Reading progress bar */
     .progress-track {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 2px;
       z-index: 60;
       pointer-events: none;
@@ -127,7 +104,7 @@
       transition: width 80ms linear;
     }
 
-    /* Fixed-size desktop shell */
+    /* Fixed-size desktop shell (No responsive reflow) */
     .page-shell {
       width: 1200px;
       min-width: 1200px;
@@ -149,6 +126,8 @@
 
     /* Top Bar */
     .top-bar {
+      position: relative;
+      z-index: 30;
       height: 44px;
       display: grid;
       grid-template-columns: 1fr 320px 1fr;
@@ -164,10 +143,7 @@
       justify-self: start;
       transition: opacity var(--t-fast) var(--ease);
     }
-
-    .brand:hover {
-      opacity: 0.82;
-    }
+    .brand:hover { opacity: 0.82; }
 
     .brand-icon {
       width: 32px;
@@ -178,47 +154,14 @@
       overflow: hidden;
       flex-shrink: 0;
     }
-
-    .brand-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.25;
-    }
-
-    .brand-title {
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-
-    .brand-sub {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .brand-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.25; }
+    .brand-title { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+    .brand-sub { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
 
     /* Search */
-    .search-pill {
-      position: relative;
-      width: 100%;
-      display: flex;
-      align-items: center;
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 12px;
-      color: var(--text-muted);
-      pointer-events: none;
-      display: flex;
-    }
+    .search-pill { position: relative; width: 100%; display: flex; align-items: center; }
+    .search-icon { position: absolute; left: 12px; color: var(--text-muted); pointer-events: none; display: flex; }
 
     .search-input {
       width: 100%;
@@ -231,16 +174,8 @@
       box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
       transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
     }
-
-    .search-input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-soft);
-    }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 
     .keycap {
       position: absolute;
@@ -255,14 +190,10 @@
       pointer-events: none;
       transition: opacity var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
     }
-
     .search-input:focus + .keycap,
-    .search-input:not(:placeholder-shown) + .keycap {
-      opacity: 0;
-      transform: scale(0.92);
-    }
+    .search-input:not(:placeholder-shown) + .keycap { opacity: 0; transform: scale(0.92); }
 
-    /* Toast notification */
+    /* Toast */
     .toast {
       position: fixed;
       left: 50%;
@@ -276,52 +207,31 @@
       font-weight: 500;
       opacity: 0;
       pointer-events: none;
-      z-index: 100;
+      z-index: 120;
       box-shadow: var(--shadow-float);
       transition: opacity 200ms var(--ease), transform 200ms var(--ease);
     }
-
-    .toast.is-visible {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* Controls & Tactile Buttons */
-    .top-controls {
-      justify-self: end;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .top-controls { justify-self: end; display: flex; align-items: center; gap: 8px; }
 
     .swatch-btn {
-      width: 16px;
-      height: 16px;
+      width: 16px; height: 16px;
       border-radius: 99px;
       border: 2px solid transparent;
       cursor: pointer;
       padding: 0;
       transition: transform var(--t-fast) var(--spring), border-color var(--t-fast) var(--ease);
     }
-
-    .swatch-btn:hover {
-      transform: scale(1.12);
-    }
-
-    .swatch-btn:active {
-      transform: scale(0.92);
-    }
-
-    .swatch-btn.is-active {
-      border-color: var(--text-primary);
-    }
-
+    .swatch-btn:hover { transform: scale(1.12); }
+    .swatch-btn:active { transform: scale(0.92); }
+    .swatch-btn.is-active { border-color: var(--text-primary); }
     .swatch-blue { background-color: #0071e3; }
     .swatch-purple { background-color: #7c3aed; }
     .swatch-green { background-color: #16a34a; }
     .swatch-orange { background-color: #d9480f; }
 
-    /* Shared tactile button physics */
     .tactile-btn {
       display: inline-flex;
       align-items: center;
@@ -335,28 +245,11 @@
       transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
         border-color var(--t-fast) var(--ease), transform var(--t-fast) var(--spring);
     }
+    [data-theme="dark"] .tactile-btn { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
+    .tactile-btn:hover { background-color: var(--bg-raised); border-color: var(--hairline-strong); color: var(--text-primary); }
+    .tactile-btn:active { transform: scale(0.97); }
 
-    [data-theme="dark"] .tactile-btn {
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
-
-    .tactile-btn:hover {
-      background-color: var(--bg-raised);
-      border-color: var(--hairline-strong);
-      color: var(--text-primary);
-    }
-
-    .tactile-btn:active {
-      transform: scale(0.97);
-    }
-
-    .theme-btn {
-      height: 36px;
-      padding: 0 14px;
-      border-radius: 99px;
-      font-size: 13px;
-      font-weight: 500;
-    }
+    .theme-btn { height: 36px; padding: 0 14px; border-radius: 99px; font-size: 13px; font-weight: 500; }
 
     /* Hero Banner */
     .hero-card {
@@ -382,15 +275,8 @@
       color: var(--text-secondary);
       margin-bottom: 10px;
     }
+    .kicker-dot { width: 5px; height: 5px; border-radius: 99px; background-color: var(--accent); }
 
-    .kicker-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 99px;
-      background-color: var(--accent);
-    }
-
-    /* Initial load stagger entrance */
     .top-bar { animation: shellEnter 280ms var(--ease) 0ms both; }
     .hero-card { animation: shellEnter 300ms var(--ease) 40ms both; }
     .profile-card { animation: shellEnter 300ms var(--ease) 80ms both; }
@@ -404,21 +290,8 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .hero-title {
-      margin: 0 0 8px 0;
-      font-size: 26px;
-      font-weight: 600;
-      line-height: 1.25;
-      letter-spacing: -0.025em;
-    }
-
-    .hero-sub {
-      margin: 0;
-      max-width: 540px;
-      font-size: 14px;
-      line-height: 1.65;
-      color: var(--text-secondary);
-    }
+    .hero-title { margin: 0 0 8px 0; font-size: 26px; font-weight: 600; line-height: 1.25; letter-spacing: -0.025em; }
+    .hero-sub { margin: 0; max-width: 540px; font-size: 14px; line-height: 1.65; color: var(--text-secondary); }
 
     /* Clock & Weather Widget */
     .clock-widget {
@@ -431,59 +304,14 @@
       border: 1px solid var(--hairline);
       flex-shrink: 0;
     }
-
-    .analog-clock {
-      width: 64px;
-      height: 64px;
-      flex-shrink: 0;
-    }
-
-    .digital-block {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      padding-right: 18px;
-      border-right: 1px solid var(--hairline);
-    }
-
-    .clock-label {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .clock-time {
-      font-family: var(--font-mono);
-      font-size: 22px;
-      font-weight: 600;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-    }
-
-    .clock-date {
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-
-    .weather-block {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 4px;
-      min-width: 56px;
-    }
-
-    .weather-city {
-      font-size: 12px;
-      color: var(--text-muted);
-      white-space: nowrap;
-    }
-
-    .weather-temp {
-      font-family: var(--font-mono);
-      font-size: 18px;
-      font-weight: 500;
-    }
+    .analog-clock { width: 64px; height: 64px; flex-shrink: 0; }
+    .digital-block { display: flex; flex-direction: column; gap: 2px; padding-right: 18px; border-right: 1px solid var(--hairline); }
+    .clock-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+    .clock-time { font-family: var(--font-mono); font-size: 22px; font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; }
+    .clock-date { font-size: 12px; color: var(--text-secondary); }
+    .weather-block { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; min-width: 56px; }
+    .weather-city { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+    .weather-temp { font-family: var(--font-mono); font-size: 18px; font-weight: 500; }
 
     /* Main Two-Column Body */
     .main-grid {
@@ -496,13 +324,7 @@
     }
 
     /* Left Sidebar */
-    .left-col {
-      width: 268px;
-      height: 684px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+    .left-col { width: 268px; height: 684px; display: flex; flex-direction: column; gap: 20px; }
 
     .profile-card {
       width: 268px;
@@ -515,59 +337,20 @@
       gap: 16px;
       overflow: hidden;
     }
-
-    .profile-head {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      padding-top: 4px;
-    }
-
+    .profile-head { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 4px; }
     .avatar-ring {
-      width: 72px;
-      height: 72px;
+      width: 72px; height: 72px;
       border-radius: 99px;
       background-color: var(--bg-raised);
       border: 1px solid var(--hairline-strong);
       overflow: hidden;
       flex-shrink: 0;
     }
+    .avatar-ring img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 280ms var(--ease); }
+    .avatar-ring:hover img { transform: scale(1.05); }
+    .profile-name { font-size: 15px; font-weight: 600; letter-spacing: 0.01em; }
 
-    .avatar-ring img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 280ms var(--ease);
-    }
-
-    .avatar-ring:hover img {
-      transform: scale(1.05);
-    }
-
-    @keyframes iconSpin {
-      from { transform: rotate(-90deg) scale(0.8); opacity: 0.4; }
-      to { transform: rotate(0deg) scale(1); opacity: 1; }
-    }
-
-    .theme-btn.is-spinning svg {
-      animation: iconSpin 280ms var(--ease) both;
-    }
-
-    .profile-name {
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-
-    .info-list {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      border-top: 1px solid var(--hairline);
-    }
-
+    .info-list { width: 100%; display: flex; flex-direction: column; border-top: 1px solid var(--hairline); }
     .info-row {
       height: 38px;
       padding: 0 2px;
@@ -577,11 +360,7 @@
       justify-content: space-between;
       font-size: 13px;
     }
-
-    .info-row:last-child {
-      border-bottom: none;
-    }
-
+    .info-row:last-child { border-bottom: none; }
     .info-key { color: var(--text-muted); }
     .info-val { font-weight: 500; color: var(--text-primary); }
 
@@ -594,20 +373,8 @@
       gap: 10px;
       overflow: hidden;
     }
-
-    .card-heading {
-      margin: 0;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      color: var(--text-muted);
-    }
-
-    .contact-list {
-      display: flex;
-      flex-direction: column;
-    }
-
+    .card-heading { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; color: var(--text-muted); }
+    .contact-list { display: flex; flex-direction: column; }
     .contact-row {
       height: 40px;
       border-bottom: 1px solid var(--hairline);
@@ -617,49 +384,16 @@
       gap: 8px;
       font-size: 13px;
     }
+    .contact-row:last-child { border-bottom: none; }
+    .contact-left { color: var(--text-primary); font-weight: 500; }
 
-    .contact-row:last-child {
-      border-bottom: none;
-    }
-
-    .contact-left {
-      color: var(--text-primary);
-      font-weight: 500;
-    }
-
-    .copy-btn {
-      height: 26px;
-      padding: 0 10px;
-      border-radius: 7px;
-      font-size: 11px;
-      font-weight: 500;
-      background-color: var(--bg-subcard);
-    }
-
-    .copy-btn.is-copied {
-      color: var(--positive);
-      border-color: var(--positive);
-      background-color: var(--bg-card);
-    }
-
-    .copy-btn.is-copied svg {
-      animation: checkPop 200ms var(--ease) both;
-    }
-
-    @keyframes checkPop {
-      from { opacity: 0; transform: scale(0.6); }
-      to { opacity: 1; transform: scale(1); }
-    }
+    .copy-btn { height: 26px; padding: 0 10px; border-radius: 7px; font-size: 11px; font-weight: 500; background-color: var(--bg-subcard); }
+    .copy-btn.is-copied { color: var(--positive); border-color: var(--positive); background-color: var(--bg-card); }
+    .copy-btn.is-copied svg { animation: checkPop 200ms var(--ease) both; }
+    @keyframes checkPop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
 
     /* Right Column */
-    .right-col {
-      width: 100%;
-      height: 684px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      min-width: 0;
-    }
+    .right-col { width: 100%; height: 684px; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
 
     .category-bar {
       position: relative;
@@ -673,11 +407,9 @@
       gap: 8px;
       overflow: hidden;
     }
-
     .cat-indicator {
       position: absolute;
-      top: 9px;
-      left: 0;
+      top: 9px; left: 0;
       height: 32px;
       border-radius: 99px;
       background-color: var(--accent);
@@ -685,7 +417,6 @@
       z-index: 1;
       transition: transform 240ms var(--ease), width 240ms var(--ease), background-color var(--t-fast) var(--ease);
     }
-
     .cat-pill {
       position: relative;
       z-index: 2;
@@ -702,18 +433,9 @@
       white-space: nowrap;
       transition: color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
     }
-
-    .cat-pill:hover {
-      color: var(--text-primary);
-    }
-
-    .cat-pill:active {
-      transform: scale(0.96);
-    }
-
-    .cat-pill.is-active {
-      color: var(--accent-contrast);
-    }
+    .cat-pill:hover { color: var(--text-primary); }
+    .cat-pill:active { transform: scale(0.96); }
+    .cat-pill.is-active { color: var(--accent-contrast); }
 
     /* Main Content Panel */
     .content-panel {
@@ -724,28 +446,11 @@
       flex-direction: column;
       overflow: hidden;
     }
+    .panel-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .panel-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+    .panel-count { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
 
-    .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .panel-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .panel-count {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    /* Carousel: Left text + Right visual */
+    /* Carousel */
     .carousel-box {
       position: relative;
       border-radius: var(--radius-md);
@@ -762,20 +467,8 @@
       cursor: pointer;
       transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
     }
-
-    .carousel-box:hover {
-      border-color: var(--hairline-strong);
-      background-color: var(--bg-card-solid);
-    }
-
-    .carousel-content {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-      min-width: 0;
-    }
-
+    .carousel-box:hover { border-color: var(--hairline-strong); background-color: var(--bg-card-solid); }
+    .carousel-content { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; }
     .carousel-badge {
       padding: 3px 10px;
       border-radius: 99px;
@@ -785,28 +478,9 @@
       font-weight: 500;
       color: var(--accent);
     }
-
-    .carousel-title {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 600;
-      line-height: 1.3;
-      letter-spacing: -0.015em;
-    }
-
-    .carousel-desc {
-      margin: 0;
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--text-secondary);
-    }
-
-    .carousel-meta {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
+    .carousel-title { margin: 0; font-size: 20px; font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; }
+    .carousel-desc { margin: 0; font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+    .carousel-meta { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
     .carousel-visual {
       height: 148px;
       border-radius: 10px;
@@ -817,27 +491,9 @@
       align-items: center;
       justify-content: center;
     }
-
-    .carousel-visual svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .carousel-nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 3;
-      width: 30px;
-      height: 30px;
-      border-radius: 99px;
-    }
-
-    .carousel-nav:active {
-      transform: translateY(-50%) scale(0.94);
-    }
-
+    .carousel-visual svg { width: 100%; height: 100%; display: block; }
+    .carousel-nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; width: 30px; height: 30px; border-radius: 99px; }
+    .carousel-nav:active { transform: translateY(-50%) scale(0.94); }
     .carousel-prev { left: 12px; }
     .carousel-next { right: 12px; }
 
@@ -847,8 +503,8 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
       margin-top: 16px;
+      overflow-y: auto;
     }
-
     .article-card {
       position: relative;
       overflow: hidden;
@@ -866,50 +522,16 @@
       transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease),
         transform var(--t-fast) var(--spring), box-shadow var(--t-fast) var(--ease);
     }
-
-    .article-card:hover {
-      border-color: var(--hairline-strong);
-      background-color: var(--bg-card-solid);
-      box-shadow: var(--shadow-card);
-      transform: translateY(-1px);
-    }
-
-    .article-card:active {
-      transform: scale(0.99);
-    }
-
-    .article-card.is-entering {
-      animation: cardEnter 220ms var(--ease) both;
-    }
-
-    @keyframes cardEnter {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
+    .article-card:hover { border-color: var(--hairline-strong); background-color: var(--bg-card-solid); box-shadow: var(--shadow-card); transform: translateY(-1px); }
+    .article-card:active { transform: scale(0.99); }
+    .article-card.is-entering { animation: cardEnter 220ms var(--ease) both; }
+    @keyframes cardEnter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     .carousel-box.is-switching .carousel-content,
-    .carousel-box.is-switching .carousel-visual {
-      animation: carouselSlide 220ms var(--ease) both;
-    }
+    .carousel-box.is-switching .carousel-visual { animation: carouselSlide 220ms var(--ease) both; }
+    @keyframes carouselSlide { from { opacity: 0; transform: translateX(var(--slide-dir, 10px)); } to { opacity: 1; transform: translateX(0); } }
 
-    @keyframes carouselSlide {
-      from { opacity: 0; transform: translateX(var(--slide-dir, 10px)); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    .article-card-title {
-      margin: 0 0 6px 0;
-      font-size: 15px;
-      font-weight: 600;
-      line-height: 1.4;
-      color: var(--text-primary);
-      transition: color var(--t-fast) var(--ease);
-    }
-
-    .article-card:hover .article-card-title {
-      color: var(--accent);
-    }
-
+    .article-card-title { margin: 0 0 6px 0; font-size: 15px; font-weight: 600; line-height: 1.4; color: var(--text-primary); transition: color var(--t-fast) var(--ease); }
+    .article-card:hover .article-card-title { color: var(--accent); }
     .article-card-desc {
       margin: 0;
       font-size: 13px;
@@ -920,7 +542,6 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-
     .article-card-footer {
       display: flex;
       align-items: center;
@@ -931,1065 +552,234 @@
       padding-top: 10px;
       border-top: 1px solid var(--hairline);
     }
+    .article-tag { color: var(--accent); font-weight: 500; }
+    .empty-state { grid-column: 1 / -1; padding: 36px 16px; text-align: center; color: var(--text-muted); font-size: 13px; }
 
-    .article-tag {
-      color: var(--accent);
-      font-weight: 500;
-    }
+    /* Standalone Reader Page */
+    .home-page { display: flex; flex-direction: column; gap: 20px; transition: opacity 180ms var(--ease), transform 180ms var(--ease); }
+    .home-page.is-leaving { opacity: 0; transform: translateY(-6px); pointer-events: none; }
+    .home-page.is-entering { animation: fadeRise 260ms var(--ease) both; }
+    .home-page.is-hidden { display: none; }
+    @keyframes fadeRise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    .empty-state {
-      grid-column: 1 / -1;
-      padding: 36px 16px;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 13px;
-    }
+    .reader-page { display: none; width: 100%; transition: opacity 180ms var(--ease), transform 180ms var(--ease); }
+    .reader-page.is-open { display: block; }
+    .reader-page.is-leaving { opacity: 0; transform: translateY(8px); pointer-events: none; }
+    .reader-shell { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 24px; align-items: start; margin: 4px auto 32px auto; }
 
-    /* Standalone Article Reader Page */
-    .home-page {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      transition: opacity 180ms var(--ease), transform 180ms var(--ease);
-    }
-
-    .home-page.is-leaving {
-      opacity: 0;
-      transform: translateY(-6px);
-      pointer-events: none;
-    }
-
-    .home-page.is-entering {
-      animation: fadeRise 260ms var(--ease) both;
-    }
-
-    .home-page.is-hidden {
-      display: none;
-    }
-
-    .reader-page {
-      display: none;
-      width: 100%;
-      transition: opacity 180ms var(--ease), transform 180ms var(--ease);
-    }
-
-    .reader-page.is-open {
-      display: block;
-    }
-
-    .reader-page.is-open .reader-top { animation: cardEnter 280ms var(--ease) 0ms both; }
-    .reader-page.is-open .reader-title { animation: cardEnter 300ms var(--ease) 50ms both; }
-    .reader-page.is-open .reader-lead { animation: cardEnter 300ms var(--ease) 100ms both; }
-    .reader-page.is-open .reader-body { animation: cardEnter 320ms var(--ease) 150ms both; }
-    .reader-page.is-open .reader-pager { animation: cardEnter 320ms var(--ease) 200ms both; }
-    .reader-page.is-open .toc-aside { animation: cardEnter 320ms var(--ease) 120ms both; }
-
-    .reader-page.is-leaving {
-      opacity: 0;
-      transform: translateY(8px);
-      pointer-events: none;
-    }
-
-    .reader-shell {
-      display: grid;
-      grid-template-columns: 236px minmax(0, 1fr);
-      gap: 24px;
-      align-items: start;
-      margin: 4px auto 32px auto;
-    }
-
-    .toc-aside {
-      order: -1;
-      position: sticky;
-      top: 24px;
-      padding: 18px 14px;
-      border-radius: 18px;
-    }
-
-    .toc-heading {
-      margin: 0 0 12px 8px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      color: var(--text-muted);
-    }
-
-    .toc-list {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
+    .toc-aside { order: -1; position: sticky; top: 24px; padding: 18px 14px; border-radius: 18px; }
+    .toc-heading { margin: 0 0 12px 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; color: var(--text-muted); }
+    .toc-list { display: flex; flex-direction: column; gap: 4px; }
     .toc-link {
-      font-size: 13px;
-      line-height: 1.45;
-      color: var(--text-secondary);
-      padding: 7px 10px;
-      border-radius: 9px;
-      border-left: 2px solid transparent;
+      font-size: 13px; line-height: 1.45; color: var(--text-secondary);
+      padding: 7px 10px; border-radius: 9px; border-left: 2px solid transparent;
       transition: color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
     }
+    .toc-link:hover { color: var(--text-primary); background-color: var(--bg-raised); }
+    .toc-link.is-active { color: var(--accent); background-color: var(--accent-soft); border-left-color: var(--accent); font-weight: 500; }
 
-    .toc-link:hover {
-      color: var(--text-primary);
-      background-color: var(--bg-raised);
-    }
+    .reader-container { width: 100%; padding: 36px 52px 48px 52px; }
+    .reader-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; margin-bottom: 28px; border-bottom: 1px solid var(--hairline); }
+    .reader-back { height: 34px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 500; }
+    .reader-title { margin: 0 0 14px 0; font-size: 32px; font-weight: 600; line-height: 1.24; letter-spacing: -0.025em; }
+    .reader-lead { margin: 0 0 28px 0; padding-bottom: 24px; border-bottom: 1px solid var(--hairline); font-size: 16px; color: var(--text-secondary); line-height: 1.7; }
+    .reader-body { font-size: 16px; line-height: 1.85; }
+    .reader-body h1 { margin: 36px 0 14px 0; font-size: 24px; font-weight: 600; }
+    .reader-body h2 { margin: 34px 0 12px 0; font-size: 20px; font-weight: 600; letter-spacing: -0.015em; }
+    .reader-body h3 { margin: 26px 0 10px 0; font-size: 17px; font-weight: 600; }
+    .reader-body p { margin: 0 0 18px 0; }
+    .reader-body ul, .reader-body ol { margin: 0 0 18px 0; padding-left: 24px; }
+    .reader-body li { margin-bottom: 6px; }
+    .reader-body hr { border: none; border-top: 1px solid var(--hairline); margin: 28px 0; }
+    .reader-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+    .reader-body blockquote { margin: 24px 0; padding: 4px 0 4px 16px; border-left: 2px solid var(--accent); color: var(--text-secondary); }
+    .reader-body img { max-width: 100%; height: auto; display: block; margin: 18px 0; border-radius: 10px; border: 1px solid var(--hairline); }
 
-    .toc-link.is-active {
-      color: var(--accent);
-      background-color: var(--accent-soft);
-      border-left-color: var(--accent);
-      font-weight: 500;
-    }
-
-    .reader-container {
-      width: 100%;
-      padding: 36px 52px 48px 52px;
-    }
-
-    @keyframes fadeRise {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .reader-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 18px;
-      margin-bottom: 28px;
-      border-bottom: 1px solid var(--hairline);
-    }
-
-    .reader-back {
-      height: 34px;
-      padding: 0 14px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 500;
-    }
-
-    .reader-title {
-      margin: 0 0 14px 0;
-      font-size: 32px;
-      font-weight: 600;
-      line-height: 1.24;
-      letter-spacing: -0.025em;
-    }
-
-    .reader-lead {
-      margin: 0 0 28px 0;
-      padding-bottom: 24px;
-      border-bottom: 1px solid var(--hairline);
-      font-size: 16px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-    }
-
-    .reader-body {
-      font-size: 16px;
-      line-height: 1.85;
-    }
-
-    .reader-body h2 {
-      margin: 34px 0 12px 0;
-      font-size: 20px;
-      font-weight: 600;
-      letter-spacing: -0.015em;
-    }
-
-    .reader-body p {
-      margin: 0 0 18px 0;
-    }
-
-    .reader-body blockquote {
-      margin: 24px 0;
-      padding: 4px 0 4px 16px;
-      border-left: 2px solid var(--accent);
-      color: var(--text-secondary);
-    }
-
-    .code-wrap {
-      position: relative;
-      margin: 20px 0;
-    }
-
-    .code-copy {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      height: 26px;
-      padding: 0 8px;
-      border-radius: 6px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-    }
-
+    .code-wrap { position: relative; margin: 20px 0; }
+    .code-copy { position: absolute; top: 10px; right: 10px; height: 26px; padding: 0 8px; border-radius: 6px; font-family: var(--font-mono); font-size: 11px; }
     .reader-body pre {
-      margin: 0;
-      padding: 16px 20px;
-      border-radius: 12px;
-      background-color: var(--bg-subcard);
-      border: 1px solid var(--hairline);
-      font-family: var(--font-mono);
-      font-size: 13px;
-      overflow-x: auto;
+      margin: 0; padding: 16px 20px; border-radius: 12px;
+      background-color: var(--bg-subcard); border: 1px solid var(--hairline);
+      font-family: var(--font-mono); font-size: 13px; overflow-x: auto; line-height: 1.6;
     }
+    .reader-body code { font-family: var(--font-mono); font-size: 13px; padding: 2px 6px; border-radius: 4px; background-color: var(--bg-raised); }
+    .reader-body pre code { padding: 0; background: transparent; }
 
-    .reader-body code {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background-color: var(--bg-raised);
+    /* Reader Comments */
+    .reader-comments { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 16px; }
+    .comments-head { display: flex; align-items: center; justify-content: space-between; }
+    .comments-title { margin: 0; font-size: 16px; font-weight: 600; }
+    .comments-count { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+    .comment-form { display: flex; flex-direction: column; gap: 10px; }
+    .comment-textarea {
+      width: 100%; min-height: 84px; padding: 12px 14px;
+      border-radius: var(--radius-md); border: 1px solid var(--hairline-strong);
+      background-color: var(--bg-subcard); color: var(--text-primary);
+      font-size: 13px; resize: vertical;
     }
-
-    .reader-body pre code {
-      padding: 0;
-      background: transparent;
+    .comment-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .comment-form-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .comment-hint { font-size: 12px; color: var(--text-muted); }
+    .comment-guest-bar {
+      padding: 14px 16px; border-radius: var(--radius-md);
+      background-color: var(--bg-subcard); border: 1px solid var(--hairline);
+      display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-secondary);
     }
+    .comment-list { display: flex; flex-direction: column; gap: 10px; }
+    .comment-item { padding: 14px 16px; border-radius: var(--radius-md); background-color: var(--bg-subcard); border: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 6px; }
+    .comment-meta { display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
+    .comment-author { font-weight: 600; color: var(--text-primary); }
+    .comment-right { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+    .comment-del-btn { border: none; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 11px; padding: 2px 6px; border-radius: 6px; }
+    .comment-del-btn:hover { color: #ef4444; background-color: var(--bg-raised); }
+    .comment-content { margin: 0; font-size: 13px; line-height: 1.6; color: var(--text-secondary); white-space: pre-wrap; word-break: break-word; }
 
-    .reader-pager {
-      margin-top: 40px;
-      padding-top: 24px;
-      border-top: 1px solid var(--hairline);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+    .reader-pager { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--hairline); display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pager-btn { padding: 14px 16px; border-radius: 12px; flex-direction: column; align-items: flex-start; text-align: left; gap: 4px; }
+    .pager-btn.is-next { align-items: flex-end; text-align: right; }
+    .pager-dir { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+    .pager-title { font-size: 14px; font-weight: 500; color: var(--text-primary); }
 
-    .pager-btn {
-      padding: 14px 16px;
-      border-radius: 12px;
-      flex-direction: column;
-      align-items: flex-start;
-      text-align: left;
-      gap: 4px;
-    }
+    /* Footer */
+    .footer-card { width: 100%; height: 124px; padding: 20px 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; overflow: hidden; }
+    .footer-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .footer-stats { display: flex; align-items: center; gap: 8px; }
+    .stat-pill { height: 28px; padding: 0 11px; border-radius: 99px; background-color: var(--bg-subcard); border: 1px solid var(--hairline); display: inline-flex; align-items: center; font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); }
+    .footer-bottom { padding-top: 12px; border-top: 1px solid var(--hairline); display: flex; align-items: center; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+    .back-top { cursor: pointer; color: var(--text-secondary); transition: color var(--t-fast) var(--ease); }
+    .back-top:hover { color: var(--accent); }
 
-    .pager-btn.is-next {
-      align-items: flex-end;
-      text-align: right;
-    }
-
-    .pager-dir {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .pager-title {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-
-    /* Footer Card */
-    .footer-card {
-      width: 100%;
-      height: 124px;
-      padding: 20px 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 12px;
-      overflow: hidden;
-    }
-
-    .footer-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .footer-stats {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .stat-pill {
-      height: 28px;
-      padding: 0 11px;
-      border-radius: 99px;
-      background-color: var(--bg-subcard);
-      border: 1px solid var(--hairline);
-      display: inline-flex;
-      align-items: center;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-secondary);
-    }
-
-    .footer-bottom {
-      padding-top: 12px;
-      border-top: 1px solid var(--hairline);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .back-top {
-      cursor: pointer;
-      color: var(--text-secondary);
-      transition: color var(--t-fast) var(--ease);
-    }
-
-    .back-top:hover {
-      color: var(--accent);
-    }
-
-    /* Contact Modal (Apple Sheet/Popover) */
+    /* Modals & Popovers */
     .contact-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 90;
+      position: fixed; inset: 0; z-index: 90;
       background-color: rgba(0, 0, 0, 0.28);
-      -webkit-backdrop-filter: blur(8px);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      opacity: 0;
-      pointer-events: none;
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; pointer-events: none;
       transition: opacity 200ms var(--ease);
     }
-
-    [data-theme="dark"] .contact-modal-backdrop {
-      background-color: rgba(0, 0, 0, 0.55);
-    }
-
-    .contact-modal-backdrop.is-open {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    [data-theme="dark"] .contact-modal-backdrop { background-color: rgba(0, 0, 0, 0.55); }
+    .contact-modal-backdrop.is-open { opacity: 1; pointer-events: auto; }
 
     .contact-modal {
-      width: 100%;
-      max-width: 340px;
-      padding: 22px;
-      border-radius: 20px;
+      width: 100%; max-width: 340px; padding: 22px; border-radius: 20px;
       background-color: var(--bg-popover);
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
       border: 1px solid var(--hairline-strong);
       box-shadow: var(--shadow-float);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
       transform: scale(0.95) translateY(8px);
       transition: transform 220ms var(--spring);
     }
+    .contact-modal-backdrop.is-open .contact-modal { transform: scale(1) translateY(0); }
 
-    .contact-modal-backdrop.is-open .contact-modal {
-      transform: scale(1) translateY(0);
-    }
+    .modal-head { width: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .modal-title { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.015em; }
+    .modal-close { width: 28px; height: 28px; border-radius: 99px; padding: 0; }
+    .qr-frame { width: 184px; height: 184px; padding: 12px; border-radius: 18px; background-color: #ffffff; border: 1px solid var(--hairline); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .qr-frame img { width: 100%; height: 100%; display: block; object-fit: contain; }
 
-    .modal-head {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .modal-title {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: -0.015em;
-    }
-
-    .modal-close {
-      width: 28px;
-      height: 28px;
-      border-radius: 99px;
-      padding: 0;
-    }
-
-    .qr-frame {
-      width: 184px;
-      height: 184px;
-      padding: 12px;
-      border-radius: 18px;
-      background-color: #ffffff;
-      border: 1px solid var(--hairline);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .qr-frame img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: contain;
-    }
-
-    .modal-account-box {
-      width: 100%;
-      padding: 10px 14px;
-      border-radius: 12px;
-      background-color: var(--bg-subcard);
-      border: 1px solid var(--hairline);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      font-size: 13px;
-    }
-
-    .modal-account-label {
-      color: var(--text-muted);
-      flex-shrink: 0;
-    }
-
-    .modal-account-value {
-      font-family: var(--font-mono);
-      font-weight: 500;
-      color: var(--text-primary);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .modal-actions {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .modal-btn {
-      height: 38px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 500;
-    }
-
+    .modal-account-box { width: 100%; padding: 10px 14px; border-radius: 12px; background-color: var(--bg-subcard); border: 1px solid var(--hairline); display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; }
+    .modal-account-label { color: var(--text-muted); flex-shrink: 0; }
+    .modal-account-value { font-family: var(--font-mono); font-weight: 500; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .modal-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .modal-btn { height: 38px; border-radius: 12px; font-size: 13px; font-weight: 500; }
     .modal-btn-primary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      border: 1px solid transparent;
-      background-color: var(--accent);
-      color: var(--accent-contrast);
-      cursor: pointer;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
-      transition: filter var(--t-fast) var(--ease), transform var(--t-fast) var(--spring);
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      border: 1px solid transparent; background-color: var(--accent); color: var(--accent-contrast);
+      cursor: pointer; transition: filter var(--t-fast) var(--ease), transform var(--t-fast) var(--spring);
     }
+    .modal-btn-primary:hover { filter: brightness(1.06); }
+    .modal-btn-primary:active { transform: scale(0.97); }
 
-    .modal-btn-primary:hover {
-      filter: brightness(1.06);
-    }
-
-    .modal-btn-primary:active {
-      transform: scale(0.97);
-    }
-
-    /* Top bar stacking above blurred surfaces */
-    .top-bar {
-      position: relative;
-      z-index: 30;
-    }
-
-    /* Unified Appearance Popover */
-    .appearance-wrap {
-      position: relative;
-    }
-
+    .appearance-wrap { position: relative; }
     .appearance-popover {
-      position: absolute;
-      top: calc(100% + 10px);
-      right: 0;
-      width: 248px;
-      padding: 14px;
-      border-radius: var(--radius-lg);
-      background-color: var(--bg-popover);
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-      backdrop-filter: saturate(180%) blur(20px);
-      border: 1px solid var(--hairline-strong);
-      box-shadow: var(--shadow-float);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-6px) scale(0.97);
-      transform-origin: top right;
-      transition: opacity 160ms var(--ease), transform 200ms var(--spring), visibility 160ms;
-      z-index: 40;
+      position: absolute; top: calc(100% + 10px); right: 0; width: 248px; padding: 14px;
+      border-radius: var(--radius-lg); background-color: var(--bg-popover);
+      -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+      border: 1px solid var(--hairline-strong); box-shadow: var(--shadow-float);
+      display: flex; flex-direction: column; gap: 14px;
+      opacity: 0; visibility: hidden; transform: translateY(-6px) scale(0.97); transform-origin: top right;
+      transition: opacity 160ms var(--ease), transform 200ms var(--spring), visibility 160ms; z-index: 40;
     }
+    .appearance-popover.is-open { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+    .popover-section { display: flex; flex-direction: column; gap: 8px; }
+    .popover-label { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+    .mode-segment { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 3px; border-radius: 11px; background-color: var(--bg-raised); border: 1px solid var(--hairline); }
+    .mode-option { height: 28px; border: none; border-radius: 8px; background: transparent; font-size: 12px; font-weight: 500; color: var(--text-secondary); cursor: pointer; }
+    .mode-option.is-active { background-color: var(--bg-card-solid); color: var(--text-primary); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); }
+    .swatch-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 11px; background-color: var(--bg-subcard); border: 1px solid var(--hairline); }
+    .swatch-row .swatch-btn { width: 22px; height: 22px; }
 
-    .appearance-popover.is-open {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0) scale(1);
-    }
-
-    .popover-section {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .popover-label {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-muted);
-    }
-
-    .mode-segment {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 4px;
-      padding: 3px;
-      border-radius: 11px;
-      background-color: var(--bg-raised);
-      border: 1px solid var(--hairline);
-    }
-
-    .mode-option {
-      height: 28px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
-    }
-
-    .mode-option:hover {
-      color: var(--text-primary);
-    }
-
-    .mode-option.is-active {
-      background-color: var(--bg-card-solid);
-      color: var(--text-primary);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-    }
-
-    .swatch-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      border-radius: 11px;
-      background-color: var(--bg-subcard);
-      border: 1px solid var(--hairline);
-    }
-
-    .swatch-row .swatch-btn {
-      width: 22px;
-      height: 22px;
-    }
-
-    /* Auth Button & Modal */
-    .auth-trigger-btn {
-      height: 36px;
-      padding: 0 14px;
-      border-radius: 18px;
-      font-size: 13px;
-      font-weight: 500;
-    }
-
-    .auth-trigger-btn.is-logged-in {
-      color: var(--accent);
-      border-color: var(--accent-soft);
-    }
-
-    .auth-tabs {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
-      padding: 3px;
-      border-radius: 12px;
-      background-color: var(--bg-raised);
-      border: 1px solid var(--hairline);
-    }
-
-    .auth-tab {
-      height: 30px;
-      border: none;
-      border-radius: 9px;
-      background: transparent;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
-    }
-
-    .auth-tab.is-active {
-      background-color: var(--bg-card-solid);
-      color: var(--text-primary);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-    }
-
-    .auth-form {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .auth-field {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .auth-field label {
-      font-size: 12px;
-      color: var(--text-secondary);
-      font-weight: 500;
-    }
-
+    /* Auth */
+    .auth-trigger-btn { height: 36px; padding: 0 14px; border-radius: 99px; font-size: 13px; font-weight: 500; }
+    .auth-trigger-btn.is-logged-in { color: var(--accent); border-color: var(--accent-soft); }
+    .auth-tabs { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 3px; border-radius: 12px; background-color: var(--bg-raised); border: 1px solid var(--hairline); }
+    .auth-tab { height: 30px; border: none; border-radius: 9px; background: transparent; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; }
+    .auth-tab.is-active { background-color: var(--bg-card-solid); color: var(--text-primary); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); }
+    .auth-form { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+    .auth-field { display: flex; flex-direction: column; gap: 5px; }
+    .auth-field label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
     .auth-input {
-      width: 100%;
-      height: 38px;
-      padding: 0 12px;
-      border-radius: 10px;
-      border: 1px solid var(--hairline-strong);
-      background-color: var(--bg-subcard);
-      font-size: 13px;
-      color: var(--text-primary);
-      transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+      width: 100%; height: 36px; padding: 0 12px; border-radius: 10px;
+      border: 1px solid var(--hairline-strong); background-color: var(--bg-subcard);
+      font-size: 13px; color: var(--text-primary);
     }
-
-    .auth-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-soft);
-    }
-
-    .auth-input-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .auth-input-wrap .auth-input {
-      padding-right: 38px;
-    }
-
-    .pwd-toggle {
-      position: absolute;
-      right: 6px;
-      width: 28px;
-      height: 28px;
-      border: none;
-      border-radius: 7px;
-      background: transparent;
-      color: var(--text-muted);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      padding: 0;
-      transition: color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
-    }
-
-    .pwd-toggle:hover {
-      color: var(--text-primary);
-      background-color: var(--bg-raised);
-    }
-
-    .auth-error {
-      min-height: 18px;
-      font-size: 12px;
-      color: #ff3b30;
-      text-align: center;
-    }
-
-    [data-theme="dark"] .auth-error {
-      color: #ff453a;
-    }
-
-    .auth-submit {
-      width: 100%;
-      height: 38px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 500;
-    }
-
-    .auth-profile-box {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    /* Reader Images & Comments */
-    .reader-body img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-      margin: 18px 0;
-      border-radius: 10px;
-      border: 1px solid var(--hairline);
-    }
-
-    .reader-comments {
-      margin-top: 36px;
-      padding-top: 24px;
-      border-top: 1px solid var(--hairline);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .comments-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .comments-title {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .comments-count {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .comment-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .comment-textarea {
-      width: 100%;
-      min-height: 84px;
-      padding: 12px 14px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--hairline-strong);
-      background-color: var(--bg-subcard);
-      color: var(--text-primary);
-      font: inherit;
-      font-size: 13px;
-      resize: vertical;
-      transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
-    }
-
-    .comment-textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-soft);
-    }
-
-    .comment-form-actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .comment-hint {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .comment-guest-bar {
-      padding: 14px 16px;
-      border-radius: var(--radius-md);
-      background-color: var(--bg-subcard);
-      border: 1px solid var(--hairline);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-
-    .comment-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .comment-item {
-      padding: 14px 16px;
-      border-radius: var(--radius-md);
-      background-color: var(--bg-subcard);
-      border: 1px solid var(--hairline);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .comment-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-    }
-
-    .comment-author {
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .comment-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .comment-del-btn {
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 6px;
-    }
-
-    .comment-del-btn:hover {
-      color: #ef4444;
-      background-color: var(--bg-raised);
-    }
-
-    .comment-content {
-      margin: 0;
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--text-secondary);
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
+    .auth-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .auth-input-wrap { position: relative; display: flex; align-items: center; }
+    .auth-input-wrap .auth-input { padding-right: 38px; }
+    .pwd-toggle { position: absolute; right: 6px; width: 28px; height: 28px; border: none; border-radius: 7px; background: transparent; color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+    .pwd-toggle:hover { color: var(--text-primary); background-color: var(--bg-raised); }
+    .auth-error { min-height: 18px; font-size: 12px; color: #ef4444; text-align: center; }
+    .auth-submit { width: 100%; height: 38px; border-radius: 12px; font-size: 13px; font-weight: 500; }
+    .auth-profile-box { width: 100%; display: flex; flex-direction: column; gap: 12px; }
 
     /* Admin Modal */
-    .admin-trigger-btn {
-      color: var(--accent);
-      border-color: var(--accent-soft);
-      background-color: var(--accent-soft);
-    }
-
+    .admin-trigger-btn { color: var(--accent); border-color: var(--accent-soft); background-color: var(--accent-soft); }
     .admin-modal {
-      width: 880px;
-      max-width: 94vw;
-      height: 620px;
-      padding: 20px 22px;
-      border-radius: 20px;
-      background-color: var(--bg-card);
-      border: 1px solid var(--hairline-strong);
-      box-shadow: var(--shadow-float);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      transform: scale(0.96) translateY(8px);
-      transition: transform 220ms var(--spring);
-      overflow: hidden;
+      width: 920px; height: 640px; padding: 20px 22px; border-radius: 20px;
+      background-color: var(--bg-card); border: 1px solid var(--hairline-strong);
+      box-shadow: var(--shadow-float); display: flex; flex-direction: column; gap: 14px;
+      transform: scale(0.96) translateY(8px); transition: transform 220ms var(--spring); overflow: hidden;
     }
+    .contact-modal-backdrop.is-open .admin-modal { transform: scale(1) translateY(0); }
+    .admin-tabs { display: flex; align-items: center; gap: 6px; padding: 4px; border-radius: 12px; background-color: var(--bg-raised); border: 1px solid var(--hairline); width: fit-content; }
+    .admin-tab { height: 30px; padding: 0 14px; border: none; border-radius: 8px; background: transparent; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; }
+    .admin-tab.is-active { background-color: var(--bg-card-solid); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); }
+    .admin-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    .admin-panel { display: none; flex: 1; min-height: 0; }
+    .admin-panel.is-active { display: flex; }
+    .admin-posts-layout { width: 100%; display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 16px; min-height: 0; }
+    .admin-post-list { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding-right: 4px; }
+    .admin-post-item { padding: 10px 12px; border-radius: 10px; border: 1px solid var(--hairline); background-color: var(--bg-subcard); text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 3px; }
+    .admin-post-item.is-active { border-color: var(--accent); background-color: var(--accent-soft); }
+    .admin-post-item-title { font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .admin-post-item-meta { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
 
-    .contact-modal-backdrop.is-open .admin-modal {
-      transform: scale(1) translateY(0);
-    }
-
-    .admin-tabs {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px;
-      border-radius: 12px;
-      background-color: var(--bg-raised);
-      border: 1px solid var(--hairline);
-      width: fit-content;
-    }
-
-    .admin-tab {
-      height: 30px;
-      padding: 0 14px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      cursor: pointer;
-    }
-
-    .admin-tab.is-active {
-      background-color: var(--bg-card-solid);
-      color: var(--text-primary);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    }
-
-    .admin-body {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .admin-panel {
-      display: none;
-      flex: 1;
-      min-height: 0;
-    }
-
-    .admin-panel.is-active {
-      display: flex;
-    }
-
-    .admin-posts-layout {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 240px minmax(0, 1fr);
-      gap: 16px;
-      min-height: 0;
-    }
-
-    .admin-post-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .admin-post-item {
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--hairline);
-      background-color: var(--bg-subcard);
-      text-align: left;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .admin-post-item.is-active {
-      border-color: var(--accent);
-      background-color: var(--accent-soft);
-    }
-
-    .admin-post-item-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .admin-post-item-meta {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .admin-editor {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .admin-row-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .admin-row-3 {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-    }
+    .admin-editor { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 4px; }
+    .admin-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .admin-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .admin-contact-row { display: grid; grid-template-columns: 100px 130px 1fr 1fr auto; gap: 8px; align-items: center; }
 
     .admin-textarea {
-      width: 100%;
-      min-height: 150px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--hairline-strong);
-      background-color: var(--bg-subcard);
-      color: var(--text-primary);
-      font-family: var(--font-mono);
-      font-size: 12px;
-      line-height: 1.6;
-      resize: vertical;
+      width: 100%; min-height: 170px; padding: 10px 12px; border-radius: 10px;
+      border: 1px solid var(--hairline-strong); background-color: var(--bg-subcard);
+      color: var(--text-primary); font-family: var(--font-mono); font-size: 12px; line-height: 1.6; resize: vertical;
     }
-
-    .admin-textarea:focus {
-      outline: none;
-      border-color: var(--accent);
+    .admin-textarea:focus { outline: none; border-color: var(--accent); }
+    .admin-md-preview {
+      width: 100%; min-height: 170px; max-height: 240px; overflow-y: auto;
+      padding: 12px 14px; border-radius: 10px; border: 1px solid var(--hairline-strong);
+      background-color: var(--bg-subcard); font-size: 13px;
     }
-
-    .admin-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .admin-scroll-box {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .invite-item {
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--hairline);
-      background-color: var(--bg-subcard);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      font-size: 13px;
-    }
-
-    .invite-code {
-      font-family: var(--font-mono);
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .invite-status {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .admin-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .admin-scroll-box { width: 100%; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; padding-right: 4px; }
+    .invite-item { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--hairline); background-color: var(--bg-subcard); display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; }
+    .invite-code { font-family: var(--font-mono); font-weight: 600; color: var(--text-primary); }
+    .invite-status { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
     }
   </style>
 </head>
@@ -1999,14 +789,10 @@
   </div>
 
   <div class="page-shell" id="top">
-    <!-- Top Bar -->
     <header class="top-bar">
       <div class="brand" id="brandBtn" tabindex="0" role="button" aria-label="返回首页">
         <div class="brand-icon">
-          <img
-            src="https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/836ce0fa-8ecc-4d16-a805-6ce2860ae4ab.webp"
-            alt="XXOXOVX Logo"
-          />
+          <img id="brandLogoImg" src="https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/836ce0fa-8ecc-4d16-a805-6ce2860ae4ab.webp" alt="XXOXOVX Logo" />
         </div>
         <div class="brand-text">
           <span class="brand-title" id="brandTitleEl">XXOXOVX · Blog</span>
@@ -2017,44 +803,25 @@
       <div class="search-pill">
         <span class="search-icon" aria-hidden="true">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.3-4.3"></path>
+            <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>
           </svg>
         </span>
-        <input
-          type="search"
-          class="search-input"
-          id="searchInput"
-          placeholder="搜索文章标题或简介"
-          aria-label="搜索文章"
-        />
+        <input type="search" class="search-input" id="searchInput" placeholder="搜索文章标题或简介" aria-label="搜索文章" />
         <span class="keycap">Ctrl K</span>
       </div>
 
       <div class="top-controls">
         <div class="appearance-wrap" id="appearanceWrap">
-          <button
-            class="tactile-btn theme-btn"
-            id="appearanceBtn"
-            type="button"
-            aria-haspopup="true"
-            aria-expanded="false"
-            aria-label="外观与主题设置"
-          >
+          <button class="tactile-btn theme-btn" id="appearanceBtn" type="button" aria-haspopup="true" aria-expanded="false">
             <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="4"></circle>
-              <path d="M12 2v2"></path><path d="M12 20v2"></path>
-              <path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path>
-              <path d="M2 12h2"></path><path d="M20 12h2"></path>
-              <path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
             </svg>
             <span id="themeText">外观</span>
           </button>
-
           <div class="appearance-popover" id="appearancePopover" role="dialog" aria-label="外观设置">
             <div class="popover-section">
               <span class="popover-label">外观模式</span>
-              <div class="mode-segment" role="group" aria-label="深浅色模式">
+              <div class="mode-segment" role="group">
                 <button class="mode-option" type="button" data-theme-mode="light">浅色</button>
                 <button class="mode-option" type="button" data-theme-mode="dark">深色</button>
                 <button class="mode-option is-active" type="button" data-theme-mode="system">跟随系统</button>
@@ -2062,28 +829,26 @@
             </div>
             <div class="popover-section">
               <span class="popover-label">系统主题色</span>
-              <div class="swatch-row" role="group" aria-label="系统主题色切换">
-                <button class="swatch-btn swatch-blue is-active" type="button" data-palette="blue" title="晴空蓝" aria-label="晴空蓝"></button>
-                <button class="swatch-btn swatch-purple" type="button" data-palette="purple" title="星辰紫" aria-label="星辰紫"></button>
-                <button class="swatch-btn swatch-green" type="button" data-palette="green" title="生态绿" aria-label="生态绿"></button>
-                <button class="swatch-btn swatch-orange" type="button" data-palette="orange" title="活力橙" aria-label="活力橙"></button>
+              <div class="swatch-row" role="group">
+                <button class="swatch-btn swatch-blue is-active" type="button" data-palette="blue" title="晴空蓝"></button>
+                <button class="swatch-btn swatch-purple" type="button" data-palette="purple" title="星辰紫"></button>
+                <button class="swatch-btn swatch-green" type="button" data-palette="green" title="生态绿"></button>
+                <button class="swatch-btn swatch-orange" type="button" data-palette="orange" title="活力橙"></button>
               </div>
             </div>
           </div>
         </div>
 
-        <button class="tactile-btn auth-trigger-btn admin-trigger-btn" id="adminTriggerBtn" type="button" style="display: none;" aria-label="打开管理后台">
+        <button class="tactile-btn auth-trigger-btn admin-trigger-btn" id="adminTriggerBtn" type="button" style="display: none;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 20h9"></path>
-            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+            <path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
           </svg>
           <span>管理后台</span>
         </button>
 
-        <button class="tactile-btn auth-trigger-btn" id="authTriggerBtn" type="button" aria-label="登录或注册账号">
+        <button class="tactile-btn auth-trigger-btn" id="authTriggerBtn" type="button">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="8" r="4"></circle>
-            <path d="M20 21a8 8 0 0 0-16 0"></path>
+            <circle cx="12" cy="8" r="4"></circle><path d="M20 21a8 8 0 0 0-16 0"></path>
           </svg>
           <span id="authTriggerText">登录 / 注册</span>
         </button>
@@ -2091,7 +856,6 @@
     </header>
 
     <div class="home-page" id="homePage">
-      <!-- Hero Banner -->
       <section class="surface hero-card" aria-label="站点概览">
         <div>
           <div class="hero-kicker">
@@ -2099,12 +863,9 @@
             <span id="heroKickerText">Tech Archive · 2026</span>
           </div>
           <h1 class="hero-title" id="heroTitleEl">xxoxovx 的个人技术档案</h1>
-          <p class="hero-sub" id="heroSubEl">
-            记录软路由折腾、网络自动化与云原生 Serverless 实践，在纯净通透的秩序感中保持克制而高效的数字生活。
-          </p>
+          <p class="hero-sub" id="heroSubEl">记录软路由折腾、网络自动化与云原生 Serverless 实践，在纯净通透的秩序感中保持克制而高效的数字生活。</p>
         </div>
 
-        <!-- Live Analog + Digital Clock Card -->
         <div class="clock-widget" aria-label="实时时钟与天气">
           <svg class="analog-clock" viewBox="0 0 80 80" aria-hidden="true">
             <circle cx="40" cy="40" r="36" fill="var(--bg-card-solid)" stroke="var(--hairline-strong)" stroke-width="1.5" />
@@ -2117,13 +878,11 @@
             <line id="secondHand" x1="40" y1="44" x2="40" y2="14" stroke="var(--accent)" stroke-width="1" stroke-linecap="round" />
             <circle cx="40" cy="40" r="2.5" fill="var(--accent)" />
           </svg>
-
           <div class="digital-block">
             <span class="clock-label">Local time · 24h</span>
             <span class="clock-time tabular" id="digitalTime">--:--:--</span>
             <span class="clock-date tabular" id="digitalDate">----年--月--日</span>
           </div>
-
           <div class="weather-block">
             <span class="weather-city">北京 · 晴</span>
             <span class="weather-temp tabular">12°C</span>
@@ -2131,107 +890,29 @@
         </div>
       </section>
 
-      <!-- Two-Column Content Grid -->
       <div class="main-grid">
-        <!-- Left Sidebar -->
         <aside class="left-col">
           <section class="surface profile-card" aria-label="个人简介">
             <div class="profile-head">
               <div class="avatar-ring">
-                <img
-                  id="profileAvatarImg"
-                  src="https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/836ce0fa-8ecc-4d16-a805-6ce2860ae4ab.webp"
-                  alt="XXOXOVX 头像"
-                />
+                <img id="profileAvatarImg" src="https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/836ce0fa-8ecc-4d16-a805-6ce2860ae4ab.webp" alt="XXOXOVX 头像" />
               </div>
               <div class="profile-name" id="profileNameEl">XXOXOVX</div>
             </div>
             <div class="info-list">
-              <div class="info-row">
-                <span class="info-key">姓名</span>
-                <span class="info-val" id="infoNameVal">SoxMoox</span>
-              </div>
-              <div class="info-row">
-                <span class="info-key">性别</span>
-                <span class="info-val" id="infoGenderVal">男</span>
-              </div>
-              <div class="info-row">
-                <span class="info-key">年龄</span>
-                <span class="info-val tabular" id="infoAgeVal">27 岁</span>
-              </div>
+              <div class="info-row"><span class="info-key">姓名</span><span class="info-val" id="infoNameVal">SoxMoox</span></div>
+              <div class="info-row"><span class="info-key">性别</span><span class="info-val" id="infoGenderVal">男</span></div>
+              <div class="info-row"><span class="info-key">年龄</span><span class="info-val tabular" id="infoAgeVal">27 岁</span></div>
             </div>
           </section>
 
           <section class="surface contact-card" aria-label="联系方式">
             <h2 class="card-heading">联系方式</h2>
-            <div class="contact-list" id="contactListEl">
-              <div class="contact-row">
-                <span class="contact-left">QQ</span>
-                <button
-                  class="tactile-btn copy-btn contact-view-btn"
-                  type="button"
-                  data-title="QQ 联系方式"
-                  data-label="QQ 号码"
-                  data-value="10086001"
-                  data-url="tencent://message/?uin=10086001&Site=&Menu=yes"
-                  data-qr="https://qm.qq.com/q/10086001"
-                >查看</button>
-              </div>
-              <div class="contact-row">
-                <span class="contact-left">WeChat</span>
-                <button
-                  class="tactile-btn copy-btn contact-view-btn"
-                  type="button"
-                  data-title="WeChat 联系方式"
-                  data-label="微信号"
-                  data-value="soxmoox_wx"
-                  data-url="weixin://"
-                  data-qr="soxmoox_wx"
-                >查看</button>
-              </div>
-              <div class="contact-row">
-                <span class="contact-left">Telegram</span>
-                <button
-                  class="tactile-btn copy-btn contact-view-btn"
-                  type="button"
-                  data-title="Telegram 联系方式"
-                  data-label="用户名"
-                  data-value="@xxoxovx"
-                  data-url="https://t.me/xxoxovx"
-                  data-qr="https://t.me/xxoxovx"
-                >查看</button>
-              </div>
-              <div class="contact-row">
-                <span class="contact-left">Twitter / X</span>
-                <button
-                  class="tactile-btn copy-btn contact-view-btn"
-                  type="button"
-                  data-title="Twitter / X 联系方式"
-                  data-label="账号"
-                  data-value="@xxoxovx_dev"
-                  data-url="https://x.com/xxoxovx_dev"
-                  data-qr="https://x.com/xxoxovx_dev"
-                >查看</button>
-              </div>
-              <div class="contact-row">
-                <span class="contact-left">Email</span>
-                <button
-                  class="tactile-btn copy-btn contact-view-btn"
-                  type="button"
-                  data-title="Email 联系方式"
-                  data-label="邮箱"
-                  data-value="hi@xxoxovx.dev"
-                  data-url="mailto:hi@xxoxovx.dev"
-                  data-qr="mailto:hi@xxoxovx.dev"
-                >查看</button>
-              </div>
-            </div>
+            <div class="contact-list" id="contactListEl"></div>
           </section>
         </aside>
 
-        <!-- Right Main Area -->
         <main class="right-col">
-          <!-- Category Pills -->
           <nav class="surface category-bar" id="categoryBar" aria-label="文章分类">
             <div class="cat-indicator" id="catIndicator" aria-hidden="true"></div>
             <button class="cat-pill is-active" type="button" data-filter="all">最新动态</button>
@@ -2241,26 +922,18 @@
             <button class="cat-pill" type="button" data-filter="网络自动化">网络自动化</button>
           </nav>
 
-          <!-- Main Content Surface -->
           <section class="surface content-panel">
             <div class="panel-header">
-              <div class="panel-title">
-                <span id="panelTitleText">最新动态 · 最新发布</span>
-              </div>
+              <div class="panel-title"><span id="panelTitleText">最新动态 · 最新发布</span></div>
               <span class="panel-count tabular" id="panelCountText">共 4 篇</span>
             </div>
 
-            <!-- Featured Carousel: Left text + Right visual -->
-            <div class="carousel-box" id="carouselBox" tabindex="0" role="button" aria-label="查看精选文章">
+            <div class="carousel-box" id="carouselBox" tabindex="0" role="button">
               <button class="tactile-btn carousel-nav carousel-prev" id="carouselPrev" type="button" aria-label="上一篇精选">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="m15 18-6-6 6-6"></path>
-                </svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
               </button>
               <button class="tactile-btn carousel-nav carousel-next" id="carouselNext" type="button" aria-label="下一篇精选">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="m9 18 6-6-6-6"></path>
-                </svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
               </button>
 
               <div class="carousel-content">
@@ -2285,13 +958,11 @@
               </div>
             </div>
 
-            <!-- 2-Column Article Cards Grid -->
             <div class="articles-grid" id="articlesGrid"></div>
           </section>
         </main>
       </div>
 
-      <!-- Bottom Footer Card -->
       <footer class="surface footer-card">
         <div class="footer-top">
           <div>
@@ -2311,19 +982,15 @@
       </footer>
     </div>
 
-    <!-- Standalone Article Reader Page -->
+    <!-- Reader -->
     <main class="reader-page" id="readerPage" aria-live="polite">
       <div class="reader-shell">
         <article class="surface reader-container">
           <div class="reader-top">
             <button class="tactile-btn reader-back" id="backToListBtn" type="button">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="m12 19-7-7 7-7"></path>
-                <path d="M19 12H5"></path>
-              </svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
               <span>返回首页</span>
             </button>
-
             <div class="article-card-footer tabular" style="border-top: none; padding-top: 0; gap: 14px;">
               <span class="article-tag" id="readerCat"></span>
               <span id="readerDate"></span>
@@ -2340,12 +1007,10 @@
               <h2 class="comments-title">评论交流</h2>
               <span class="comments-count tabular" id="commentsCount">0 条评论</span>
             </div>
-
             <div class="comment-guest-bar" id="commentGuestBar">
               <span>登录后可参与文章评论与交流</span>
               <button class="tactile-btn copy-btn" id="commentLoginBtn" type="button">登录 / 注册</button>
             </div>
-
             <form class="comment-form" id="commentForm" style="display: none;">
               <textarea class="comment-textarea" id="commentInput" placeholder="写下你的想法..." maxlength="1000" required></textarea>
               <div class="comment-form-actions">
@@ -2353,18 +1018,15 @@
                 <button class="modal-btn modal-btn-primary" style="padding: 0 18px; height: 34px;" id="commentSubmitBtn" type="submit">发表评论</button>
               </div>
             </form>
-
             <div class="comment-list" id="commentList"></div>
           </section>
 
-          <nav class="reader-pager" aria-label="文章上下篇切换">
+          <nav class="reader-pager">
             <button class="tactile-btn pager-btn" id="prevPostBtn" type="button">
-              <span class="pager-dir">← 上一篇</span>
-              <span class="pager-title" id="prevPostTitle"></span>
+              <span class="pager-dir">← 上一篇</span><span class="pager-title" id="prevPostTitle"></span>
             </button>
             <button class="tactile-btn pager-btn is-next" id="nextPostBtn" type="button">
-              <span class="pager-dir">下一篇 →</span>
-              <span class="pager-title" id="nextPostTitle"></span>
+              <span class="pager-dir">下一篇 →</span><span class="pager-title" id="nextPostTitle"></span>
             </button>
           </nav>
         </article>
@@ -2377,28 +1039,18 @@
     </main>
   </div>
 
-  <!-- Contact Detail Modal -->
-  <div class="contact-modal-backdrop" id="contactModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle" aria-hidden="true">
-    <div class="contact-modal" id="contactModal">
+  <!-- Contact Modal -->
+  <div class="contact-modal-backdrop" id="contactModalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="contact-modal">
       <div class="modal-head">
-        <h3 class="modal-title" id="contactModalTitle">QQ 联系方式</h3>
-        <button class="tactile-btn modal-close" id="contactModalClose" type="button" aria-label="关闭弹窗">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M18 6 6 18"></path>
-            <path d="m6 6 12 12"></path>
-          </svg>
-        </button>
+        <h3 class="modal-title" id="contactModalTitle">联系方式</h3>
+        <button class="tactile-btn modal-close" id="contactModalClose" type="button" aria-label="关闭弹窗">✕</button>
       </div>
-
-      <div class="qr-frame">
-        <img id="contactModalQr" src="" alt="联系方式二维码" />
-      </div>
-
+      <div class="qr-frame"><img id="contactModalQr" src="" alt="联系方式二维码" /></div>
       <div class="modal-account-box">
-        <span class="modal-account-label" id="contactModalLabel">QQ 号码</span>
-        <span class="modal-account-value tabular" id="contactModalValue">10086001</span>
+        <span class="modal-account-label" id="contactModalLabel">账号</span>
+        <span class="modal-account-value tabular" id="contactModalValue">-</span>
       </div>
-
       <div class="modal-actions">
         <button class="tactile-btn modal-btn" id="contactModalCopy" type="button">复制</button>
         <a class="modal-btn modal-btn-primary" id="contactModalJump" href="#" target="_blank" rel="noopener noreferrer">一键跳转</a>
@@ -2406,128 +1058,76 @@
     </div>
   </div>
 
-  <!-- Auth Modal (Login / Register / Profile) -->
-  <div class="contact-modal-backdrop" id="authModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="authModalTitle" aria-hidden="true">
-    <div class="contact-modal" id="authModal">
+  <!-- Auth Modal -->
+  <div class="contact-modal-backdrop" id="authModalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="contact-modal">
       <div class="modal-head">
         <h3 class="modal-title" id="authModalTitle">账号登录</h3>
-        <button class="tactile-btn modal-close" id="authModalClose" type="button" aria-label="关闭弹窗">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M18 6 6 18"></path>
-            <path d="m6 6 12 12"></path>
-          </svg>
-        </button>
+        <button class="tactile-btn modal-close" id="authModalClose" type="button" aria-label="关闭弹窗">✕</button>
       </div>
-
-      <!-- Guest View -->
       <div id="authGuestView" style="width: 100%; display: flex; flex-direction: column; gap: 14px;">
-        <div class="auth-tabs" role="tablist" aria-label="登录与注册切换">
-          <button class="auth-tab is-active" id="tabLogin" type="button" role="tab" aria-selected="true">登录</button>
-          <button class="auth-tab" id="tabRegister" type="button" role="tab" aria-selected="false">注册</button>
+        <div class="auth-tabs" role="tablist">
+          <button class="auth-tab is-active" id="tabLogin" type="button">登录</button>
+          <button class="auth-tab" id="tabRegister" type="button">注册</button>
         </div>
-
         <form class="auth-form" id="authForm" novalidate>
-          <div class="auth-field">
-            <label for="authUsername">用户名</label>
-            <input class="auth-input" id="authUsername" type="text" placeholder="请输入用户名" autocomplete="username" required />
-          </div>
-          <div class="auth-field" id="authEmailField" style="display: none;">
-            <label for="authEmail">邮箱</label>
-            <input class="auth-input" id="authEmail" type="email" placeholder="name@example.com" autocomplete="email" />
-          </div>
-          <div class="auth-field" id="authInviteField" style="display: none;">
-            <label for="authInviteCode">邀请码</label>
-            <input class="auth-input" id="authInviteCode" type="text" placeholder="请输入有效邀请码" autocomplete="off" />
-          </div>
+          <div class="auth-field"><label for="authUsername">用户名</label><input class="auth-input" id="authUsername" type="text" placeholder="请输入用户名" required /></div>
+          <div class="auth-field" id="authEmailField" style="display: none;"><label for="authEmail">邮箱</label><input class="auth-input" id="authEmail" type="email" placeholder="name@example.com" /></div>
+          <div class="auth-field" id="authInviteField" style="display: none;"><label for="authInviteCode">邀请码</label><input class="auth-input" id="authInviteCode" type="text" placeholder="请输入有效邀请码" autocomplete="off" /></div>
           <div class="auth-field">
             <label for="authPassword">密码</label>
             <div class="auth-input-wrap">
-              <input class="auth-input" id="authPassword" type="password" placeholder="至少 6 位密码" autocomplete="current-password" required />
-              <button class="pwd-toggle" type="button" data-target="authPassword" aria-label="显示密码" aria-pressed="false">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-              </button>
+              <input class="auth-input" id="authPassword" type="password" placeholder="至少 6 位密码" required />
+              <button class="pwd-toggle" type="button" data-target="authPassword" aria-label="显示密码">👁</button>
             </div>
           </div>
           <div class="auth-field" id="authConfirmField" style="display: none;">
             <label for="authConfirm">确认密码</label>
             <div class="auth-input-wrap">
-              <input class="auth-input" id="authConfirm" type="password" placeholder="再次输入密码" autocomplete="new-password" />
-              <button class="pwd-toggle" type="button" data-target="authConfirm" aria-label="显示密码" aria-pressed="false">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-              </button>
+              <input class="auth-input" id="authConfirm" type="password" placeholder="再次输入密码" />
+              <button class="pwd-toggle" type="button" data-target="authConfirm" aria-label="显示密码">👁</button>
             </div>
           </div>
           <div class="auth-error" id="authError" role="alert"></div>
           <button class="modal-btn modal-btn-primary auth-submit" id="authSubmitBtn" type="submit">登录</button>
         </form>
       </div>
-
-      <!-- Logged-in View -->
       <div class="auth-profile-box" id="authUserView" style="display: none;">
-        <div class="modal-account-box">
-          <span class="modal-account-label">当前账号</span>
-          <span class="modal-account-value" id="authUserName">-</span>
-        </div>
-        <div class="modal-account-box">
-          <span class="modal-account-label">账号权限</span>
-          <span class="modal-account-value" id="authUserRole">普通用户</span>
-        </div>
-        <div class="modal-account-box">
-          <span class="modal-account-label">绑定邮箱</span>
-          <span class="modal-account-value" id="authUserEmail">-</span>
-        </div>
+        <div class="modal-account-box"><span class="modal-account-label">当前账号</span><span class="modal-account-value" id="authUserName">-</span></div>
+        <div class="modal-account-box"><span class="modal-account-label">账号权限</span><span class="modal-account-value" id="authUserRole">普通用户</span></div>
+        <div class="modal-account-box"><span class="modal-account-label">绑定邮箱</span><span class="modal-account-value" id="authUserEmail">-</span></div>
         <button class="tactile-btn auth-submit" id="authLogoutBtn" type="button">退出登录</button>
       </div>
     </div>
   </div>
 
-  <!-- Admin Console Modal -->
-  <div class="contact-modal-backdrop" id="adminModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle" aria-hidden="true">
-    <div class="admin-modal" id="adminModal">
+  <!-- Admin Modal -->
+  <div class="contact-modal-backdrop" id="adminModalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="admin-modal">
       <div class="modal-head">
         <div style="display: flex; align-items: center; gap: 16px;">
-          <h3 class="modal-title" id="adminModalTitle">管理后台</h3>
+          <h3 class="modal-title">管理后台</h3>
           <div class="admin-tabs" role="tablist">
-            <button class="admin-tab is-active" type="button" data-admin-tab="posts">文章管理</button>
-            <button class="admin-tab" type="button" data-admin-tab="profile">资料设置</button>
+            <button class="admin-tab is-active" type="button" data-admin-tab="posts">文章管理 (Markdown)</button>
+            <button class="admin-tab" type="button" data-admin-tab="profile">资料与二维码</button>
             <button class="admin-tab" type="button" data-admin-tab="invites">邀请码</button>
           </div>
         </div>
-        <button class="tactile-btn modal-close" id="adminModalClose" type="button" aria-label="关闭管理后台">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M18 6 6 18"></path>
-            <path d="m6 6 12 12"></path>
-          </svg>
-        </button>
+        <button class="tactile-btn modal-close" id="adminModalClose" type="button" aria-label="关闭管理后台">✕</button>
       </div>
 
       <div class="admin-body">
-        <!-- Tab 1: Posts -->
         <div class="admin-panel is-active" data-admin-panel="posts">
           <div class="admin-posts-layout">
             <div style="display: flex; flex-direction: column; gap: 10px; min-height: 0;">
               <button class="modal-btn modal-btn-primary" id="adminNewPostBtn" type="button" style="height: 34px; flex-shrink: 0;">+ 新建文章</button>
               <div class="admin-post-list" id="adminPostList"></div>
             </div>
-
             <form class="admin-editor" id="adminPostForm">
               <div class="admin-row-2">
-                <div class="auth-field">
-                  <label for="postTitleInput">文章标题</label>
-                  <input class="auth-input" id="postTitleInput" type="text" required />
-                </div>
-                <div class="auth-field">
-                  <label for="postIdInput">文章标识 (URL ID)</label>
-                  <input class="auth-input" id="postIdInput" type="text" placeholder="例如 my-new-post" required />
-                </div>
+                <div class="auth-field"><label for="postTitleInput">文章标题</label><input class="auth-input" id="postTitleInput" type="text" required /></div>
+                <div class="auth-field"><label for="postIdInput">文章标识 (URL ID)</label><input class="auth-input" id="postIdInput" type="text" required /></div>
               </div>
-
               <div class="admin-row-3">
                 <div class="auth-field">
                   <label for="postCategoryInput">分类</label>
@@ -2538,35 +1138,25 @@
                     <option value="网络自动化">网络自动化</option>
                   </select>
                 </div>
-                <div class="auth-field">
-                  <label for="postDateInput">发布日期</label>
-                  <input class="auth-input" id="postDateInput" type="date" required />
-                </div>
-                <div class="auth-field">
-                  <label for="postReadTimeInput">阅读时长</label>
-                  <input class="auth-input" id="postReadTimeInput" type="text" value="5 分钟" required />
-                </div>
+                <div class="auth-field"><label for="postDateInput">发布日期</label><input class="auth-input" id="postDateInput" type="date" required /></div>
+                <div class="auth-field"><label for="postReadTimeInput">阅读时长</label><input class="auth-input" id="postReadTimeInput" type="text" value="5 分钟" required /></div>
               </div>
-
-              <div class="auth-field">
-                <label for="postExcerptInput">文章摘要</label>
-                <input class="auth-input" id="postExcerptInput" type="text" required />
-              </div>
-
+              <div class="auth-field"><label for="postExcerptInput">文章摘要</label><input class="auth-input" id="postExcerptInput" type="text" required /></div>
               <div class="auth-field">
                 <div class="admin-toolbar">
-                  <label for="postBodyInput">正文内容（支持 HTML 段落、h2、blockquote、pre/code 与 img）</label>
+                  <label for="postBodyInput">正文内容（标准 Markdown 语法）</label>
                   <div style="display: flex; align-items: center; gap: 8px;">
                     <label style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer;">
                       <input type="checkbox" id="postFeaturedInput" /> 设为精选
                     </label>
                     <input type="file" id="postImageFileInput" accept="image/*" style="display: none;" />
-                    <button class="tactile-btn copy-btn" id="postUploadImageBtn" type="button">上传并插入图片</button>
+                    <button class="tactile-btn copy-btn" id="postUploadImageBtn" type="button">上传图片</button>
+                    <button class="tactile-btn copy-btn" id="postPreviewToggleBtn" type="button">预览效果</button>
                   </div>
                 </div>
-                <textarea class="admin-textarea" id="postBodyInput" required></textarea>
+                <textarea class="admin-textarea" id="postBodyInput" placeholder="支持 ## 二级标题、**粗体**、`代码`、```代码块```、> 引用、![图片](url)..." required></textarea>
+                <div class="reader-body admin-md-preview" id="postBodyPreview" style="display: none;"></div>
               </div>
-
               <div class="admin-toolbar" style="margin-top: auto; padding-top: 6px;">
                 <button class="tactile-btn modal-btn" id="adminDeletePostBtn" type="button" style="padding: 0 14px; height: 36px; color: #ef4444;">删除当前文章</button>
                 <button class="modal-btn modal-btn-primary" id="adminSavePostBtn" type="submit" style="padding: 0 20px; height: 36px;">保存并提交到 GitHub</button>
@@ -2575,78 +1165,44 @@
           </div>
         </div>
 
-        <!-- Tab 2: Profile -->
         <div class="admin-panel" data-admin-panel="profile">
           <form class="admin-scroll-box" id="adminProfileForm">
             <div class="admin-row-3">
-              <div class="auth-field">
-                <label for="profSiteTitle">站点名称</label>
-                <input class="auth-input" id="profSiteTitle" type="text" required />
-              </div>
-              <div class="auth-field">
-                <label for="profSiteSub">站点副标</label>
-                <input class="auth-input" id="profSiteSub" type="text" required />
-              </div>
-              <div class="auth-field">
-                <label for="profHeroKicker">Hero 标签</label>
-                <input class="auth-input" id="profHeroKicker" type="text" required />
-              </div>
+              <div class="auth-field"><label for="profSiteTitle">站点名称</label><input class="auth-input" id="profSiteTitle" type="text" required /></div>
+              <div class="auth-field"><label for="profSiteSub">站点副标</label><input class="auth-input" id="profSiteSub" type="text" required /></div>
+              <div class="auth-field"><label for="profHeroKicker">Hero 标签</label><input class="auth-input" id="profHeroKicker" type="text" required /></div>
             </div>
-
             <div class="admin-row-2">
-              <div class="auth-field">
-                <label for="profHeroTitle">Hero 主标题</label>
-                <input class="auth-input" id="profHeroTitle" type="text" required />
-              </div>
-              <div class="auth-field">
-                <label for="profName">个人昵称</label>
-                <input class="auth-input" id="profName" type="text" required />
-              </div>
+              <div class="auth-field"><label for="profHeroTitle">Hero 主标题</label><input class="auth-input" id="profHeroTitle" type="text" required /></div>
+              <div class="auth-field"><label for="profName">个人昵称</label><input class="auth-input" id="profName" type="text" required /></div>
             </div>
-
-            <div class="auth-field">
-              <label for="profHeroSub">Hero 简介</label>
-              <input class="auth-input" id="profHeroSub" type="text" required />
-            </div>
-
+            <div class="auth-field"><label for="profHeroSub">Hero 简介</label><input class="auth-input" id="profHeroSub" type="text" required /></div>
             <div class="admin-row-3">
-              <div class="auth-field">
-                <label for="profInfoName">姓名</label>
-                <input class="auth-input" id="profInfoName" type="text" required />
-              </div>
-              <div class="auth-field">
-                <label for="profInfoGender">性别</label>
-                <input class="auth-input" id="profInfoGender" type="text" required />
-              </div>
-              <div class="auth-field">
-                <label for="profInfoAge">年龄</label>
-                <input class="auth-input" id="profInfoAge" type="text" required />
-              </div>
+              <div class="auth-field"><label for="profInfoName">姓名</label><input class="auth-input" id="profInfoName" type="text" required /></div>
+              <div class="auth-field"><label for="profInfoGender">性别</label><input class="auth-input" id="profInfoGender" type="text" required /></div>
+              <div class="auth-field"><label for="profInfoAge">年龄</label><input class="auth-input" id="profInfoAge" type="text" required /></div>
             </div>
-
             <div class="auth-field">
               <div class="admin-toolbar">
                 <label for="profAvatar">头像图片链接</label>
                 <div>
                   <input type="file" id="profAvatarFileInput" accept="image/*" style="display: none;" />
-                  <button class="tactile-btn copy-btn" id="profAvatarUploadBtn" type="button">上传新头像到 GitHub</button>
+                  <button class="tactile-btn copy-btn" id="profAvatarUploadBtn" type="button">上传新头像</button>
                 </div>
               </div>
               <input class="auth-input" id="profAvatar" type="text" required />
             </div>
-
             <div class="auth-field">
-              <label>联系方式账号配置</label>
+              <label>联系方式与二维码配置（支持直接上传微信/QQ真实二维码图片，留空则按链接自动生成）</label>
+              <input type="file" id="contactQrFileInput" accept="image/*" style="display: none;" />
               <div id="adminContactsEditor" style="display: flex; flex-direction: column; gap: 8px;"></div>
             </div>
-
             <div style="display: flex; justify-content: flex-end; padding-top: 6px;">
               <button class="modal-btn modal-btn-primary" id="adminSaveProfileBtn" type="submit" style="padding: 0 20px; height: 36px;">保存资料并提交到 GitHub</button>
             </div>
           </form>
         </div>
 
-        <!-- Tab 3: Invites -->
         <div class="admin-panel" data-admin-panel="invites">
           <div class="admin-scroll-box">
             <div style="display: flex; align-items: center; gap: 10px;">
@@ -2676,13 +1232,7 @@
         readTime: "6 分钟",
         featured: true,
         excerpt: "精选兼具美学质感与高效实用性的 Web 应用程序与设计灵感库。",
-        body: `
-          <p>日常工作里，一个界面安静、打开即用的小工具往往比庞大臃肿的套件更顺手。这里整理了近期长期留在书签栏里的几个轻量站点。</p>
-          <h2>排版与颜色参考</h2>
-          <p>在选色时尽量避免高饱和渐变，优先采用低饱和莫兰迪中性色阶，让内容本身承担视觉重心。</p>
-          <h2>离线优先的剪贴板与文档</h2>
-          <p>支持本地存储与键盘快捷键（如 <code>Ctrl + K</code>）的 Web 工具，在多设备切换时能显著减少上下文打断。</p>
-        `
+        body: "日常工作里，一个界面安静、打开即用的小工具往往比庞大臃肿的套件更顺手。这里整理了近期长期留在书签栏里的几个轻量站点。\n\n## 排版与颜色参考\n\n在选色时尽量避免高饱和渐变，优先采用低饱和莫兰迪中性色阶，让内容本身承担视觉重心。\n\n## 离线优先的剪贴板与文档\n\n支持本地存储与键盘快捷键（如 `Ctrl + K`）的 Web 工具，在多设备切换时能显著减少上下文打断。"
       },
       {
         id: "nanopi-r5c",
@@ -2692,18 +1242,7 @@
         readTime: "10 分钟",
         featured: true,
         excerpt: "基于 Rockchip armv8 架构的固件编译、apk 软件源配置及旁路分流经验总结。",
-        body: `
-          <p>NanoPi R5C 配备双 2.5G 网口与 RK3568B2 处理器，功耗控制极佳，非常适合作为家庭网络的旁路网关。</p>
-          <h2>精简固件包选择</h2>
-          <p>只保留核心网络转发、DNS 缓存与基础监控组件，避免在有限的 eMMC 空间里堆积不必要的后台服务。</p>
-          <div class="code-wrap">
-            <button class="tactile-btn code-copy" type="button">复制</button>
-            <pre><code>opkg update && opkg install luci-app-sqm nftables</code></pre>
-          </div>
-          <blockquote>把复杂度隔离在旁路设备里，主路由永远保持最小可用配置。</blockquote>
-          <h2>分流规则维护</h2>
-          <p>通过定时任务每周自动拉取并校验规则集，配合 <code>nftables</code> 实现低延迟的本地直连与分流。</p>
-        `
+        body: "NanoPi R5C 配备双 2.5G 网口与 RK3568B2 处理器，功耗控制极佳，非常适合作为家庭网络的旁路网关。\n\n## 精简固件包选择\n\n只保留核心网络转发、DNS 缓存与基础监控组件，避免在有限的 eMMC 空间里堆积不必要的后台服务。\n\n```bash\nopkg update && opkg install luci-app-sqm nftables\n```\n\n> 把复杂度隔离在旁路设备里，主路由永远保持最小可用配置。\n\n## 分流规则维护\n\n通过定时任务每周自动拉取并校验规则集，配合 `nftables` 实现低延迟的本地直连与分流。"
       },
       {
         id: "serverless-cron",
@@ -2713,19 +1252,7 @@
         readTime: "8 分钟",
         featured: false,
         excerpt: "把域名证书监测、RSS 汇总与状态巡检迁移到无服务器定时任务，零机器维护成本。",
-        body: `
-          <p>以前为了跑几个每天只执行一次的 Python 巡检脚本，总要维护一台最低配的 VPS。迁到无服务器定时触发器后，几乎不再需要关心系统更新。</p>
-          <h2>单文件无状态设计</h2>
-          <p>将密钥放入环境变量，把巡检结果通过 Webhook 推送到常用通讯工具，整个函数不超过 80 行。</p>
-          <div class="code-wrap">
-            <button class="tactile-btn code-copy" type="button">复制</button>
-            <pre><code>export default {
-  async scheduled(event, env) {
-    await checkCertificates(env.DOMAINS);
-  }
-};</code></pre>
-          </div>
-        `
+        body: "以前为了跑几个每天只执行一次的 Python 巡检脚本，总要维护一台最低配的 VPS。迁到无服务器定时触发器后，几乎不再需要关心系统更新。\n\n## 单文件无状态设计\n\n将密钥放入环境变量，把巡检结果通过 Webhook 推送到常用通讯工具，整个函数不超过 80 行。\n\n```javascript\nexport default {\n  async scheduled(event, env) {\n    await checkCertificates(env.DOMAINS);\n  }\n};\n```"
       },
       {
         id: "mac-minimal-apps",
@@ -2735,473 +1262,10 @@
         readTime: "5 分钟",
         featured: false,
         excerpt: "克制、无常驻弹窗的终端、窗口管理与本地笔记工具整理。",
-        body: `
-          <p>挑选桌面软件的唯一标准：启动足够快、不弹推广、配置文件能用纯文本备份。</p>
-          <h2>终端与编辑器</h2>
-          <p>统一使用等宽字体与一致的配色方案，让切换窗口时的视觉落差降到最低。</p>
-        `
+        body: "挑选桌面软件的唯一标准：启动足够快、不弹推广、配置文件能用纯文本备份。\n\n## 终端与编辑器\n\n统一使用等宽字体与一致的配色方案，让切换窗口时的视觉落差降到最低。"
       }
     ];
 
-    const state = {
-      filter: "all",
-      query: "",
-      carouselIndex: 0,
-      currentPostId: null
-    };
-
-    const htmlEl = document.documentElement;
-    const searchInput = document.getElementById("searchInput");
-    const catPills = document.querySelectorAll(".cat-pill");
-    const swatchBtns = document.querySelectorAll(".swatch-btn");
-    const appearanceWrap = document.getElementById("appearanceWrap");
-    const appearanceBtn = document.getElementById("appearanceBtn");
-    const appearancePopover = document.getElementById("appearancePopover");
-    const modeBtns = document.querySelectorAll("[data-theme-mode]");
-    const themeIcon = document.getElementById("themeIcon");
-    const themeText = document.getElementById("themeText");
-    const articlesGrid = document.getElementById("articlesGrid");
-    const panelTitleText = document.getElementById("panelTitleText");
-    const panelCountText = document.getElementById("panelCountText");
-    const listView = document.getElementById("homePage");
-    const readerView = document.getElementById("readerPage");
-    const progressBar = document.getElementById("progressBar");
-
-    const CHECK_ICON =
-      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
-
-    // Live Clock
-    function updateClock() {
-      const now = new Date();
-      const pad = (n) => String(n).padStart(2, "0");
-      const h = now.getHours();
-      const m = now.getMinutes();
-      const s = now.getSeconds();
-
-      document.getElementById("digitalTime").textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
-      const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-      document.getElementById("digitalDate").textContent =
-        `${now.getFullYear()}年${pad(now.getMonth() + 1)}月${pad(now.getDate())}日 ${weekdays[now.getDay()]}`;
-
-      document.getElementById("secondHand").setAttribute("transform", `rotate(${s * 6} 40 40)`);
-      document.getElementById("minuteHand").setAttribute("transform", `rotate(${m * 6 + s * 0.1} 40 40)`);
-      document.getElementById("hourHand").setAttribute("transform", `rotate(${(h % 12) * 30 + m * 0.5} 40 40)`);
-    }
-
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    // Theme (Light / Dark / System) & Apple Palette Popover
-    const VALID_PALETTES = new Set(["blue", "purple", "green", "orange"]);
-    const VALID_MODES = new Set(["light", "dark", "system"]);
-    const systemDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    let currentThemeMode = "system";
-
-    function resolveTheme(mode) {
-      if (mode === "system") return systemDarkQuery.matches ? "dark" : "light";
-      return mode;
-    }
-
-    function applyThemeMode(mode) {
-      currentThemeMode = VALID_MODES.has(mode) ? mode : "system";
-      localStorage.setItem("xxoxovx-theme", currentThemeMode);
-      const effective = resolveTheme(currentThemeMode);
-      htmlEl.setAttribute("data-theme", effective);
-
-      modeBtns.forEach((btn) => btn.classList.toggle("is-active", btn.dataset.themeMode === currentThemeMode));
-
-      if (currentThemeMode === "system") {
-        themeText.textContent = "跟随系统";
-        themeIcon.innerHTML =
-          '<rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path>';
-      } else if (effective === "dark") {
-        themeText.textContent = "深色";
-        themeIcon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>';
-      } else {
-        themeText.textContent = "浅色";
-        themeIcon.innerHTML =
-          '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>';
-      }
-    }
-
-    function applyPalette(palette) {
-      const nextPalette = VALID_PALETTES.has(palette) ? palette : "blue";
-      htmlEl.setAttribute("data-palette", nextPalette);
-      localStorage.setItem("xxoxovx-palette", nextPalette);
-      swatchBtns.forEach((btn) => btn.classList.toggle("is-active", btn.dataset.palette === nextPalette));
-    }
-
-    function setAppearanceOpen(open) {
-      appearancePopover.classList.toggle("is-open", open);
-      appearanceBtn.setAttribute("aria-expanded", String(open));
-    }
-
-    const savedTheme = localStorage.getItem("xxoxovx-theme");
-    applyThemeMode(savedTheme || "system");
-    const savedPalette = localStorage.getItem("xxoxovx-palette");
-    if (savedPalette) applyPalette(savedPalette);
-
-    systemDarkQuery.addEventListener("change", () => {
-      if (currentThemeMode === "system") applyThemeMode("system");
-    });
-
-    appearanceBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      setAppearanceOpen(!appearancePopover.classList.contains("is-open"));
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!appearanceWrap.contains(e.target)) setAppearanceOpen(false);
-    });
-
-    modeBtns.forEach((btn) => {
-      btn.addEventListener("click", () => applyThemeMode(btn.dataset.themeMode));
-    });
-
-    swatchBtns.forEach((btn) => {
-      btn.addEventListener("click", () => applyPalette(btn.dataset.palette));
-    });
-
-    // Featured Carousel + Auto-play (pauses on hover)
-    function getFeaturedPosts() {
-      const list = POSTS.filter((p) => p.featured);
-      return list.length > 0 ? list : POSTS.slice(0, 1);
-    }
-    const carouselBox = document.getElementById("carouselBox");
-    let carouselPaused = false;
-
-    function renderCarousel(dir = 0) {
-      const featuredPosts = getFeaturedPosts();
-      if (featuredPosts.length === 0) return;
-      if (state.carouselIndex >= featuredPosts.length) state.carouselIndex = 0;
-      const post = featuredPosts[state.carouselIndex];
-      if (dir !== 0) {
-        carouselBox.style.setProperty("--slide-dir", dir > 0 ? "12px" : "-12px");
-        carouselBox.classList.remove("is-switching");
-        void carouselBox.offsetWidth;
-        carouselBox.classList.add("is-switching");
-      }
-      document.getElementById("carouselBadge").textContent = `精选手记 · ${state.carouselIndex + 1} / ${featuredPosts.length}`;
-      document.getElementById("carouselTitle").textContent = post.title;
-      document.getElementById("carouselDesc").textContent = post.excerpt;
-      document.getElementById("carouselDate").textContent = post.date;
-    }
-
-    carouselBox.addEventListener("mouseenter", () => { carouselPaused = true; });
-    carouselBox.addEventListener("mouseleave", () => { carouselPaused = false; });
-
-    setInterval(() => {
-      const featuredPosts = getFeaturedPosts();
-      if (!carouselPaused && !state.currentPostId && featuredPosts.length > 1) {
-        state.carouselIndex = (state.carouselIndex + 1) % featuredPosts.length;
-        renderCarousel(1);
-      }
-    }, 5000);
-
-    document.getElementById("carouselPrev").addEventListener("click", (e) => {
-      e.stopPropagation();
-      const featuredPosts = getFeaturedPosts();
-      if (!featuredPosts.length) return;
-      state.carouselIndex = (state.carouselIndex - 1 + featuredPosts.length) % featuredPosts.length;
-      renderCarousel(-1);
-    });
-
-    document.getElementById("carouselNext").addEventListener("click", (e) => {
-      e.stopPropagation();
-      const featuredPosts = getFeaturedPosts();
-      if (!featuredPosts.length) return;
-      state.carouselIndex = (state.carouselIndex + 1) % featuredPosts.length;
-      renderCarousel(1);
-    });
-
-    document.getElementById("carouselBox").addEventListener("click", () => {
-      const featuredPosts = getFeaturedPosts();
-      if (featuredPosts[state.carouselIndex]) {
-        openReader(featuredPosts[state.carouselIndex].id);
-      }
-    });
-
-    // Articles Grid
-    let isFirstRender = true;
-    function renderArticles() {
-      const q = state.query.trim().toLowerCase();
-      const filtered = POSTS.filter((post) => {
-        const matchCat = state.filter === "all" || post.category === state.filter;
-        const matchQuery =
-          !q ||
-          post.title.toLowerCase().includes(q) ||
-          post.excerpt.toLowerCase().includes(q) ||
-          post.category.toLowerCase().includes(q);
-        return matchCat && matchQuery;
-      });
-
-      panelTitleText.textContent = state.filter === "all" ? "最新动态 · 最新发布" : state.filter;
-      panelCountText.textContent = `共 ${filtered.length} 篇`;
-
-      if (filtered.length === 0) {
-        articlesGrid.innerHTML = '<div class="empty-state">没有找到匹配的文章</div>';
-        isFirstRender = false;
-        return;
-      }
-
-      const baseDelay = isFirstRender ? 260 : 0;
-      isFirstRender = false;
-
-      articlesGrid.innerHTML = filtered
-        .map(
-          (post, idx) => `
-          <article class="article-card is-entering" style="animation-delay: ${baseDelay + Math.min(idx, 5) * 45}ms" data-id="${post.id}" tabindex="0" role="button">
-            <div>
-              <h3 class="article-card-title">${post.title}</h3>
-              <p class="article-card-desc">${post.excerpt}</p>
-            </div>
-            <div class="article-card-footer tabular">
-              <span class="article-tag">${post.category}</span>
-              <span>${post.date}</span>
-            </div>
-          </article>
-        `
-        )
-        .join("");
-
-      articlesGrid.querySelectorAll(".article-card").forEach((card) => {
-        const open = () => openReader(card.dataset.id);
-        card.addEventListener("click", open);
-        card.addEventListener("mousemove", (e) => {
-          const rect = card.getBoundingClientRect();
-          card.style.setProperty("--mx", `${e.clientX - rect.left}px`);
-          card.style.setProperty("--my", `${e.clientY - rect.top}px`);
-        });
-        card.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            open();
-          }
-        });
-      });
-    }
-
-    // Global minimal toast + Morphing copy button feedback
-    const toastEl = document.getElementById("toast");
-    let toastTimer = null;
-    function showToast(msg) {
-      toastEl.textContent = msg;
-      toastEl.classList.add("is-visible");
-      if (toastTimer) clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toastEl.classList.remove("is-visible");
-      }, 1600);
-    }
-
-    function triggerCopyFeedback(btn, text) {
-      if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
-      showToast(`已复制：${text}`);
-      if (btn.dataset.timer) clearTimeout(Number(btn.dataset.timer));
-      const orig = btn.dataset.orig || btn.textContent;
-      btn.dataset.orig = orig;
-      btn.classList.add("is-copied");
-      btn.innerHTML = `${CHECK_ICON}<span>已复制</span>`;
-      const timer = setTimeout(() => {
-        btn.classList.remove("is-copied");
-        btn.textContent = orig;
-      }, 1500);
-      btn.dataset.timer = String(timer);
-    }
-
-    // Reader View with smooth page transitions
-    let transitionTimer = null;
-    function populateReader(post, idx) {
-      document.getElementById("readerCat").textContent = post.category;
-      document.getElementById("readerDate").textContent = post.date;
-      document.getElementById("readerTime").textContent = post.readTime;
-      document.getElementById("readerTitle").textContent = post.title;
-      document.getElementById("readerLead").textContent = post.excerpt;
-
-      const bodyEl = document.getElementById("readerBody");
-      bodyEl.innerHTML = post.body;
-      bodyEl.querySelectorAll(".code-copy").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          triggerCopyFeedback(btn, btn.nextElementSibling.textContent);
-        });
-      });
-      loadComments(post.id);
-
-      // Build floating TOC from h2 headings
-      const headings = bodyEl.querySelectorAll("h2");
-      const tocAside = document.getElementById("tocAside");
-      const tocList = document.getElementById("tocList");
-      if (headings.length > 0) {
-        tocAside.style.display = "";
-        tocList.innerHTML = Array.from(headings)
-          .map((h, i) => {
-            const hid = `sec-${i}`;
-            h.id = hid;
-            return `<a class="toc-link" href="#${hid}" data-target="${hid}">${h.textContent}</a>`;
-          })
-          .join("");
-      } else {
-        tocAside.style.display = "none";
-      }
-
-      const prevBtn = document.getElementById("prevPostBtn");
-      const nextBtn = document.getElementById("nextPostBtn");
-      const prevPost = idx > 0 ? POSTS[idx - 1] : null;
-      const nextPost = idx < POSTS.length - 1 ? POSTS[idx + 1] : null;
-
-      if (prevPost) {
-        prevBtn.style.visibility = "visible";
-        document.getElementById("prevPostTitle").textContent = prevPost.title;
-        prevBtn.onclick = () => openReader(prevPost.id);
-      } else {
-        prevBtn.style.visibility = "hidden";
-      }
-
-      if (nextPost) {
-        nextBtn.style.visibility = "visible";
-        document.getElementById("nextPostTitle").textContent = nextPost.title;
-        nextBtn.onclick = () => openReader(nextPost.id);
-      } else {
-        nextBtn.style.visibility = "hidden";
-      }
-    }
-
-    function openReader(id) {
-      const idx = POSTS.findIndex((p) => p.id === id);
-      if (idx === -1) return;
-      const post = POSTS[idx];
-      const wasOpen = Boolean(state.currentPostId);
-      state.currentPostId = id;
-      if (transitionTimer) clearTimeout(transitionTimer);
-
-      if (wasOpen) {
-        readerView.classList.add("is-leaving");
-        transitionTimer = setTimeout(() => {
-          readerView.classList.remove("is-leaving", "is-open");
-          void readerView.offsetWidth;
-          populateReader(post, idx);
-          readerView.classList.add("is-open");
-          window.scrollTo({ top: 0, behavior: "instant" });
-          updateProgress();
-        }, 150);
-        return;
-      }
-
-      listView.classList.remove("is-entering");
-      listView.classList.add("is-leaving");
-      transitionTimer = setTimeout(() => {
-        listView.classList.add("is-hidden");
-        listView.classList.remove("is-leaving");
-        populateReader(post, idx);
-        readerView.classList.add("is-open");
-        window.scrollTo({ top: 0, behavior: "instant" });
-        updateProgress();
-      }, 150);
-    }
-
-    function closeReader() {
-      if (!state.currentPostId) return;
-      state.currentPostId = null;
-      if (transitionTimer) clearTimeout(transitionTimer);
-
-      readerView.classList.add("is-leaving");
-      transitionTimer = setTimeout(() => {
-        readerView.classList.remove("is-open", "is-leaving");
-        listView.classList.remove("is-hidden");
-        void listView.offsetWidth;
-        listView.classList.add("is-entering");
-        progressBar.style.width = "0%";
-        window.scrollTo({ top: 0, behavior: "instant" });
-      }, 150);
-    }
-
-    document.getElementById("backToListBtn").addEventListener("click", closeReader);
-    document.getElementById("brandBtn").addEventListener("click", closeReader);
-
-    const catIndicator = document.getElementById("catIndicator");
-    function moveCatIndicator(pill) {
-      if (!pill || !catIndicator) return;
-      catIndicator.style.width = `${pill.offsetWidth}px`;
-      catIndicator.style.transform = `translateX(${pill.offsetLeft}px)`;
-    }
-
-    catPills.forEach((pill) => {
-      pill.addEventListener("click", () => {
-        catPills.forEach((p) => p.classList.remove("is-active"));
-        pill.classList.add("is-active");
-        moveCatIndicator(pill);
-        state.filter = pill.dataset.filter;
-        if (state.currentPostId) closeReader();
-        renderArticles();
-      });
-    });
-
-    window.addEventListener("resize", () => {
-      const activePill = document.querySelector(".cat-pill.is-active");
-      moveCatIndicator(activePill);
-    });
-
-    requestAnimationFrame(() => {
-      moveCatIndicator(document.querySelector(".cat-pill.is-active"));
-    });
-
-    searchInput.addEventListener("input", (e) => {
-      state.query = e.target.value;
-      if (state.currentPostId) closeReader();
-      renderArticles();
-    });
-
-    // Contact Modal
-    const contactModalBackdrop = document.getElementById("contactModalBackdrop");
-    const contactModalTitle = document.getElementById("contactModalTitle");
-    const contactModalQr = document.getElementById("contactModalQr");
-    const contactModalLabel = document.getElementById("contactModalLabel");
-    const contactModalValue = document.getElementById("contactModalValue");
-    const contactModalCopy = document.getElementById("contactModalCopy");
-    const contactModalJump = document.getElementById("contactModalJump");
-    const contactModalClose = document.getElementById("contactModalClose");
-    let activeContactValue = "";
-
-    const FALLBACK_QR_SVG =
-      "data:image/svg+xml;utf8," +
-      encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none"><rect width="120" height="120" fill="#ffffff"/><rect x="12" y="12" width="32" height="32" rx="4" stroke="#1d1d1f" stroke-width="6"/><rect x="22" y="22" width="12" height="12" rx="2" fill="#1d1d1f"/><rect x="76" y="12" width="32" height="32" rx="4" stroke="#1d1d1f" stroke-width="6"/><rect x="86" y="22" width="12" height="12" rx="2" fill="#1d1d1f"/><rect x="12" y="76" width="32" height="32" rx="4" stroke="#1d1d1f" stroke-width="6"/><rect x="22" y="86" width="12" height="12" rx="2" fill="#1d1d1f"/><path d="M56 16h8v16h-8zm0 24h12v12H56zm16 12h12v12H72zm-24 8h16v12H48zm32 8h28v12H80zm-24 20h16v20H56zm24 12h20v8H80z" fill="#1d1d1f"/></svg>`
-      );
-
-    function openContactModal(btn) {
-      const { title, label, value, url, qr } = btn.dataset;
-      activeContactValue = value || "";
-      contactModalTitle.textContent = title || "联系方式";
-      contactModalLabel.textContent = label || "账号";
-      contactModalValue.textContent = activeContactValue;
-      contactModalJump.href = url || "#";
-      contactModalQr.onerror = () => {
-        contactModalQr.onerror = null;
-        contactModalQr.src = FALLBACK_QR_SVG;
-      };
-      contactModalQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=6&data=${encodeURIComponent(qr || activeContactValue)}`;
-      contactModalCopy.classList.remove("is-copied");
-      contactModalCopy.textContent = "复制";
-      contactModalBackdrop.classList.add("is-open");
-      contactModalBackdrop.setAttribute("aria-hidden", "false");
-    }
-
-    function closeContactModal() {
-      contactModalBackdrop.classList.remove("is-open");
-      contactModalBackdrop.setAttribute("aria-hidden", "true");
-    }
-
-    document.getElementById("contactListEl").addEventListener("click", (e) => {
-      const btn = e.target.closest(".contact-view-btn");
-      if (btn) openContactModal(btn);
-    });
-
-    contactModalCopy.addEventListener("click", () => {
-      if (activeContactValue) triggerCopyFeedback(contactModalCopy, activeContactValue);
-    });
-
-    contactModalClose.addEventListener("click", closeContactModal);
-
-    // Profile & Content Sync (GitHub-backed via Cloudflare Pages Functions)
     let currentProfile = {
       siteTitle: "XXOXOVX · Blog",
       siteSub: "Notes & Tech",
@@ -3220,14 +1284,165 @@
       ]
     };
 
+    const state = { filter: "all", query: "", carouselIndex: 0, currentPostId: null };
+    const htmlEl = document.documentElement;
+    const searchInput = document.getElementById("searchInput");
+    const catPills = document.querySelectorAll(".cat-pill");
+    const swatchBtns = document.querySelectorAll(".swatch-btn");
+    const appearanceWrap = document.getElementById("appearanceWrap");
+    const appearanceBtn = document.getElementById("appearanceBtn");
+    const appearancePopover = document.getElementById("appearancePopover");
+    const modeBtns = document.querySelectorAll("[data-theme-mode]");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeText = document.getElementById("themeText");
+    const articlesGrid = document.getElementById("articlesGrid");
+    const panelTitleText = document.getElementById("panelTitleText");
+    const panelCountText = document.getElementById("panelCountText");
+    const listView = document.getElementById("homePage");
+    const readerView = document.getElementById("readerPage");
+    const progressBar = document.getElementById("progressBar");
+    const CHECK_ICON = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
     function escapeHtml(str) {
-      return String(str || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
+      return String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
 
+    // Markdown Renderer (supports legacy HTML + clean Markdown)
+    function renderMarkdown(raw) {
+      const text = String(raw || "").trim();
+      if (!text) return "";
+      if (/^<(p|h[1-6]|div|blockquote|ul|ol|pre|img)\b/i.test(text)) {
+        return text;
+      }
+
+      const codeBlocks = [];
+      let processed = text.replace(/```([a-zA-Z0-9_-]*)\r?\n([\s\S]*?)```/g, (_, lang, code) => {
+        const idx = codeBlocks.length;
+        const safeCode = escapeHtml(code.replace(/\r?\n$/, ""));
+        codeBlocks.push(
+          `<div class="code-wrap"><button class="tactile-btn code-copy" type="button">复制</button><pre><code>${safeCode}</code></pre></div>`
+        );
+        return `@@CODEBLOCK_${idx}@@`;
+      });
+
+      function inlineMd(s) {
+        let out = escapeHtml(s);
+        out = out.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, src) => `<img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" />`);
+        out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${label}</a>`);
+        out = out.replace(/`([^`]+)`/g, (_, code) => `<code>${code}</code>`);
+        out = out.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+        out = out.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+        out = out.replace(/~~([^~]+)~~/g, "<del>$1</del>");
+        return out;
+      }
+
+      const lines = processed.split(/\r?\n/);
+      const html = [];
+      let inUl = false;
+      let inOl = false;
+
+      const closeLists = () => {
+        if (inUl) { html.push("</ul>"); inUl = false; }
+        if (inOl) { html.push("</ol>"); inOl = false; }
+      };
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) { closeLists(); continue; }
+
+        const cbMatch = trimmed.match(/^@@CODEBLOCK_(\d+)@@$/);
+        if (cbMatch) { closeLists(); html.push(codeBlocks[Number(cbMatch[1])]); continue; }
+
+        if (/^---+$/.test(trimmed) || /^\*\*\*+$/.test(trimmed)) { closeLists(); html.push("<hr />"); continue; }
+        if (trimmed.startsWith("### ")) { closeLists(); html.push(`<h3>${inlineMd(trimmed.slice(4))}</h3>`); continue; }
+        if (trimmed.startsWith("## ")) { closeLists(); html.push(`<h2>${inlineMd(trimmed.slice(3))}</h2>`); continue; }
+        if (trimmed.startsWith("# ")) { closeLists(); html.push(`<h1>${inlineMd(trimmed.slice(2))}</h1>`); continue; }
+        if (trimmed.startsWith("> ")) { closeLists(); html.push(`<blockquote>${inlineMd(trimmed.slice(2))}</blockquote>`); continue; }
+
+        if (/^[-*+]\s+/.test(trimmed)) {
+          if (inOl) { html.push("</ol>"); inOl = false; }
+          if (!inUl) { html.push("<ul>"); inUl = true; }
+          html.push(`<li>${inlineMd(trimmed.replace(/^[-*+]\s+/, ""))}</li>`);
+          continue;
+        }
+        if (/^\d+\.\s+/.test(trimmed)) {
+          if (inUl) { html.push("</ul>"); inUl = false; }
+          if (!inOl) { html.push("<ol>"); inOl = true; }
+          html.push(`<li>${inlineMd(trimmed.replace(/^\d+\.\s+/, ""))}</li>`);
+          continue;
+        }
+
+        closeLists();
+        html.push(`<p>${inlineMd(trimmed)}</p>`);
+      }
+      closeLists();
+      return html.join("\n");
+    }
+
+    // Clock
+    function updateClock() {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+      document.getElementById("digitalTime").textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+      const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+      document.getElementById("digitalDate").textContent = `${now.getFullYear()}年${pad(now.getMonth() + 1)}月${pad(now.getDate())}日 ${weekdays[now.getDay()]}`;
+      document.getElementById("hourHand").setAttribute("transform", `rotate(${(h % 12) * 30 + m * 0.5} 40 40)`);
+      document.getElementById("minuteHand").setAttribute("transform", `rotate(${m * 6 + s * 0.1} 40 40)`);
+      document.getElementById("secondHand").setAttribute("transform", `rotate(${s * 6} 40 40)`);
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Theme & Palette
+    const VALID_PALETTES = new Set(["blue", "purple", "green", "orange"]);
+    const VALID_MODES = new Set(["light", "dark", "system"]);
+    const systemDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    let currentThemeMode = "system";
+
+    function resolveTheme(mode) {
+      return mode === "system" ? (systemDarkQuery.matches ? "dark" : "light") : mode;
+    }
+
+    function applyThemeMode(mode) {
+      currentThemeMode = VALID_MODES.has(mode) ? mode : "system";
+      localStorage.setItem("xxoxovx-theme", currentThemeMode);
+      const effective = resolveTheme(currentThemeMode);
+      htmlEl.setAttribute("data-theme", effective);
+      modeBtns.forEach((btn) => btn.classList.toggle("is-active", btn.dataset.themeMode === currentThemeMode));
+      if (currentThemeMode === "system") {
+        themeText.textContent = "跟随系统";
+        themeIcon.innerHTML = '<rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path>';
+      } else if (effective === "dark") {
+        themeText.textContent = "深色";
+        themeIcon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>';
+      } else {
+        themeText.textContent = "浅色";
+        themeIcon.innerHTML = '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>';
+      }
+    }
+
+    function applyPalette(palette) {
+      const next = VALID_PALETTES.has(palette) ? palette : "blue";
+      htmlEl.setAttribute("data-palette", next);
+      localStorage.setItem("xxoxovx-palette", next);
+      swatchBtns.forEach((btn) => btn.classList.toggle("is-active", btn.dataset.palette === next));
+    }
+
+    function setAppearanceOpen(open) {
+      appearancePopover.classList.toggle("is-open", open);
+      appearanceBtn.setAttribute("aria-expanded", String(open));
+    }
+
+    applyThemeMode(localStorage.getItem("xxoxovx-theme") || "system");
+    if (localStorage.getItem("xxoxovx-palette")) applyPalette(localStorage.getItem("xxoxovx-palette"));
+    systemDarkQuery.addEventListener("change", () => { if (currentThemeMode === "system") applyThemeMode("system"); });
+    appearanceBtn.addEventListener("click", (e) => { e.stopPropagation(); setAppearanceOpen(!appearancePopover.classList.contains("is-open")); });
+    document.addEventListener("click", (e) => { if (!appearanceWrap.contains(e.target)) setAppearanceOpen(false); });
+    modeBtns.forEach((btn) => btn.addEventListener("click", () => applyThemeMode(btn.dataset.themeMode)));
+    swatchBtns.forEach((btn) => btn.addEventListener("click", () => applyPalette(btn.dataset.palette)));
+
+    // Profile rendering
     function applyProfile(profile) {
       if (!profile) return;
       currentProfile = profile;
@@ -3238,6 +1453,7 @@
       document.getElementById("heroTitleEl").textContent = profile.heroTitle || "";
       document.getElementById("heroSubEl").textContent = profile.heroSub || "";
       document.getElementById("profileAvatarImg").src = profile.avatar || "";
+      document.getElementById("brandLogoImg").src = profile.avatar || "";
       document.getElementById("profileNameEl").textContent = profile.profileName || "";
       document.getElementById("infoNameVal").textContent = profile.info?.name || "";
       document.getElementById("infoGenderVal").textContent = profile.info?.gender || "";
@@ -3249,15 +1465,12 @@
             (c) => `
             <div class="contact-row">
               <span class="contact-left">${escapeHtml(c.label)}</span>
-              <button
-                class="tactile-btn copy-btn contact-view-btn"
-                type="button"
-                data-title="${escapeHtml(c.modalTitle)}"
-                data-label="${escapeHtml(c.fieldLabel)}"
+              <button class="tactile-btn copy-btn contact-view-btn" type="button"
+                data-title="${escapeHtml(c.modalTitle || c.label + ' 联系方式')}"
+                data-label="${escapeHtml(c.fieldLabel || '账号')}"
                 data-value="${escapeHtml(c.value)}"
                 data-url="${escapeHtml(c.url)}"
-                data-qr="${escapeHtml(c.qr)}"
-              >查看</button>
+                data-qr="${escapeHtml(c.qr || '')}">查看</button>
             </div>`
           )
           .join("");
@@ -3265,11 +1478,282 @@
     }
 
     function updateFooterStats() {
-      const fCount = POSTS.filter((p) => p.featured).length;
       document.getElementById("footerPostCount").textContent = `${POSTS.length} 篇手记`;
-      document.getElementById("footerFeaturedCount").textContent = `${fCount} 篇精选`;
+      document.getElementById("footerFeaturedCount").textContent = `${POSTS.filter((p) => p.featured).length} 篇精选`;
     }
 
+    // Carousel & Articles
+    function getFeaturedPosts() {
+      const list = POSTS.filter((p) => p.featured);
+      return list.length > 0 ? list : POSTS.slice(0, 1);
+    }
+    const carouselBox = document.getElementById("carouselBox");
+    let carouselPaused = false;
+
+    function renderCarousel(dir = 0) {
+      const featuredPosts = getFeaturedPosts();
+      if (!featuredPosts.length) return;
+      if (state.carouselIndex >= featuredPosts.length) state.carouselIndex = 0;
+      const post = featuredPosts[state.carouselIndex];
+      if (dir !== 0) {
+        carouselBox.style.setProperty("--slide-dir", dir > 0 ? "12px" : "-12px");
+        carouselBox.classList.remove("is-switching");
+        void carouselBox.offsetWidth;
+        carouselBox.classList.add("is-switching");
+      }
+      document.getElementById("carouselBadge").textContent = `精选手记 · ${state.carouselIndex + 1} / ${featuredPosts.length}`;
+      document.getElementById("carouselTitle").textContent = post.title;
+      document.getElementById("carouselDesc").textContent = post.excerpt;
+      document.getElementById("carouselDate").textContent = post.date;
+    }
+
+    carouselBox.addEventListener("mouseenter", () => { carouselPaused = true; });
+    carouselBox.addEventListener("mouseleave", () => { carouselPaused = false; });
+    setInterval(() => {
+      const featuredPosts = getFeaturedPosts();
+      if (!carouselPaused && !state.currentPostId && featuredPosts.length > 1) {
+        state.carouselIndex = (state.carouselIndex + 1) % featuredPosts.length;
+        renderCarousel(1);
+      }
+    }, 5000);
+
+    document.getElementById("carouselPrev").addEventListener("click", (e) => {
+      e.stopPropagation();
+      const featuredPosts = getFeaturedPosts();
+      if (!featuredPosts.length) return;
+      state.carouselIndex = (state.carouselIndex - 1 + featuredPosts.length) % featuredPosts.length;
+      renderCarousel(-1);
+    });
+    document.getElementById("carouselNext").addEventListener("click", (e) => {
+      e.stopPropagation();
+      const featuredPosts = getFeaturedPosts();
+      if (!featuredPosts.length) return;
+      state.carouselIndex = (state.carouselIndex + 1) % featuredPosts.length;
+      renderCarousel(1);
+    });
+    carouselBox.addEventListener("click", () => {
+      const featuredPosts = getFeaturedPosts();
+      if (featuredPosts[state.carouselIndex]) openReader(featuredPosts[state.carouselIndex].id);
+    });
+
+    let isFirstRender = true;
+    function renderArticles() {
+      const q = state.query.trim().toLowerCase();
+      const filtered = POSTS.filter((post) => {
+        const matchCat = state.filter === "all" || post.category === state.filter;
+        const matchQuery = !q || post.title.toLowerCase().includes(q) || post.excerpt.toLowerCase().includes(q) || post.category.toLowerCase().includes(q);
+        return matchCat && matchQuery;
+      });
+      panelTitleText.textContent = state.filter === "all" ? "最新动态 · 最新发布" : state.filter;
+      panelCountText.textContent = `共 ${filtered.length} 篇`;
+
+      if (filtered.length === 0) {
+        articlesGrid.innerHTML = '<div class="empty-state">没有找到匹配的文章</div>';
+        isFirstRender = false;
+        return;
+      }
+
+      const baseDelay = isFirstRender ? 220 : 0;
+      isFirstRender = false;
+      articlesGrid.innerHTML = filtered
+        .map((post, idx) => `
+          <article class="article-card is-entering" style="animation-delay: ${baseDelay + Math.min(idx, 5) * 40}ms" data-id="${escapeHtml(post.id)}" tabindex="0" role="button">
+            <div>
+              <h3 class="article-card-title">${escapeHtml(post.title)}</h3>
+              <p class="article-card-desc">${escapeHtml(post.excerpt)}</p>
+            </div>
+            <div class="article-card-footer tabular">
+              <span class="article-tag">${escapeHtml(post.category)}</span>
+              <span>${escapeHtml(post.date)}</span>
+            </div>
+          </article>
+        `).join("");
+
+      articlesGrid.querySelectorAll(".article-card").forEach((card) => {
+        const open = () => openReader(card.dataset.id);
+        card.addEventListener("click", open);
+        card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+      });
+    }
+
+    // Toast
+    const toastEl = document.getElementById("toast");
+    let toastTimer = null;
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add("is-visible");
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove("is-visible"), 1800);
+    }
+
+    function triggerCopyFeedback(btn, text) {
+      if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
+      showToast(`已复制：${text}`);
+      if (btn.dataset.timer) clearTimeout(Number(btn.dataset.timer));
+      const orig = btn.dataset.orig || btn.textContent;
+      btn.dataset.orig = orig;
+      btn.classList.add("is-copied");
+      btn.innerHTML = `${CHECK_ICON}<span>已复制</span>`;
+      btn.dataset.timer = String(setTimeout(() => { btn.classList.remove("is-copied"); btn.textContent = orig; }, 1500));
+    }
+
+    // Reader
+    let transitionTimer = null;
+    function populateReader(post, idx) {
+      document.getElementById("readerCat").textContent = post.category;
+      document.getElementById("readerDate").textContent = post.date;
+      document.getElementById("readerTime").textContent = post.readTime;
+      document.getElementById("readerTitle").textContent = post.title;
+      document.getElementById("readerLead").textContent = post.excerpt;
+
+      const bodyEl = document.getElementById("readerBody");
+      bodyEl.innerHTML = renderMarkdown(post.body);
+      bodyEl.querySelectorAll(".code-copy").forEach((btn) => {
+        btn.addEventListener("click", () => triggerCopyFeedback(btn, btn.nextElementSibling.textContent));
+      });
+
+      const headings = bodyEl.querySelectorAll("h2");
+      const tocAside = document.getElementById("tocAside");
+      const tocList = document.getElementById("tocList");
+      if (headings.length > 0) {
+        tocAside.style.display = "";
+        tocList.innerHTML = Array.from(headings).map((h, i) => {
+          const hid = `sec-${i}`;
+          h.id = hid;
+          return `<a class="toc-link" href="#${hid}" data-target="${hid}">${escapeHtml(h.textContent)}</a>`;
+        }).join("");
+      } else {
+        tocAside.style.display = "none";
+        tocList.innerHTML = "";
+      }
+
+      const prevBtn = document.getElementById("prevPostBtn");
+      const nextBtn = document.getElementById("nextPostBtn");
+      const prevPost = POSTS[idx - 1];
+      const nextPost = POSTS[idx + 1];
+      prevBtn.disabled = !prevPost;
+      prevBtn.style.opacity = prevPost ? "1" : "0.4";
+      document.getElementById("prevPostTitle").textContent = prevPost ? prevPost.title : "已是最新";
+      prevBtn.onclick = () => prevPost && openReader(prevPost.id);
+      nextBtn.disabled = !nextPost;
+      nextBtn.style.opacity = nextPost ? "1" : "0.4";
+      document.getElementById("nextPostTitle").textContent = nextPost ? nextPost.title : "已是最后一篇";
+      nextBtn.onclick = () => nextPost && openReader(nextPost.id);
+
+      loadComments(post.id);
+    }
+
+    function openReader(id) {
+      const idx = POSTS.findIndex((p) => p.id === id);
+      if (idx === -1) return;
+      const post = POSTS[idx];
+      const wasOpen = state.currentPostId !== null;
+      state.currentPostId = id;
+      if (transitionTimer) clearTimeout(transitionTimer);
+      populateReader(post, idx);
+      if (wasOpen) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        updateProgress();
+        return;
+      }
+      listView.classList.add("is-leaving");
+      transitionTimer = setTimeout(() => {
+        listView.classList.add("is-hidden");
+        listView.classList.remove("is-leaving");
+        readerView.classList.add("is-open");
+        window.scrollTo({ top: 0, behavior: "instant" });
+        updateProgress();
+      }, 170);
+    }
+
+    function closeReader() {
+      if (!state.currentPostId) return;
+      state.currentPostId = null;
+      if (transitionTimer) clearTimeout(transitionTimer);
+      readerView.classList.add("is-leaving");
+      transitionTimer = setTimeout(() => {
+        readerView.classList.remove("is-open", "is-leaving");
+        listView.classList.remove("is-hidden");
+        listView.classList.add("is-entering");
+        setTimeout(() => listView.classList.remove("is-entering"), 260);
+        window.scrollTo({ top: 0, behavior: "instant" });
+        updateProgress();
+        requestAnimationFrame(() => moveCatIndicator(document.querySelector(".cat-pill.is-active")));
+      }, 170);
+    }
+
+    document.getElementById("backToListBtn").addEventListener("click", closeReader);
+    document.getElementById("brandBtn").addEventListener("click", () => { if (state.currentPostId) closeReader(); });
+    document.getElementById("brandBtn").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (state.currentPostId) closeReader(); } });
+
+    const catIndicator = document.getElementById("catIndicator");
+    function moveCatIndicator(pill) {
+      if (!pill) return;
+      catIndicator.style.width = `${pill.offsetWidth}px`;
+      catIndicator.style.transform = `translateX(${pill.offsetLeft}px)`;
+    }
+    catPills.forEach((pill) => {
+      pill.addEventListener("click", () => {
+        catPills.forEach((p) => p.classList.remove("is-active"));
+        pill.classList.add("is-active");
+        moveCatIndicator(pill);
+        state.filter = pill.dataset.filter;
+        renderArticles();
+      });
+    });
+    requestAnimationFrame(() => moveCatIndicator(document.querySelector(".cat-pill.is-active")));
+    searchInput.addEventListener("input", () => { state.query = searchInput.value; renderArticles(); });
+
+    // Contact Modal (Supports uploaded QR image OR auto-generated QR)
+    const contactModalBackdrop = document.getElementById("contactModalBackdrop");
+    const contactModalTitle = document.getElementById("contactModalTitle");
+    const contactModalQr = document.getElementById("contactModalQr");
+    const contactModalLabel = document.getElementById("contactModalLabel");
+    const contactModalValue = document.getElementById("contactModalValue");
+    const contactModalCopy = document.getElementById("contactModalCopy");
+    const contactModalJump = document.getElementById("contactModalJump");
+    let activeContactValue = "";
+
+    const FALLBACK_QR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none"><rect width="120" height="120" fill="#ffffff"/><rect x="12" y="12" width="32" height="32" rx="4" stroke="#1d1d1f" stroke-width="6"/><rect x="22" y="22" width="12" height="12" rx="2" fill="#1d1d1f"/><rect x="76" y="12" width="32" height="32" rx="4" stroke="#1d1d1f" stroke-width="6"/><rect x="86" y="22" width="12" height="12" rx="2" fill="#1d1d1f"/><rect x="12" y="76" width="32" height="32" rx="4" stroke="#1d1d1f" stroke-width="6"/><rect x="22" y="86" width="12" height="12" rx="2" fill="#1d1d1f"/></svg>`);
+
+    function isImageSource(str) {
+      return /^(\/api\/image\?|data:image\/)/i.test(str) || /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(str);
+    }
+
+    function openContactModal(btn) {
+      const { title, label, value, url, qr } = btn.dataset;
+      activeContactValue = value || "";
+      contactModalTitle.textContent = title || "联系方式";
+      contactModalLabel.textContent = label || "账号";
+      contactModalValue.textContent = activeContactValue;
+      contactModalJump.href = url || "#";
+      contactModalQr.onerror = () => { contactModalQr.onerror = null; contactModalQr.src = FALLBACK_QR_SVG; };
+
+      const qrSource = (qr || "").trim();
+      if (isImageSource(qrSource)) {
+        contactModalQr.src = qrSource;
+      } else {
+        contactModalQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=6&data=${encodeURIComponent(qrSource || activeContactValue)}`;
+      }
+      contactModalCopy.classList.remove("is-copied");
+      contactModalCopy.textContent = "复制";
+      contactModalBackdrop.classList.add("is-open");
+      contactModalBackdrop.setAttribute("aria-hidden", "false");
+    }
+
+    function closeContactModal() {
+      contactModalBackdrop.classList.remove("is-open");
+      contactModalBackdrop.setAttribute("aria-hidden", "true");
+    }
+
+    document.getElementById("contactListEl").addEventListener("click", (e) => {
+      const btn = e.target.closest(".contact-view-btn");
+      if (btn) openContactModal(btn);
+    });
+    contactModalCopy.addEventListener("click", () => { if (activeContactValue) triggerCopyFeedback(contactModalCopy, activeContactValue); });
+    document.getElementById("contactModalClose").addEventListener("click", closeContactModal);
+
+    // Server Sync
     async function syncContentFromServer() {
       try {
         const res = await fetch("/api/content");
@@ -3281,22 +1765,17 @@
           renderArticles();
           updateFooterStats();
         }
-        if (data.profile) {
-          applyProfile(data.profile);
-        }
-      } catch {
-        // Fallback to built-in data when opened as local static file
-      }
+        if (data.profile) applyProfile(data.profile);
+      } catch {}
     }
 
-    // Auth System (Cloudflare D1 + Session Cookie + Invite Code)
+    // Auth
     let currentUser = null;
     const authTriggerBtn = document.getElementById("authTriggerBtn");
     const authTriggerText = document.getElementById("authTriggerText");
     const adminTriggerBtn = document.getElementById("adminTriggerBtn");
     const authModalBackdrop = document.getElementById("authModalBackdrop");
     const authModalTitle = document.getElementById("authModalTitle");
-    const authModalClose = document.getElementById("authModalClose");
     const authGuestView = document.getElementById("authGuestView");
     const authUserView = document.getElementById("authUserView");
     const tabLogin = document.getElementById("tabLogin");
@@ -3312,16 +1791,11 @@
     const authConfirm = document.getElementById("authConfirm");
     const authError = document.getElementById("authError");
     const authSubmitBtn = document.getElementById("authSubmitBtn");
-    const authUserName = document.getElementById("authUserName");
-    const authUserRole = document.getElementById("authUserRole");
-    const authUserEmail = document.getElementById("authUserEmail");
-    const authLogoutBtn = document.getElementById("authLogoutBtn");
     let authMode = "login";
 
     function syncAuthUI() {
       const commentGuestBar = document.getElementById("commentGuestBar");
       const commentForm = document.getElementById("commentForm");
-
       if (currentUser) {
         authTriggerText.textContent = currentUser.username;
         authTriggerBtn.classList.add("is-logged-in");
@@ -3329,9 +1803,9 @@
         authGuestView.style.display = "none";
         authUserView.style.display = "flex";
         authModalTitle.textContent = "账号信息";
-        authUserName.textContent = currentUser.username;
-        authUserRole.textContent = currentUser.role === "admin" ? "管理员" : "普通用户";
-        authUserEmail.textContent = currentUser.email || "未填写";
+        document.getElementById("authUserName").textContent = currentUser.username;
+        document.getElementById("authUserRole").textContent = currentUser.role === "admin" ? "管理员" : "普通用户";
+        document.getElementById("authUserEmail").textContent = currentUser.email || "未填写";
         if (commentGuestBar) commentGuestBar.style.display = "none";
         if (commentForm) commentForm.style.display = "flex";
       } else {
@@ -3353,73 +1827,44 @@
         const data = await res.json();
         currentUser = data.user || null;
         syncAuthUI();
-      } catch {
-        // Ignore offline fallback
-      }
-    }
-
-    const EYE_OPEN_SVG =
-      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
-    const EYE_OFF_SVG =
-      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" y1="2" x2="22" y2="22"></line></svg>';
-
-    function setPasswordVisible(btn, visible) {
-      const input = document.getElementById(btn.dataset.target);
-      if (!input) return;
-      input.type = visible ? "text" : "password";
-      btn.innerHTML = visible ? EYE_OFF_SVG : EYE_OPEN_SVG;
-      btn.setAttribute("aria-label", visible ? "隐藏密码" : "显示密码");
-      btn.setAttribute("aria-pressed", String(visible));
-    }
-
-    function resetPasswordVisibility() {
-      document.querySelectorAll(".pwd-toggle").forEach((btn) => setPasswordVisible(btn, false));
+      } catch {}
     }
 
     document.querySelectorAll(".pwd-toggle").forEach((btn) => {
       btn.addEventListener("click", () => {
         const input = document.getElementById(btn.dataset.target);
-        if (input) setPasswordVisible(btn, input.type === "password");
+        if (input) input.type = input.type === "password" ? "text" : "password";
       });
     });
 
     function switchAuthMode(mode) {
       authMode = mode;
-      const isRegister = mode === "register";
-      tabLogin.classList.toggle("is-active", !isRegister);
-      tabRegister.classList.toggle("is-active", isRegister);
-      tabLogin.setAttribute("aria-selected", String(!isRegister));
-      tabRegister.setAttribute("aria-selected", String(isRegister));
-      authEmailField.style.display = isRegister ? "flex" : "none";
-      authInviteField.style.display = isRegister ? "flex" : "none";
-      authConfirmField.style.display = isRegister ? "flex" : "none";
-      authPassword.setAttribute("autocomplete", isRegister ? "new-password" : "current-password");
-      authSubmitBtn.textContent = isRegister ? "验证邀请码并注册" : "登录";
-      authModalTitle.textContent = isRegister ? "邀请码注册" : "账号登录";
+      const isReg = mode === "register";
+      tabLogin.classList.toggle("is-active", !isReg);
+      tabRegister.classList.toggle("is-active", isReg);
+      authEmailField.style.display = isReg ? "flex" : "none";
+      authInviteField.style.display = isReg ? "flex" : "none";
+      authConfirmField.style.display = isReg ? "flex" : "none";
+      authSubmitBtn.textContent = isReg ? "验证邀请码并注册" : "登录";
+      authModalTitle.textContent = isReg ? "邀请码注册" : "账号登录";
       authError.textContent = "";
-      resetPasswordVisibility();
     }
 
     function openAuthModal() {
       setAppearanceOpen(false);
       authError.textContent = "";
-      resetPasswordVisibility();
       syncAuthUI();
       authModalBackdrop.classList.add("is-open");
       authModalBackdrop.setAttribute("aria-hidden", "false");
-      if (!currentUser) {
-        setTimeout(() => authUsername.focus(), 60);
-      }
     }
 
     function closeAuthModal() {
       authModalBackdrop.classList.remove("is-open");
       authModalBackdrop.setAttribute("aria-hidden", "true");
-      resetPasswordVisibility();
     }
 
     authTriggerBtn.addEventListener("click", openAuthModal);
-    authModalClose.addEventListener("click", closeAuthModal);
+    document.getElementById("authModalClose").addEventListener("click", closeAuthModal);
     tabLogin.addEventListener("click", () => switchAuthMode("login"));
     tabRegister.addEventListener("click", () => switchAuthMode("register"));
     document.getElementById("commentLoginBtn").addEventListener("click", openAuthModal);
@@ -3434,18 +1879,9 @@
       const confirm = authConfirm.value;
 
       if (authMode === "register") {
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          authError.textContent = "请输入有效的邮箱地址";
-          return;
-        }
-        if (!inviteCode) {
-          authError.textContent = "请输入邀请码";
-          return;
-        }
-        if (password !== confirm) {
-          authError.textContent = "两次输入的密码不一致";
-          return;
-        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { authError.textContent = "请输入有效的邮箱地址"; return; }
+        if (!inviteCode) { authError.textContent = "请输入邀请码"; return; }
+        if (password !== confirm) { authError.textContent = "两次输入的密码不一致"; return; }
       }
 
       authSubmitBtn.disabled = true;
@@ -3453,19 +1889,10 @@
         const res = await fetch("/api/auth", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: authMode,
-            username,
-            email,
-            inviteCode,
-            password,
-          }),
+          body: JSON.stringify({ action: authMode, username, email, inviteCode, password }),
         });
         const data = await res.json();
-        if (!res.ok) {
-          authError.textContent = data.error || "操作失败，请重试";
-          return;
-        }
+        if (!res.ok) { authError.textContent = data.error || "操作失败"; return; }
         currentUser = data.user;
         syncAuthUI();
         authForm.reset();
@@ -3479,14 +1906,8 @@
       }
     });
 
-    authLogoutBtn.addEventListener("click", async () => {
-      try {
-        await fetch("/api/auth", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "logout" }),
-        });
-      } catch {}
+    document.getElementById("authLogoutBtn").addEventListener("click", async () => {
+      try { await fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "logout" }) }); } catch {}
       currentUser = null;
       syncAuthUI();
       switchAuthMode("login");
@@ -3495,7 +1916,7 @@
       if (state.currentPostId) loadComments(state.currentPostId);
     });
 
-    // Comments System
+    // Comments
     const commentListEl = document.getElementById("commentList");
     const commentsCountEl = document.getElementById("commentsCount");
     const commentFormEl = document.getElementById("commentForm");
@@ -3520,26 +1941,23 @@
           commentListEl.innerHTML = '<div class="empty-state" style="padding: 16px;">暂无评论，来抢个沙发吧</div>';
           return;
         }
-        commentListEl.innerHTML = list
-          .map((c) => {
-            const canDel = currentUser && (currentUser.role === "admin" || currentUser.id === c.user_id);
-            return `
-              <div class="comment-item" data-comment-id="${c.id}">
-                <div class="comment-meta">
-                  <span class="comment-author">${escapeHtml(c.username)}</span>
-                  <div class="comment-right">
-                    <span>${formatIsoTime(c.created_at)}</span>
-                    ${canDel ? `<button class="comment-del-btn" type="button" data-del-comment="${c.id}">删除</button>` : ""}
-                  </div>
+        commentListEl.innerHTML = list.map((c) => {
+          const canDel = currentUser && (currentUser.role === "admin" || currentUser.id === c.user_id);
+          return `
+            <div class="comment-item">
+              <div class="comment-meta">
+                <span class="comment-author">${escapeHtml(c.username)}</span>
+                <div class="comment-right">
+                  <span>${formatIsoTime(c.created_at)}</span>
+                  ${canDel ? `<button class="comment-del-btn" type="button" data-del-comment="${c.id}">删除</button>` : ""}
                 </div>
-                <p class="comment-content">${escapeHtml(c.content)}</p>
               </div>
-            `;
-          })
-          .join("");
+              <p class="comment-content">${escapeHtml(c.content)}</p>
+            </div>`;
+        }).join("");
       } catch {
         commentsCountEl.textContent = "0 条评论";
-        commentListEl.innerHTML = '<div class="empty-state" style="padding: 16px;">评论服务未连接（部署到 Cloudflare 后可用）</div>';
+        commentListEl.innerHTML = '<div class="empty-state" style="padding: 16px;">评论服务未连接</div>';
       }
     }
 
@@ -3557,10 +1975,7 @@
           body: JSON.stringify({ postId: state.currentPostId, content }),
         });
         const data = await res.json();
-        if (!res.ok) {
-          showToast(data.error || "发表评论失败");
-          return;
-        }
+        if (!res.ok) { showToast(data.error || "发表评论失败"); return; }
         commentInputEl.value = "";
         showToast("评论已发表");
         loadComments(state.currentPostId);
@@ -3574,49 +1989,54 @@
     commentListEl.addEventListener("click", async (e) => {
       const delBtn = e.target.closest("[data-del-comment]");
       if (!delBtn) return;
-      const id = delBtn.dataset.delComment;
-      try {
-        const res = await fetch(`/api/comments?id=${encodeURIComponent(id)}`, { method: "DELETE" });
-        if (!res.ok) {
-          const data = await res.json().catch(() => ({}));
-          showToast(data.error || "删除失败");
-          return;
-        }
-        showToast("评论已删除");
-        loadComments(state.currentPostId);
-      } catch {
-        showToast("删除失败");
-      }
+      const res = await fetch(`/api/comments?id=${encodeURIComponent(delBtn.dataset.delComment)}`, { method: "DELETE" });
+      if (res.ok) { showToast("评论已删除"); loadComments(state.currentPostId); }
     });
 
-    // Admin Console (Posts, Images -> GitHub, Profile, Invites)
+    // Admin Console
     const adminModalBackdrop = document.getElementById("adminModalBackdrop");
-    const adminModalClose = document.getElementById("adminModalClose");
     const adminTabs = document.querySelectorAll("[data-admin-tab]");
     const adminPanels = document.querySelectorAll("[data-admin-panel]");
     const adminPostListEl = document.getElementById("adminPostList");
+    const postBodyInput = document.getElementById("postBodyInput");
+    const postBodyPreview = document.getElementById("postBodyPreview");
+    const postPreviewToggleBtn = document.getElementById("postPreviewToggleBtn");
     let editingPostId = null;
+    let isPreviewMode = false;
+    let pendingQrIdx = null;
 
     function switchAdminTab(tabName) {
       adminTabs.forEach((t) => t.classList.toggle("is-active", t.dataset.adminTab === tabName));
       adminPanels.forEach((p) => p.classList.toggle("is-active", p.dataset.adminPanel === tabName));
       if (tabName === "invites") loadAdminInvites();
     }
-
     adminTabs.forEach((t) => t.addEventListener("click", () => switchAdminTab(t.dataset.adminTab)));
 
+    function setMarkdownPreview(preview) {
+      isPreviewMode = preview;
+      if (preview) {
+        postBodyPreview.innerHTML = renderMarkdown(postBodyInput.value);
+        postBodyInput.style.display = "none";
+        postBodyPreview.style.display = "block";
+        postPreviewToggleBtn.textContent = "返回编辑";
+      } else {
+        postBodyInput.style.display = "block";
+        postBodyPreview.style.display = "none";
+        postPreviewToggleBtn.textContent = "预览效果";
+      }
+    }
+    postPreviewToggleBtn.addEventListener("click", () => setMarkdownPreview(!isPreviewMode));
+
     function renderAdminPostList() {
-      adminPostListEl.innerHTML = POSTS.map(
-        (p) => `
-          <button type="button" class="admin-post-item ${p.id === editingPostId ? "is-active" : ""}" data-edit-post="${escapeHtml(p.id)}">
-            <span class="admin-post-item-title">${escapeHtml(p.title)}</span>
-            <span class="admin-post-item-meta">${escapeHtml(p.category)} · ${escapeHtml(p.date)}</span>
-          </button>
-        `
-      ).join("");
+      adminPostListEl.innerHTML = POSTS.map((p) => `
+        <button type="button" class="admin-post-item ${p.id === editingPostId ? "is-active" : ""}" data-edit-post="${escapeHtml(p.id)}">
+          <span class="admin-post-item-title">${escapeHtml(p.title)}</span>
+          <span class="admin-post-item-meta">${escapeHtml(p.category)} · ${escapeHtml(p.date)}</span>
+        </button>`).join("");
     }
 
     function fillPostEditor(post) {
+      setMarkdownPreview(false);
       if (!post) {
         editingPostId = null;
         document.getElementById("postTitleInput").value = "";
@@ -3625,7 +2045,7 @@
         document.getElementById("postDateInput").value = new Date().toISOString().slice(0, 10);
         document.getElementById("postReadTimeInput").value = "5 分钟";
         document.getElementById("postExcerptInput").value = "";
-        document.getElementById("postBodyInput").value = "<p>在这里开始撰写正文...</p>";
+        postBodyInput.value = "## 小节标题\n\n在这里开始用 **Markdown** 写作...\n";
         document.getElementById("postFeaturedInput").checked = false;
         document.getElementById("adminDeletePostBtn").style.visibility = "hidden";
       } else {
@@ -3636,7 +2056,7 @@
         document.getElementById("postDateInput").value = post.date;
         document.getElementById("postReadTimeInput").value = post.readTime;
         document.getElementById("postExcerptInput").value = post.excerpt;
-        document.getElementById("postBodyInput").value = post.body;
+        postBodyInput.value = post.body;
         document.getElementById("postFeaturedInput").checked = Boolean(post.featured);
         document.getElementById("adminDeletePostBtn").style.visibility = "visible";
       }
@@ -3655,17 +2075,14 @@
       document.getElementById("profInfoAge").value = currentProfile.info?.age || "";
       document.getElementById("profAvatar").value = currentProfile.avatar || "";
 
-      const contactsBox = document.getElementById("adminContactsEditor");
-      contactsBox.innerHTML = (currentProfile.contacts || [])
-        .map(
-          (c, idx) => `
-          <div class="admin-row-3" data-contact-idx="${idx}">
-            <input class="auth-input" data-ckey="label" value="${escapeHtml(c.label)}" placeholder="名称" />
-            <input class="auth-input" data-ckey="value" value="${escapeHtml(c.value)}" placeholder="账号" />
-            <input class="auth-input" data-ckey="url" value="${escapeHtml(c.url)}" placeholder="跳转链接" />
-          </div>`
-        )
-        .join("");
+      document.getElementById("adminContactsEditor").innerHTML = (currentProfile.contacts || []).map((c, idx) => `
+        <div class="admin-contact-row" data-contact-idx="${idx}">
+          <input class="auth-input" data-ckey="label" value="${escapeHtml(c.label)}" placeholder="名称" />
+          <input class="auth-input" data-ckey="value" value="${escapeHtml(c.value)}" placeholder="账号" />
+          <input class="auth-input" data-ckey="url" value="${escapeHtml(c.url)}" placeholder="跳转链接" />
+          <input class="auth-input" data-ckey="qr" value="${escapeHtml(c.qr || '')}" placeholder="二维码图片URL或文本" />
+          <button class="tactile-btn copy-btn" type="button" data-upload-qr="${idx}" style="height: 36px; white-space: nowrap;">上传二维码</button>
+        </div>`).join("");
     }
 
     function openAdminModal() {
@@ -3676,25 +2093,20 @@
       adminModalBackdrop.classList.add("is-open");
       adminModalBackdrop.setAttribute("aria-hidden", "false");
     }
-
     function closeAdminModal() {
       adminModalBackdrop.classList.remove("is-open");
       adminModalBackdrop.setAttribute("aria-hidden", "true");
     }
 
     adminTriggerBtn.addEventListener("click", openAdminModal);
-    adminModalClose.addEventListener("click", closeAdminModal);
-
+    document.getElementById("adminModalClose").addEventListener("click", closeAdminModal);
     adminPostListEl.addEventListener("click", (e) => {
       const item = e.target.closest("[data-edit-post]");
-      if (!item) return;
-      const found = POSTS.find((p) => p.id === item.dataset.editPost);
-      if (found) fillPostEditor(found);
+      if (item) fillPostEditor(POSTS.find((p) => p.id === item.dataset.editPost));
     });
-
     document.getElementById("adminNewPostBtn").addEventListener("click", () => fillPostEditor(null));
 
-    async function uploadImageToGitHub(file) {
+    async function uploadImageFile(file) {
       const dataUrl = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result);
@@ -3708,24 +2120,21 @@
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "图片上传失败");
-      return data.url;
+      return data;
     }
 
-    document.getElementById("postUploadImageBtn").addEventListener("click", () => {
-      document.getElementById("postImageFileInput").click();
-    });
-
+    document.getElementById("postUploadImageBtn").addEventListener("click", () => document.getElementById("postImageFileInput").click());
     document.getElementById("postImageFileInput").addEventListener("change", async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
-      showToast("正在上传图片到 GitHub...");
+      showToast("正在上传图片...");
       try {
-        const url = await uploadImageToGitHub(file);
-        const ta = document.getElementById("postBodyInput");
-        const snippet = `\n<img src="${url}" alt="${escapeHtml(file.name)}" />\n`;
-        const start = ta.selectionStart ?? ta.value.length;
-        ta.value = ta.value.slice(0, start) + snippet + ta.value.slice(start);
-        showToast("图片已上传并插入正文");
+        const res = await uploadImageFile(file);
+        const snippet = `\n![${file.name.replace(/[\[\]]/g, "")}](${res.url})\n`;
+        const start = postBodyInput.selectionStart ?? postBodyInput.value.length;
+        postBodyInput.value = postBodyInput.value.slice(0, start) + snippet + postBodyInput.value.slice(start);
+        if (isPreviewMode) setMarkdownPreview(true);
+        showToast(`图片已上传至 ${res.storage === "r2" ? "R2" : "GitHub"} 并插入 Markdown`);
       } catch (err) {
         showToast(err.message);
       } finally {
@@ -3733,22 +2142,43 @@
       }
     });
 
-    document.getElementById("profAvatarUploadBtn").addEventListener("click", () => {
-      document.getElementById("profAvatarFileInput").click();
-    });
-
+    document.getElementById("profAvatarUploadBtn").addEventListener("click", () => document.getElementById("profAvatarFileInput").click());
     document.getElementById("profAvatarFileInput").addEventListener("change", async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
-      showToast("正在上传头像到 GitHub...");
+      showToast("正在上传头像...");
       try {
-        const url = await uploadImageToGitHub(file);
-        document.getElementById("profAvatar").value = url;
+        const res = await uploadImageFile(file);
+        document.getElementById("profAvatar").value = res.url;
         showToast("头像上传成功，请记得点击保存资料");
       } catch (err) {
         showToast(err.message);
       } finally {
         e.target.value = "";
+      }
+    });
+
+    document.getElementById("adminContactsEditor").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-upload-qr]");
+      if (!btn) return;
+      pendingQrIdx = btn.dataset.uploadQr;
+      document.getElementById("contactQrFileInput").click();
+    });
+
+    document.getElementById("contactQrFileInput").addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (!file || pendingQrIdx === null) return;
+      showToast("正在上传二维码图片...");
+      try {
+        const res = await uploadImageFile(file);
+        const row = document.querySelector(`[data-contact-idx="${pendingQrIdx}"]`);
+        if (row) row.querySelector('[data-ckey="qr"]').value = res.url;
+        showToast("二维码已上传，请记得点击保存资料");
+      } catch (err) {
+        showToast(err.message);
+      } finally {
+        e.target.value = "";
+        pendingQrIdx = null;
       }
     });
 
@@ -3762,20 +2192,15 @@
         readTime: document.getElementById("postReadTimeInput").value.trim(),
         featured: document.getElementById("postFeaturedInput").checked,
         excerpt: document.getElementById("postExcerptInput").value.trim(),
-        body: document.getElementById("postBodyInput").value,
+        body: postBodyInput.value,
       };
-
       const nextPosts = [...POSTS];
       const idx = editingPostId ? nextPosts.findIndex((p) => p.id === editingPostId) : -1;
-      if (idx >= 0) {
-        nextPosts[idx] = newPost;
-      } else {
-        nextPosts.unshift(newPost);
-      }
+      if (idx >= 0) nextPosts[idx] = newPost;
+      else nextPosts.unshift(newPost);
 
       const btn = document.getElementById("adminSavePostBtn");
-      btn.disabled = true;
-      btn.textContent = "正在提交...";
+      btn.disabled = true; btn.textContent = "正在提交...";
       try {
         const res = await fetch("/api/content", {
           method: "POST",
@@ -3783,47 +2208,31 @@
           body: JSON.stringify({ type: "posts", posts: nextPosts }),
         });
         const data = await res.json();
-        if (!res.ok) {
-          showToast(data.error || "保存失败");
-          return;
-        }
+        if (!res.ok) { showToast(data.error || "保存失败"); return; }
         POSTS = nextPosts;
         editingPostId = newPost.id;
-        renderAdminPostList();
-        renderCarousel();
-        renderArticles();
-        updateFooterStats();
+        renderAdminPostList(); renderCarousel(); renderArticles(); updateFooterStats();
         showToast("文章已保存并提交到 GitHub");
       } catch {
-        showToast("保存失败，请检查网络或配置");
+        showToast("保存失败");
       } finally {
-        btn.disabled = false;
-        btn.textContent = "保存并提交到 GitHub";
+        btn.disabled = false; btn.textContent = "保存并提交到 GitHub";
       }
     });
 
     document.getElementById("adminDeletePostBtn").addEventListener("click", async () => {
       if (!editingPostId) return;
       const nextPosts = POSTS.filter((p) => p.id !== editingPostId);
-      try {
-        const res = await fetch("/api/content", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "posts", posts: nextPosts }),
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          showToast(data.error || "删除失败");
-          return;
-        }
+      const res = await fetch("/api/content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "posts", posts: nextPosts }),
+      });
+      if (res.ok) {
         POSTS = nextPosts;
         fillPostEditor(POSTS[0] || null);
-        renderCarousel();
-        renderArticles();
-        updateFooterStats();
+        renderCarousel(); renderArticles(); updateFooterStats();
         showToast("文章已删除并同步到 GitHub");
-      } catch {
-        showToast("删除失败");
       }
     });
 
@@ -3835,9 +2244,9 @@
         const label = row.querySelector('[data-ckey="label"]').value.trim();
         const value = row.querySelector('[data-ckey="value"]').value.trim();
         const url = row.querySelector('[data-ckey="url"]').value.trim();
-        return { ...c, label, value, url, qr: url.startsWith("http") ? url : value };
+        const qr = row.querySelector('[data-ckey="qr"]').value.trim();
+        return { ...c, label, value, url, qr: qr || (url.startsWith("http") ? url : value) };
       });
-
       const nextProfile = {
         siteTitle: document.getElementById("profSiteTitle").value.trim(),
         siteSub: document.getElementById("profSiteSub").value.trim(),
@@ -3853,10 +2262,8 @@
         },
         contacts: updatedContacts,
       };
-
       const btn = document.getElementById("adminSaveProfileBtn");
-      btn.disabled = true;
-      btn.textContent = "正在提交...";
+      btn.disabled = true; btn.textContent = "正在提交...";
       try {
         const res = await fetch("/api/content", {
           method: "POST",
@@ -3864,17 +2271,13 @@
           body: JSON.stringify({ type: "profile", profile: nextProfile }),
         });
         const data = await res.json();
-        if (!res.ok) {
-          showToast(data.error || "保存资料失败");
-          return;
-        }
+        if (!res.ok) { showToast(data.error || "保存资料失败"); return; }
         applyProfile(nextProfile);
-        showToast("资料已保存并提交到 GitHub");
+        showToast("资料与二维码已保存到 GitHub");
       } catch {
         showToast("保存失败");
       } finally {
-        btn.disabled = false;
-        btn.textContent = "保存资料并提交到 GitHub";
+        btn.disabled = false; btn.textContent = "保存资料并提交到 GitHub";
       }
     });
 
@@ -3884,31 +2287,18 @@
       try {
         const res = await fetch("/api/invites");
         const data = await res.json();
-        if (!res.ok) {
-          box.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "加载失败")}</div>`;
-          return;
-        }
+        if (!res.ok) { box.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "加载失败")}</div>`; return; }
         const invites = data.invites || [];
-        if (invites.length === 0) {
-          box.innerHTML = '<div class="empty-state" style="padding: 16px;">暂无邀请码，点击上方按钮生成一个</div>';
-          return;
-        }
-        box.innerHTML = invites
-          .map(
-            (inv) => `
-            <div class="invite-item">
-              <div>
-                <span class="invite-code">${escapeHtml(inv.code)}</span>
-                <span class="invite-status" style="margin-left: 8px;">[${inv.role === "admin" ? "管理员" : "普通用户"}]</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="invite-status">${inv.used_by ? `已由 ${escapeHtml(inv.used_by)} 使用` : "未使用"}</span>
-                <button class="tactile-btn copy-btn" type="button" data-copy-invite="${escapeHtml(inv.code)}">复制</button>
-                <button class="tactile-btn copy-btn" type="button" data-del-invite="${escapeHtml(inv.code)}" style="color:#ef4444;">删除</button>
-              </div>
-            </div>`
-          )
-          .join("");
+        if (!invites.length) { box.innerHTML = '<div class="empty-state" style="padding: 16px;">暂无邀请码</div>'; return; }
+        box.innerHTML = invites.map((inv) => `
+          <div class="invite-item">
+            <div><span class="invite-code">${escapeHtml(inv.code)}</span> <span class="invite-status">[${inv.role === "admin" ? "管理员" : "普通用户"}]</span></div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="invite-status">${inv.used_by ? `已由 ${escapeHtml(inv.used_by)} 使用` : "未使用"}</span>
+              <button class="tactile-btn copy-btn" type="button" data-copy-invite="${escapeHtml(inv.code)}">复制</button>
+              <button class="tactile-btn copy-btn" type="button" data-del-invite="${escapeHtml(inv.code)}" style="color:#ef4444;">删除</button>
+            </div>
+          </div>`).join("");
       } catch {
         box.innerHTML = '<div class="empty-state">加载失败</div>';
       }
@@ -3917,66 +2307,34 @@
     document.getElementById("adminCreateInviteBtn").addEventListener("click", async () => {
       const code = document.getElementById("inviteCustomInput").value.trim();
       const role = document.getElementById("inviteRoleSelect").value;
-      try {
-        const res = await fetch("/api/invites", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code, role }),
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          showToast(data.error || "生成失败");
-          return;
-        }
-        document.getElementById("inviteCustomInput").value = "";
-        showToast(`已生成邀请码：${data.invite.code}`);
-        loadAdminInvites();
-      } catch {
-        showToast("生成失败");
-      }
+      const res = await fetch("/api/invites", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code, role }) });
+      const data = await res.json();
+      if (res.ok) { document.getElementById("inviteCustomInput").value = ""; showToast(`已生成：${data.invite.code}`); loadAdminInvites(); }
+      else showToast(data.error || "生成失败");
     });
 
     document.getElementById("adminInviteList").addEventListener("click", async (e) => {
-      const copyBtn = e.target.closest("[data-copy-invite]");
-      if (copyBtn) {
-        triggerCopyFeedback(copyBtn, copyBtn.dataset.copyInvite);
-        return;
-      }
-      const delBtn = e.target.closest("[data-del-invite]");
-      if (delBtn) {
-        const code = delBtn.dataset.delInvite;
-        const res = await fetch(`/api/invites?code=${encodeURIComponent(code)}`, { method: "DELETE" });
-        if (res.ok) {
-          showToast("已删除邀请码");
-          loadAdminInvites();
-        }
+      const cBtn = e.target.closest("[data-copy-invite]");
+      if (cBtn) { triggerCopyFeedback(cBtn, cBtn.dataset.copyInvite); return; }
+      const dBtn = e.target.closest("[data-del-invite]");
+      if (dBtn) {
+        const res = await fetch(`/api/invites?code=${encodeURIComponent(dBtn.dataset.delInvite)}`, { method: "DELETE" });
+        if (res.ok) { showToast("已删除"); loadAdminInvites(); }
       }
     });
 
-    syncAuthUI();
-
-    // Keyboard shortcuts
     document.addEventListener("keydown", (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setAppearanceOpen(false);
-        if (adminModalBackdrop.classList.contains("is-open")) closeAdminModal();
-        if (authModalBackdrop.classList.contains("is-open")) closeAuthModal();
-        if (contactModalBackdrop.classList.contains("is-open")) closeContactModal();
+        setAppearanceOpen(false); closeAdminModal(); closeAuthModal(); closeContactModal();
         if (state.currentPostId) closeReader();
         searchInput.focus();
       } else if (e.key === "Escape") {
-        if (appearancePopover.classList.contains("is-open")) {
-          setAppearanceOpen(false);
-        } else if (adminModalBackdrop.classList.contains("is-open")) {
-          closeAdminModal();
-        } else if (authModalBackdrop.classList.contains("is-open")) {
-          closeAuthModal();
-        } else if (contactModalBackdrop.classList.contains("is-open")) {
-          closeContactModal();
-        } else if (state.currentPostId) {
-          closeReader();
-        }
+        if (appearancePopover.classList.contains("is-open")) setAppearanceOpen(false);
+        else if (adminModalBackdrop.classList.contains("is-open")) closeAdminModal();
+        else if (authModalBackdrop.classList.contains("is-open")) closeAuthModal();
+        else if (contactModalBackdrop.classList.contains("is-open")) closeContactModal();
+        else if (state.currentPostId) closeReader();
       } else if (state.currentPostId && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) {
         const idx = POSTS.findIndex((p) => p.id === state.currentPostId);
         if (e.key === "ArrowLeft" && idx > 0) openReader(POSTS[idx - 1].id);
@@ -3985,29 +2343,22 @@
     });
 
     function updateProgress() {
-      if (!state.currentPostId) {
-        progressBar.style.width = "0%";
-        return;
-      }
+      if (!state.currentPostId) { progressBar.style.width = "0%"; return; }
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const pct = docHeight > 0 ? Math.min(100, Math.max(0, (window.scrollY / docHeight) * 100)) : 0;
       progressBar.style.width = `${pct}%`;
-
       const headings = document.querySelectorAll("#readerBody h2");
       let activeId = headings[0]?.id || "";
-      headings.forEach((h) => {
-        if (h.getBoundingClientRect().top <= 120) activeId = h.id;
-      });
-      document.querySelectorAll(".toc-link").forEach((a) => {
-        a.classList.toggle("is-active", a.dataset.target === activeId);
-      });
+      headings.forEach((h) => { if (h.getBoundingClientRect().top <= 120) activeId = h.id; });
+      document.querySelectorAll(".toc-link").forEach((a) => a.classList.toggle("is-active", a.dataset.target === activeId));
     }
-
     window.addEventListener("scroll", updateProgress, { passive: true });
 
+    applyProfile(currentProfile);
     renderCarousel();
     renderArticles();
     updateFooterStats();
+    syncAuthUI();
     fetchCurrentUser();
     syncContentFromServer();
   </script>

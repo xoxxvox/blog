@@ -31,7 +31,8 @@ xxoxovx-blog/
 
 ## 存储分工说明
 
-- **GitHub 仓库**：存放前端代码、文章数据（`data/posts.json`）、个人资料（`data/profile.json`）以及上传的图片（`images/`）。
+- **GitHub 仓库**：存放前端代码、文章数据（`data/posts.json`）、个人资料（`data/profile.json`），以及未启用 R2 时的备用图片目录（`images/`）。
+- **Cloudflare R2（推荐用于图片）**：绑定变量名 `IMAGES`，专门存放后台上传的头像与文章配图（支持最大 10MB、零流量费、不撑大 Git 仓库）。
 - **Cloudflare D1 数据库**：存放用户账号（`users`）、邀请码（`invites`）、登录会话（`sessions`）与文章评论（`comments`）。
 - **Cloudflare Pages**：托管静态页面并运行 `functions/api/` 下的无服务器后端接口。
 

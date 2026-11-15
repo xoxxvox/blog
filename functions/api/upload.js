@@ -1,7 +1,16 @@
 import { json, errorJson, getSessionUser, githubPutFile, base64ToBytes } from "./_lib.js";
 
-const ALLOWED_EXT = new Set(["png", "jpg", "jpeg", "webp", "gif", "svg"]);
-const MAX_BYTES = 4 * 1024 * 1024; // 4 MB
+const MIME_MAP = {
+  png: "image/png",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  webp: "image/webp",
+  gif: "image/gif",
+  svg: "image/svg+xml",
+};
+
+const MAX_R2_BYTES = 10 * 1024 * 1024; // 10 MB when using R2
+const MAX_GH_BYTES = 4 * 1024 * 1024;  // 4 MB fallback for GitHub
 
 export async function onRequestPost({ request, env }) {
   const user = await getSessionUser(request, env);
@@ -24,35 +33,57 @@ export async function onRequestPost({ request, env }) {
 
   const rawExt = filename.split(".").pop()?.toLowerCase() || "";
   const mimeExt = match[1].toLowerCase().replace("svg+xml", "svg");
-  const ext = ALLOWED_EXT.has(rawExt) ? rawExt : ALLOWED_EXT.has(mimeExt) ? mimeExt : null;
+  const ext = MIME_MAP[rawExt] ? rawExt : MIME_MAP[mimeExt] ? mimeExt : null;
   if (!ext) {
     return errorJson("仅支持 png / jpg / webp / gif / svg 图片", 400);
   }
 
   const bytes = base64ToBytes(match[2]);
-  if (bytes.byteLength > MAX_BYTES) {
-    return errorJson("图片大小不能超过 4MB", 400);
+  const safeBase =
+    filename
+      .replace(/\.[^.]+$/, "")
+      .replace(/[^a-zA-Z0-9_-]/g, "-")
+      .replace(/-+/g, "-")
+      .slice(0, 36) || "img";
+  const objectKey = `images/${Date.now()}-${safeBase}.${ext}`;
+
+  // 最佳实践：优先写入 Cloudflare R2（绑定变量名 IMAGES）
+  if (env.IMAGES) {
+    if (bytes.byteLength > MAX_R2_BYTES) {
+      return errorJson("图片大小不能超过 10MB", 400);
+    }
+    try {
+      await env.IMAGES.put(objectKey, bytes, {
+        httpMetadata: { contentType: MIME_MAP[ext] },
+      });
+      return json({
+        ok: true,
+        storage: "r2",
+        path: objectKey,
+        url: `/api/image?key=${encodeURIComponent(objectKey)}`,
+      });
+    } catch (err) {
+      return errorJson(err.message || "图片上传到 R2 失败", 500);
+    }
   }
 
-  const safeBase = filename
-    .replace(/\.[^.]+$/, "")
-    .replace(/[^a-zA-Z0-9_-]/g, "-")
-    .replace(/-+/g, "-")
-    .slice(0, 36) || "img";
-  const filePath = `images/${Date.now()}-${safeBase}.${ext}`;
-
+  // 未绑定 R2 时，自动回退写入 GitHub 仓库 images/ 目录
+  if (bytes.byteLength > MAX_GH_BYTES) {
+    return errorJson("未绑定 R2 时图片不能超过 4MB", 400);
+  }
   try {
     await githubPutFile(
       env,
-      filePath,
+      objectKey,
       bytes,
       `chore(assets): upload ${safeBase}.${ext} by ${user.username}`,
       true
     );
     return json({
       ok: true,
-      path: filePath,
-      url: `/api/image?path=${encodeURIComponent(filePath)}`,
+      storage: "github",
+      path: objectKey,
+      url: `/api/image?path=${encodeURIComponent(objectKey)}`,
     });
   } catch (err) {
     return errorJson(err.message || "图片上传 GitHub 失败", 500);

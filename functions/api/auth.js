@@ -46,11 +46,7 @@ export async function onRequestPost({ request, env }) {
         .bind(user.sessionToken)
         .run();
     }
-    return json(
-      { ok: true },
-      200,
-      { "Set-Cookie": clearSessionCookie() }
-    );
+    return json({ ok: true }, 200, { "Set-Cookie": clearSessionCookie() });
   }
 
   if (action === "login") {
