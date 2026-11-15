@@ -11,6 +11,27 @@ const MIME_MAP = {
 
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
+  const proxyUrl = url.searchParams.get("proxy") || "";
+  if (proxyUrl) {
+    if (!proxyUrl.startsWith("https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/")) {
+      return errorJson("不允许代理该图片地址", 403);
+    }
+    try {
+      const upstream = await fetch(proxyUrl);
+      if (!upstream.ok) return errorJson("代理获取图片失败", upstream.status);
+      return new Response(upstream.body, {
+        status: 200,
+        headers: {
+          "Content-Type": upstream.headers.get("Content-Type") || "image/webp",
+          "Cache-Control": "public, max-age=3600",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+    } catch (err) {
+      return errorJson(err.message || "代理图片异常", 500);
+    }
+  }
+
   const key = url.searchParams.get("key") || "";
   const path = url.searchParams.get("path") || "";
   const target = key || path;

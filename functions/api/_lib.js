@@ -258,3 +258,29 @@ export async function githubPutFile(env, filePath, content, message, isBinary = 
   }
   return res.json();
 }
+
+export async function githubDeleteFile(env, filePath, message) {
+  const branch = env.GITHUB_BRANCH || "main";
+  const encodedPath = filePath.split("/").map(encodeURIComponent).join("/");
+  const existing = await githubGetFile(env, filePath).catch(() => null);
+  if (!existing || !existing.sha) return null;
+
+  const res = await githubFetch(
+    env,
+    `/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}/contents/${encodedPath}`,
+    {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        sha: existing.sha,
+        branch,
+      }),
+    }
+  );
+  if (!res.ok && res.status !== 404) {
+    const err = await res.text();
+    throw new Error(`GitHub 删除失败 (${res.status}): ${err}`);
+  }
+  return true;
+}

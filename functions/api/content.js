@@ -1,7 +1,42 @@
-import { json, errorJson, getSessionUser, githubGetFile, githubPutFile } from "./_lib.js";
+import { json, errorJson, getSessionUser, githubGetFile, githubPutFile, githubDeleteFile } from "./_lib.js";
 
 const POSTS_PATH = "data/posts.json";
 const PROFILE_PATH = "data/profile.json";
+const CATEGORY_ALIAS = {
+  "网络自动化": "科学网络",
+  "软件推荐": "小众软件",
+  "网站推荐": "网站优选",
+};
+
+function normalizeCategory(category) {
+  const raw = String(category || "").trim();
+  return CATEGORY_ALIAS[raw] || raw || "技术手记";
+}
+
+function getPostMarkdownPath(post) {
+  const cat = normalizeCategory(post?.category).replace(/[\\/:*?"<>|]/g, "-");
+  const safeId = String(post?.id || "untitled").replace(/[^a-zA-Z0-9_-]/g, "-");
+  return `data/posts/${cat}/${safeId}.md`;
+}
+
+function formatPostMarkdown(post) {
+  const esc = (v) => JSON.stringify(String(v ?? ""));
+  const lines = [
+    "---",
+    `id: ${esc(post.id || "")}`,
+    `title: ${esc(post.title || "")}`,
+    `category: ${esc(normalizeCategory(post.category))}`,
+    `date: ${esc(post.date || "")}`,
+    `readTime: ${esc(post.readTime || "")}`,
+    `featured: ${Boolean(post.featured)}`,
+    `excerpt: ${esc(post.excerpt || "")}`,
+    "---",
+    "",
+    String(post.body || ""),
+    "",
+  ];
+  return lines.join("\n");
+}
 
 export async function onRequestGet({ env }) {
   try {
@@ -41,13 +76,56 @@ export async function onRequestPost({ request, env }) {
       if (!Array.isArray(body.posts)) {
         return errorJson("posts 必须是数组", 400);
       }
+      const nextPosts = body.posts.map((p) => ({
+        ...p,
+        category: normalizeCategory(p.category),
+      }));
+
+      let prevPosts = [];
+      try {
+        const prevFile = await githubGetFile(env, POSTS_PATH);
+        if (prevFile?.text) {
+          const parsed = JSON.parse(prevFile.text);
+          if (Array.isArray(parsed)) prevPosts = parsed;
+        }
+      } catch {}
+
       await githubPutFile(
         env,
         POSTS_PATH,
-        JSON.stringify(body.posts, null, 2),
+        JSON.stringify(nextPosts, null, 2),
         `chore(blog): update posts by ${user.username}`
       );
-      return json({ ok: true, posts: body.posts });
+
+      const prevMap = new Map(prevPosts.map((p) => [getPostMarkdownPath(p), p]));
+      const nextPaths = new Set();
+
+      for (const post of nextPosts) {
+        const mdPath = getPostMarkdownPath(post);
+        nextPaths.add(mdPath);
+        const mdText = formatPostMarkdown(post);
+        const prevPost = prevMap.get(mdPath);
+        if (!prevPost || formatPostMarkdown(prevPost) !== mdText) {
+          await githubPutFile(
+            env,
+            mdPath,
+            mdText,
+            `docs(${normalizeCategory(post.category)}): update ${post.id || "post"} by ${user.username}`
+          );
+        }
+      }
+
+      for (const oldPath of prevMap.keys()) {
+        if (!nextPaths.has(oldPath)) {
+          await githubDeleteFile(
+            env,
+            oldPath,
+            `docs(blog): remove ${oldPath} by ${user.username}`
+          );
+        }
+      }
+
+      return json({ ok: true, posts: nextPosts });
     }
 
     if (body.type === "profile") {

@@ -2,7 +2,7 @@
   {
     "id": "minimal-sites",
     "title": "优质极简站点与轻量工具推荐",
-    "category": "网站推荐",
+    "category": "网站优选",
     "date": "2026-11-03",
     "readTime": "6 分钟",
     "featured": true,
@@ -22,7 +22,7 @@
   {
     "id": "serverless-cron",
     "title": "用 Serverless Worker 替代传统常驻脚本",
-    "category": "网络自动化",
+    "category": "科学网络",
     "date": "2026-10-22",
     "readTime": "8 分钟",
     "featured": false,
@@ -32,7 +32,7 @@
   {
     "id": "mac-minimal-apps",
     "title": "2026 桌面轻量效率软件清单",
-    "category": "软件推荐",
+    "category": "小众软件",
     "date": "2026-10-10",
     "readTime": "5 分钟",
     "featured": false,
