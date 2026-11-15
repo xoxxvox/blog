@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="darkreader-lock" />
   <title>XXOXOVX  ·  BLOG</title>
   <meta name="description" content="xxoxovx 的个人技术档案：记录软路由折腾、科学网络、小众软件、网站优选与云原生 Serverless 实践。" />
   <meta name="theme-color" content="#fdf2c8" media="(prefers-color-scheme: light)" />
@@ -4185,6 +4187,10 @@
       appearanceBtn.setAttribute("aria-expanded", String(open));
     }
 
+    if (!localStorage.getItem("xxoxovx-palette-v2")) {
+      localStorage.setItem("xxoxovx-palette-v2", "1");
+      localStorage.removeItem("xxoxovx-palette");
+    }
     applyThemeMode(localStorage.getItem("xxoxovx-theme") || "system");
     applyPalette(localStorage.getItem("xxoxovx-palette") || "blue");
 
