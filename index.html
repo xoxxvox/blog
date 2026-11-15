@@ -834,7 +834,23 @@
     .console-container { width: 100%; padding: 26px 32px 32px; margin: 4px auto 32px; display: flex; flex-direction: column; gap: 18px; }
     .console-top-tabs { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .console-page .site-rail-layout { min-height: 460px; }
-    .console-page .admin-scroll-box { flex: 1; min-height: 100%; overflow: visible; }
+    .console-page .admin-panel.is-active {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+    .console-page .admin-scroll-box {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: visible;
+    }
+    .console-page .admin-scroll-box > form {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
     .console-page .settings-footer-bar {
       position: sticky;
       bottom: 0;
