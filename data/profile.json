@@ -6,13 +6,20 @@
   "heroSub": "记录软路由折腾、网络自动化与云原生 Serverless 实践，在纯净通透的秩序感中保持克制而高效的数字生活。",
   "avatar": "https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/836ce0fa-8ecc-4d16-a805-6ce2860ae4ab.webp",
   "profileName": "XXOXOVX",
-  "tags": ["全栈开发", "网络自动化", "极简主义"],
+  "tags": [
+    "全栈开发",
+    "网络自动化",
+    "极简主义"
+  ],
   "info": {
     "name": "SoxMoox",
     "gender": "男",
     "age": "27 岁",
     "extraInfo": [
-      { "label": "爱好", "value": "摄影 / 骑行" }
+      {
+        "label": "爱好",
+        "value": "摄影 / 骑行"
+      }
     ]
   },
   "contacts": [
@@ -22,7 +29,7 @@
       "fieldLabel": "QQ 号码",
       "value": "10086001",
       "url": "tencent://message/?uin=10086001&Site=&Menu=yes",
-      "qr": "https://qm.qq.com/q/10086001"
+      "qr": "/api/image?key=images%2F1794763953887-7999.png"
     },
     {
       "label": "WeChat",
@@ -30,7 +37,7 @@
       "fieldLabel": "微信号",
       "value": "soxmoox_wx",
       "url": "weixin://",
-      "qr": "soxmoox_wx"
+      "qr": "/api/image?key=images%2F1794763965543-7866.png"
     },
     {
       "label": "Telegram",
@@ -56,5 +63,9 @@
       "url": "mailto:hi@xxoxovx.dev",
       "qr": "mailto:hi@xxoxovx.dev"
     }
-  ]
+  ],
+  "footerTitle": "XXOXOVX Blog · 数字生活档案",
+  "footerDesc": "专注于软路由、网络自动化、云原生 Serverless 架构与极简数字生活记录。",
+  "footerBadge": "Serverless 运行中",
+  "footerCopyright": "© 2026 XXOXOVX Blog · All rights reserved"
 }
