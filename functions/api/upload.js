@@ -15,7 +15,6 @@ const MAX_GH_BYTES = 4 * 1024 * 1024;  // 4 MB fallback for GitHub
 export async function onRequestPost({ request, env }) {
   const user = await getSessionUser(request, env);
   if (!user) return errorJson("请先登录", 401);
-  if (user.role !== "admin") return errorJson("仅管理员可上传图片", 403);
 
   let body;
   try {

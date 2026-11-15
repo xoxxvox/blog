@@ -9,18 +9,43 @@ import {
   clearSessionCookie,
 } from "./_lib.js";
 
+async function ensureProfileColumn(env) {
+  try {
+    await env.DB.prepare("SELECT profile_json FROM users LIMIT 1").first();
+  } catch {
+    try {
+      await env.DB.prepare("ALTER TABLE users ADD COLUMN profile_json TEXT").run();
+    } catch {}
+  }
+}
+
+function parseUserProfile(raw) {
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function onRequestGet({ request, env }) {
   if (!env.DB) {
     return errorJson("尚未绑定 D1 数据库（变量名需为 DB）", 500);
   }
+  await ensureProfileColumn(env);
   const user = await getSessionUser(request, env);
   if (!user) return json({ user: null });
+  const row = await env.DB.prepare("SELECT profile_json FROM users WHERE id = ?")
+    .bind(user.id)
+    .first();
   return json({
     user: {
       id: user.id,
       username: user.username,
       email: user.email,
       role: user.role,
+      profile: parseUserProfile(row?.profile_json),
     },
   });
 }
@@ -50,6 +75,7 @@ export async function onRequestPost({ request, env }) {
   }
 
   if (action === "login") {
+    await ensureProfileColumn(env);
     const username = String(body.username || "").trim();
     const password = String(body.password || "");
     if (!username || !password) {
@@ -57,7 +83,7 @@ export async function onRequestPost({ request, env }) {
     }
 
     const user = await env.DB.prepare(
-      "SELECT id, username, email, password_hash, role FROM users WHERE LOWER(username) = LOWER(?)"
+      "SELECT id, username, email, password_hash, role, profile_json FROM users WHERE LOWER(username) = LOWER(?)"
     )
       .bind(username)
       .first();
@@ -74,6 +100,7 @@ export async function onRequestPost({ request, env }) {
           username: user.username,
           email: user.email,
           role: user.role,
+          profile: parseUserProfile(user.profile_json),
         },
       },
       200,
@@ -166,6 +193,41 @@ export async function onRequestPost({ request, env }) {
       201,
       { "Set-Cookie": buildSessionCookie(token) }
     );
+  }
+
+  if (action === "update_profile") {
+    await ensureProfileColumn(env);
+    const sessionUser = await getSessionUser(request, env);
+    if (!sessionUser) return errorJson("请先登录", 401);
+    if (!body.profile || typeof body.profile !== "object") {
+      return errorJson("个人资料格式无效", 400);
+    }
+    const cleanProfile = {
+      avatar: String(body.profile.avatar || "").trim(),
+      profileName: String(body.profile.profileName || sessionUser.username).trim(),
+      tags: Array.isArray(body.profile.tags)
+        ? body.profile.tags.map((t) => String(t).trim()).filter(Boolean).slice(0, 8)
+        : [],
+      info: {
+        name: String(body.profile.info?.name || "").trim(),
+        gender: String(body.profile.info?.gender || "").trim(),
+        age: String(body.profile.info?.age || "").trim(),
+      },
+      contacts: Array.isArray(body.profile.contacts) ? body.profile.contacts : [],
+    };
+    await env.DB.prepare("UPDATE users SET profile_json = ? WHERE id = ?")
+      .bind(JSON.stringify(cleanProfile), sessionUser.id)
+      .run();
+    return json({
+      ok: true,
+      user: {
+        id: sessionUser.id,
+        username: sessionUser.username,
+        email: sessionUser.email,
+        role: sessionUser.role,
+        profile: cleanProfile,
+      },
+    });
   }
 
   return errorJson("不支持的操作类型", 400);
