@@ -859,6 +859,25 @@
       padding: 14px 0 4px;
       background-color: var(--bg-card);
     }
+    .console-close-btn {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border-radius: 99px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.28);
+      flex-shrink: 0;
+      transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
+    }
+    .console-close-btn:hover {
+      background: #ef4444;
+      color: #ffffff;
+      border-color: #ef4444;
+    }
     @media (max-width: 720px) { .console-container { padding: 18px; } }
     .reader-shell { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); gap: 24px; align-items: start; margin: 4px auto 32px auto; }
     .reader-shell > :not(.toc-aside) { grid-column: span 9; min-width: 0; }
@@ -3151,10 +3170,13 @@
           <div style="display: flex; align-items: center; gap: 12px;">
             <button class="tactile-btn reader-back" id="backFromConsoleBtn" type="button">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
-              <span>返回上一页</span>
+              <span>返回</span>
             </button>
             <h2 class="modal-title" id="consolePageTitle">账号设置</h2>
           </div>
+          <button class="tactile-btn console-close-btn" id="consoleCloseBtn" type="button" data-close-auth-modal="1" aria-label="关闭控制台" title="关闭">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+          </button>
         </div>
         <div class="settings-content" id="authUserView">
           <div class="site-rail-layout">
@@ -3283,7 +3305,6 @@
                     <span>个人资料控制台</span>
                   </div>
                   <div class="settings-footer-actions">
-                    <button class="tactile-btn modal-btn" type="button" data-close-auth-modal="1" style="height: 38px;">关闭</button>
                     <button class="modal-btn modal-btn-primary" id="savePersonalProfileBtn" type="submit" style="height: 38px;">保存更改</button>
                   </div>
                 </div>
@@ -3394,7 +3415,6 @@
                 <span id="siteBotStatusText">准备就绪 · 配置已同步</span>
               </div>
               <div class="settings-footer-actions">
-                <button class="tactile-btn modal-btn" type="button" data-close-auth-modal="1" style="height: 38px;">关闭</button>
                 <button class="modal-btn modal-btn-primary" id="saveSiteConfigBtn" type="submit" style="height: 38px;">保存网站设置</button>
               </div>
             </div>
@@ -3437,9 +3457,6 @@
                   <div class="settings-card-desc">支持修改到期时间、复制或删除邀请码</div>
                 </div>
                 <div id="adminInviteList" style="display: flex; flex-direction: column; gap: 8px;"></div>
-              </div>
-              <div class="settings-footer-bar" style="grid-template-columns: 1fr;">
-                <button class="tactile-btn modal-btn" type="button" data-close-auth-modal="1" style="height: 38px;">关闭</button>
               </div>
             </div>
         </div>
