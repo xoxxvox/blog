@@ -100,8 +100,55 @@ export async function createSession(env, userId) {
   return token;
 }
 
+export async function ensureLifecycleSchema(env) {
+  if (!env.DB) return;
+  const alterStmts = [
+    "ALTER TABLE invites ADD COLUMN duration_days INTEGER",
+    "ALTER TABLE invites ADD COLUMN expires_at TEXT",
+    "ALTER TABLE users ADD COLUMN invite_code TEXT",
+    "ALTER TABLE users ADD COLUMN disabled_at TEXT",
+  ];
+  for (const sql of alterStmts) {
+    try {
+      await env.DB.prepare(sql).run();
+    } catch {}
+  }
+}
+
+export async function cleanupExpiredAccounts(env) {
+  if (!env.DB) return;
+  await ensureLifecycleSchema(env);
+  const nowIso = new Date().toISOString();
+  const deleteCutoffIso = new Date(Date.now() - 7 * 86400000).toISOString();
+
+  await env.DB.prepare(
+    `UPDATE users
+     SET disabled_at = COALESCE(disabled_at, ?)
+     WHERE role != 'admin'
+       AND invite_code IS NOT NULL
+       AND invite_code != ''
+       AND (
+         invite_code NOT IN (SELECT code FROM invites)
+         OR invite_code IN (SELECT code FROM invites WHERE expires_at IS NOT NULL AND expires_at <= ?)
+       )`
+  )
+    .bind(nowIso, nowIso)
+    .run();
+
+  await env.DB.prepare(
+    "DELETE FROM sessions WHERE user_id IN (SELECT id FROM users WHERE role != 'admin' AND disabled_at IS NOT NULL)"
+  ).run();
+
+  await env.DB.prepare(
+    "DELETE FROM users WHERE role != 'admin' AND disabled_at IS NOT NULL AND disabled_at <= ?"
+  )
+    .bind(deleteCutoffIso)
+    .run();
+}
+
 export async function getSessionUser(request, env) {
   if (!env.DB) return null;
+  await cleanupExpiredAccounts(env);
   const cookies = parseCookies(request);
   const token = cookies[SESSION_COOKIE];
   if (!token) return null;
@@ -110,7 +157,7 @@ export async function getSessionUser(request, env) {
     `SELECT u.id, u.username, u.email, u.role
      FROM sessions s
      JOIN users u ON u.id = s.user_id
-     WHERE s.token = ? AND s.expires_at > ?`
+     WHERE s.token = ? AND s.expires_at > ? AND (u.role = 'admin' OR u.disabled_at IS NULL)`
   )
     .bind(token, now)
     .first();

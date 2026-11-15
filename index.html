@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>XXOXOVX · Blog</title>
+  <link id="siteFavicon" rel="icon" type="image/webp" sizes="any" href="https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/9da19e20-2f43-4863-97c7-0d87f3995645.webp" />
+  <link rel="apple-touch-icon" href="https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/9da19e20-2f43-4863-97c7-0d87f3995645.webp" />
   <style>
     :root {
       --bg-page: #f4f5f7;
@@ -74,7 +76,8 @@
     [data-theme="dark"][data-palette="green"] { --accent: #22c55e; --accent-soft: rgba(34, 197, 94, 0.16); }
     [data-theme="dark"][data-palette="orange"] { --accent: #f97316; --accent-soft: rgba(249, 115, 22, 0.16); }
 
-    *, *::before, *::after { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; scrollbar-width: none; -ms-overflow-style: none; }
+    *::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
     html {
       font-size: 16px;
@@ -166,15 +169,32 @@
     .brand:hover { opacity: 0.82; }
 
     .brand-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-sm);
+      width: 34px;
+      height: 34px;
+      padding: 4px;
+      border-radius: 10px;
       background-color: var(--bg-card);
-      border: 1px solid var(--hairline);
+      border: 1px solid var(--hairline-strong);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
       flex-shrink: 0;
+      transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
     }
-    .brand-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    [data-theme="dark"] .brand-icon {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.14);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 6px rgba(0, 0, 0, 0.25);
+    }
+    .brand-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 6px;
+      display: block;
+    }
     .brand-text { display: flex; flex-direction: column; line-height: 1.25; }
     .brand-title { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
     .brand-sub { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
@@ -385,7 +405,7 @@
       line-height: 1.5;
     }
 
-    .info-list { width: 100%; display: flex; flex-direction: column; border-top: 1px solid var(--hairline); max-height: 148px; overflow-y: auto; scrollbar-width: none; }
+    .info-list { width: 100%; display: flex; flex-direction: column; border-top: 1px solid var(--hairline); max-height: 280px; overflow-y: auto; scrollbar-width: none; }
     .info-list::-webkit-scrollbar { display: none; }
     .info-row {
       min-height: 35px;
@@ -657,15 +677,15 @@
     .toc-link:hover { color: var(--text-primary); background-color: var(--bg-raised); }
     .toc-link.is-active { color: var(--accent); background-color: var(--accent-soft); border-left-color: var(--accent); font-weight: 500; }
 
-    .reader-container { width: 100%; padding: 36px 52px 48px 52px; }
-    .reader-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; margin-bottom: 28px; border-bottom: 1px solid var(--hairline); }
+    .reader-container { width: 100%; padding: 32px 42px 44px 42px; }
+    .reader-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 16px; margin-bottom: 24px; border-bottom: 1px solid var(--hairline); }
     .reader-back { height: 34px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 500; }
-    .reader-title { margin: 0 0 14px 0; font-size: 32px; font-weight: 600; line-height: 1.24; letter-spacing: -0.025em; }
-    .reader-lead { margin: 0 0 28px 0; padding-bottom: 24px; border-bottom: 1px solid var(--hairline); font-size: 16px; color: var(--text-secondary); line-height: 1.7; }
-    .reader-body { font-size: 16px; line-height: 1.85; }
-    .reader-body h1 { margin: 36px 0 14px 0; font-size: 24px; font-weight: 600; }
-    .reader-body h2 { margin: 34px 0 12px 0; font-size: 20px; font-weight: 600; letter-spacing: -0.015em; }
-    .reader-body h3 { margin: 26px 0 10px 0; font-size: 17px; font-weight: 600; }
+    .reader-title { margin: 0 0 10px 0; font-size: 24px; font-weight: 600; line-height: 1.32; letter-spacing: -0.02em; }
+    .reader-lead { margin: 0 0 24px 0; padding-bottom: 18px; border-bottom: 1px solid var(--hairline); font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .reader-body { font-size: 14.5px; line-height: 1.78; }
+    .reader-body h1 { margin: 28px 0 12px 0; font-size: 20px; font-weight: 600; }
+    .reader-body h2 { margin: 26px 0 10px 0; font-size: 17.5px; font-weight: 600; letter-spacing: -0.015em; }
+    .reader-body h3 { margin: 22px 0 8px 0; font-size: 15.5px; font-weight: 600; }
     .reader-body p { margin: 0 0 18px 0; }
     .reader-body ul, .reader-body ol { margin: 0 0 18px 0; padding-left: 24px; }
     .reader-body li { margin-bottom: 6px; }
@@ -685,7 +705,7 @@
       margin: 0; padding: 14px 18px; background: transparent; border: none;
       font-family: var(--font-mono); font-size: 13px; overflow-x: auto; line-height: 1.65;
     }
-    .reader-body code { font-family: var(--font-mono); font-size: 13px; padding: 2px 6px; border-radius: 4px; background-color: var(--bg-raised); }
+    .reader-body code { font-family: var(--font-mono); font-size: 12.5px; padding: 2px 6px; border-radius: 4px; background-color: var(--bg-raised); }
     .reader-body pre code { padding: 0; background: transparent; color: var(--text-primary); }
     .tok-kw { color: #ad3da4; font-weight: 500; }
     .tok-str { color: #c41a16; }
@@ -782,10 +802,55 @@
       display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-secondary);
     }
     .comment-list { display: flex; flex-direction: column; gap: 10px; }
-    .comment-item { padding: 14px 16px; border-radius: var(--radius-md); background-color: var(--bg-subcard); border: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 6px; }
-    .comment-meta { display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
-    .comment-author { font-weight: 600; color: var(--text-primary); }
-    .comment-right { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+    .comment-item { position: relative; padding: 14px 16px; border-radius: var(--radius-md); background-color: var(--bg-subcard); border: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 8px; }
+    .comment-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; }
+    .comment-author-wrap { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .comment-avatar-wrap { position: relative; display: inline-flex; align-items: center; flex-shrink: 0; }
+    .comment-avatar {
+      width: 30px; height: 30px; border-radius: 50%; object-fit: cover;
+      background-color: var(--bg-raised);
+      box-shadow: 0 0 0 1px var(--hairline);
+      transition: transform 220ms var(--spring), box-shadow 220ms var(--spring);
+      cursor: pointer;
+    }
+    .comment-avatar-wrap:hover .comment-avatar {
+      transform: translateY(-2px) scale(1.08);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.14), 0 0 0 2px var(--accent-soft);
+    }
+    .comment-author-meta { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+    .comment-author { font-weight: 600; color: var(--text-primary); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    html[data-theme="dark"] .comment-author { font-weight: 500; }
+    .comment-role-badge { font-size: 10px; padding: 1px 6px; border-radius: 999px; background-color: var(--accent-soft); color: var(--accent); font-weight: 500; line-height: 1.5; flex-shrink: 0; }
+    .comment-hover-card {
+      position: absolute; left: 0; bottom: calc(100% + 10px); width: 256px; padding: 14px; border-radius: 16px;
+      background-color: var(--bg-popover);
+      backdrop-filter: saturate(190%) blur(24px); -webkit-backdrop-filter: saturate(190%) blur(24px);
+      border: 1px solid var(--hairline);
+      box-shadow: 0 18px 40px -10px rgba(15, 23, 42, 0.22), 0 4px 12px rgba(15, 23, 42, 0.08);
+      z-index: 60; opacity: 0; visibility: hidden; pointer-events: none;
+      transform: translateY(6px) scale(0.96); transform-origin: bottom left;
+      transition: opacity 180ms ease, transform 240ms var(--spring), visibility 180ms;
+    }
+    .comment-hover-card::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 12px; }
+    .comment-avatar-wrap:hover .comment-hover-card,
+    .comment-avatar-wrap:focus-within .comment-hover-card {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+    .chc-header { display: flex; align-items: center; gap: 10px; }
+    .chc-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background-color: var(--bg-subcard); border: 1px solid var(--hairline); }
+    .chc-names { display: flex; flex-direction: column; min-width: 0; gap: 2px; }
+    .chc-nick { font-size: 13px; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    html[data-theme="dark"] .chc-nick { font-weight: 500; }
+    .chc-handle { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+    .chc-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+    .chc-tag { font-size: 11px; padding: 2px 8px; border-radius: 999px; background-color: var(--bg-subcard); color: var(--text-secondary); }
+    .chc-info { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--hairline); font-size: 12px; }
+    .chc-info-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+    .chc-info-k { color: var(--text-muted); flex-shrink: 0; }
+    .chc-info-v { color: var(--text-primary); text-align: right; word-break: break-word; }
+    .chc-empty { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--hairline); font-size: 11px; color: var(--text-muted); }
+    .comment-right { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
     .comment-del-btn { border: none; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 11px; padding: 2px 6px; border-radius: 6px; }
     .comment-del-btn:hover { color: #ef4444; background-color: var(--bg-raised); }
     .comment-content { margin: 0; font-size: 13px; line-height: 1.65; color: var(--text-secondary); white-space: pre-wrap; word-break: break-word; text-wrap: pretty; }
@@ -883,9 +948,89 @@
     /* Auth */
     .auth-trigger-btn { height: 36px; padding: 0 14px; border-radius: 99px; font-size: 13px; font-weight: 500; }
     .auth-trigger-btn.is-logged-in { color: var(--accent); border-color: var(--accent-soft); padding-left: 8px; }
+    .account-menu-wrap { position: relative; }
+    .account-popover {
+      position: absolute; top: calc(100% + 10px); right: 0; width: 292px; padding: 18px 14px 12px;
+      border-radius: 22px; background-color: var(--bg-popover);
+      -webkit-backdrop-filter: saturate(190%) blur(24px); backdrop-filter: saturate(190%) blur(24px);
+      border: 1px solid var(--hairline-strong); box-shadow: var(--shadow-float);
+      display: flex; flex-direction: column; gap: 10px;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transform: translateY(-6px) scale(0.97); transform-origin: top right;
+      transition: opacity 160ms var(--ease), transform 220ms var(--spring), visibility 160ms;
+      z-index: 45;
+    }
+    .account-popover.is-open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0) scale(1); }
+    .account-pop-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 4px 8px 6px; }
+    .account-pop-avatar {
+      width: 50px; height: 50px; border-radius: 15px; object-fit: cover;
+      background-color: var(--bg-raised); border: 1px solid var(--hairline);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    }
+    .account-pop-name-row { display: flex; align-items: center; justify-content: center; gap: 7px; max-width: 100%; margin-top: 2px; }
+    .account-pop-name {
+      font-size: 15px; font-weight: 600; color: var(--text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px;
+    }
+    html[data-theme="dark"] .account-pop-name { font-weight: 500; }
+    .account-pop-badge {
+      font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 999px;
+      background-color: var(--accent-soft); color: var(--accent); line-height: 1.4; flex-shrink: 0;
+    }
+    .account-pop-badge.is-admin {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(245, 158, 11, 0.2));
+      color: var(--accent);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.14);
+    }
+    html[data-theme="dark"] .account-pop-badge { font-weight: 500; }
+    .account-pop-sub { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+    .account-pop-sep { height: 1px; background-color: var(--hairline); margin: 2px 6px; }
+    .account-pop-list { display: flex; flex-direction: column; gap: 4px; }
+    .account-pop-item {
+      width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px 10px;
+      border: none; border-radius: 14px; background: transparent; cursor: pointer; text-align: left;
+      transition: background-color 160ms var(--ease), transform 180ms var(--spring);
+    }
+    .account-pop-item:hover { background-color: var(--bg-raised); }
+    .account-pop-item:active { transform: scale(0.985); }
+    .account-pop-icon {
+      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+      display: grid; place-items: center;
+      background-color: var(--bg-subcard); border: 1px solid var(--hairline); color: var(--text-secondary);
+    }
+    .account-pop-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+    .account-pop-title { font-size: 13.5px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+    html[data-theme="dark"] .account-pop-title { font-weight: 500; }
+    .account-pop-desc { font-size: 11.5px; color: var(--text-muted); line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .account-pop-arrow { color: var(--text-muted); flex-shrink: 0; opacity: 0.7; transition: transform 180ms var(--spring), opacity 160ms ease; }
+    .account-pop-item:hover .account-pop-arrow { transform: translateX(2px); opacity: 1; }
+    .account-pop-item.is-danger .account-pop-icon {
+      background-color: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.14); color: #dc2626;
+    }
+    .account-pop-item.is-danger .account-pop-title { color: #dc2626; }
+    html[data-theme="dark"] .account-pop-item.is-danger .account-pop-icon { color: #f87171; }
+    html[data-theme="dark"] .account-pop-item.is-danger .account-pop-title { color: #f87171; }
     .auth-btn-avatar { width: 22px; height: 22px; border-radius: 99px; object-fit: cover; border: 1px solid var(--hairline-strong); display: none; flex-shrink: 0; }
-    .contact-modal.is-admin-account { width: 420px; max-width: 94vw; height: auto; align-items: stretch; overflow: hidden; transition: width 220ms ease, height 220ms ease, transform 220ms var(--spring); }
-    .contact-modal.is-admin-account.is-wide { width: 840px; height: 610px; }
+    .contact-modal.is-admin-account { width: 460px; max-height: 86vh; max-width: 94vw; align-items: stretch; overflow: hidden; padding: 20px 22px; transition: width 200ms var(--ease); }
+    .contact-modal.is-admin-account.is-wide-page { width: 740px; }
+    .settings-content { display: flex; flex-direction: column; min-width: 0; min-height: 0; flex: 1; width: 100%; }
+    .settings-card {
+      width: 100%; padding: 14px 16px; border-radius: 14px;
+      background-color: var(--bg-subcard); border: 1px solid var(--hairline);
+      display: flex; flex-direction: column; gap: 11px;
+    }
+    .settings-card-head { display: flex; flex-direction: column; gap: 2px; padding-bottom: 6px; border-bottom: 1px solid var(--hairline); }
+    .settings-card-title { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
+    html[data-theme="dark"] .settings-card-title { font-weight: 500; }
+    .settings-card-desc { font-size: 11.5px; color: var(--text-muted); }
+    .settings-footer-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-top: 8px; flex-shrink: 0; }
+    .invite-item-card {
+      padding: 12px 14px; border-radius: 12px; background-color: var(--bg-card-solid);
+      border: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 8px;
+    }
+    .invite-item-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .invite-item-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding-top: 6px; border-top: 1px dashed var(--hairline); }
+    .invite-date-input { height: 30px; padding: 0 8px; border-radius: 8px; border: 1px solid var(--hairline-strong); background-color: var(--bg-subcard); color: var(--text-primary); font-family: var(--font-mono); font-size: 11.5px; }
     .account-hero-card {
       width: 100%; padding: 14px 16px; border-radius: 16px; background-color: var(--bg-subcard);
       border: 1px solid var(--hairline); display: flex; align-items: center; gap: 12px;
@@ -1044,7 +1189,7 @@
     <header class="top-bar">
       <div class="brand" id="brandBtn" tabindex="0" role="button" aria-label="返回首页">
         <div class="brand-icon">
-          <img id="brandLogoImg" src="https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/836ce0fa-8ecc-4d16-a805-6ce2860ae4ab.webp" alt="XXOXOVX Logo" />
+          <img id="brandLogoImg" src="https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/9da19e20-2f43-4863-97c7-0d87f3995645.webp" alt="XXOXOVX Logo" />
         </div>
         <div class="brand-text">
           <span class="brand-title" id="brandTitleEl">XXOXOVX · Blog</span>
@@ -1091,13 +1236,98 @@
           </div>
         </div>
 
-        <button class="tactile-btn auth-trigger-btn" id="authTriggerBtn" type="button">
-          <img class="auth-btn-avatar" id="authTriggerAvatar" alt="用户头像" style="display: none;" />
-          <svg id="authTriggerIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="8" r="4"></circle><path d="M20 21a8 8 0 0 0-16 0"></path>
-          </svg>
-          <span id="authTriggerText">登录 / 注册</span>
-        </button>
+        <div class="account-menu-wrap" id="accountMenuWrap">
+          <button class="tactile-btn auth-trigger-btn" id="authTriggerBtn" type="button" aria-expanded="false" aria-haspopup="true">
+            <img class="auth-btn-avatar" id="authTriggerAvatar" alt="用户头像" style="display: none;" />
+            <svg id="authTriggerIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"></circle><path d="M20 21a8 8 0 0 0-16 0"></path>
+            </svg>
+            <span id="authTriggerText">登录 / 注册</span>
+          </button>
+
+          <div class="account-popover" id="accountMenuPopover" role="menu" aria-label="账号菜单">
+            <div class="account-pop-head">
+              <img class="account-pop-avatar" id="accountPopAvatar" alt="用户头像" />
+              <div class="account-pop-name-row">
+                <span class="account-pop-name" id="accountPopName">-</span>
+                <span class="account-pop-badge" id="accountPopBadge">普通用户</span>
+              </div>
+              <div class="account-pop-sub" id="accountPopSub">@user</div>
+            </div>
+
+            <div class="account-pop-sep"></div>
+
+            <div class="account-pop-list">
+              <button class="account-pop-item" id="popSiteSettingsBtn" type="button" role="menuitem" style="display: none;">
+                <span class="account-pop-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="3"></rect><line x1="3" y1="9" x2="21" y2="9"></line>
+                  </svg>
+                </span>
+                <span class="account-pop-text">
+                  <span class="account-pop-title">网站设置</span>
+                  <span class="account-pop-desc">页头信息、页尾联系方式与二维码</span>
+                </span>
+                <svg class="account-pop-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+
+              <button class="account-pop-item" id="popAdminManageBtn" type="button" role="menuitem" style="display: none;">
+                <span class="account-pop-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                </span>
+                <span class="account-pop-text">
+                  <span class="account-pop-title">邀请码管理</span>
+                  <span class="account-pop-desc">生成邀请码、设置有效期与管理账号</span>
+                </span>
+                <svg class="account-pop-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+
+              <button class="account-pop-item" id="popAccountSettingsBtn" type="button" role="menuitem">
+                <span class="account-pop-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.85 1 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                  </svg>
+                </span>
+                <span class="account-pop-text">
+                  <span class="account-pop-title">账号设置</span>
+                  <span class="account-pop-desc" id="popSettingsDesc">头像、个人资料、邀请码与账号信息</span>
+                </span>
+                <svg class="account-pop-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+
+              <button class="account-pop-item" id="popSwitchAccountBtn" type="button" role="menuitem">
+                <span class="account-pop-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                    <polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                  </svg>
+                </span>
+                <span class="account-pop-text">
+                  <span class="account-pop-title">切换账号</span>
+                  <span class="account-pop-desc">退出当前账号并重新登录</span>
+                </span>
+                <svg class="account-pop-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+
+            <div class="account-pop-sep"></div>
+
+            <button class="account-pop-item is-danger" id="popLogoutBtn" type="button" role="menuitem">
+              <span class="account-pop-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+              </span>
+              <span class="account-pop-text">
+                <span class="account-pop-title">退出登录</span>
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -1172,7 +1402,7 @@
           <section class="surface content-panel">
             <div class="panel-header">
               <div class="panel-title"><span id="panelTitleText">最新动态 · 最新发布</span></div>
-              <span class="panel-count tabular" id="panelCountText">共 4 篇</span>
+              <button class="tactile-btn modal-btn-primary" id="newPostHeaderBtn" type="button" style="display: none; height: 30px; padding: 0 14px; border-radius: 99px; font-size: 12px; font-weight: 500;">+ 新建文章</button>
             </div>
 
             <div class="carousel-box" id="carouselBox" tabindex="0" role="button">
@@ -1226,17 +1456,17 @@
       <footer class="surface footer-card">
         <div class="footer-top">
           <div>
-            <div class="brand-title" style="margin-bottom: 4px;">XXOXOVX Blog · 数字生活档案</div>
-            <div class="hero-sub" style="font-size: 13px;">专注于软路由、网络自动化、云原生 Serverless 架构与极简数字生活记录。</div>
+            <div class="brand-title" id="footerTitleEl" style="margin-bottom: 4px;">XXOXOVX Blog · 数字生活档案</div>
+            <div class="hero-sub" id="footerDescEl" style="font-size: 13px;">专注于软路由、网络自动化、云原生 Serverless 架构与极简数字生活记录。</div>
           </div>
           <div class="footer-stats tabular">
             <span class="stat-pill" id="footerPostCount">4 篇手记</span>
             <span class="stat-pill" id="footerFeaturedCount">2 篇精选</span>
-            <span class="stat-pill">Serverless 运行中</span>
+            <span class="stat-pill" id="footerBadgeEl">Serverless 运行中</span>
           </div>
         </div>
         <div class="footer-bottom">
-          <span>© 2026 XXOXOVX Blog · All rights reserved</span>
+          <span id="footerCopyrightEl">© 2026 XXOXOVX Blog · All rights reserved</span>
           <a href="#top" class="back-top">返回顶部 ↑</a>
         </div>
       </footer>
@@ -1251,10 +1481,11 @@
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
               <span>返回首页</span>
             </button>
-            <div class="article-card-footer tabular" style="border-top: none; padding-top: 0; gap: 14px;">
+            <div class="article-card-footer tabular" style="border-top: none; padding-top: 0; gap: 12px; align-items: center;">
               <span class="article-tag" id="readerCat"></span>
               <span id="readerDate"></span>
               <span id="readerTime"></span>
+              <button class="tactile-btn copy-btn" id="readerEditPostBtn" type="button" style="display: none; height: 26px; padding: 0 10px; font-size: 11.5px;">编辑文章</button>
             </div>
           </div>
 
@@ -1354,11 +1585,6 @@
         <h3 class="modal-title" id="authModalTitle">账号登录</h3>
         <button class="tactile-btn modal-close" id="authModalClose" type="button" aria-label="关闭弹窗">✕</button>
       </div>
-      <div class="admin-tabs" id="accountAdminTabs" role="tablist" style="display: none;">
-        <button class="admin-tab is-active" type="button" data-account-tab="account">账号信息</button>
-        <button class="admin-tab" id="accountTabProfile" type="button" data-account-tab="profile">资料与二维码</button>
-        <button class="admin-tab" id="accountTabInvites" type="button" data-account-tab="invites">邀请码</button>
-      </div>
       <div id="authGuestView" style="width: 100%; display: flex; flex-direction: column; gap: 14px;">
         <div class="auth-tabs" role="tablist">
           <button class="auth-tab is-active" id="tabLogin" type="button">登录</button>
@@ -1375,7 +1601,7 @@
           </div>
           <div class="float-field" id="authInviteField" style="display: none;">
             <input class="float-input" id="authInviteCode" type="text" placeholder=" " autocomplete="off" />
-            <label class="float-label" for="authInviteCode">邀请码</label>
+            <label class="float-label" for="authInviteCode">邀请码（选填，留空注册普通账号）</label>
           </div>
           <div class="float-field">
             <div class="float-input-wrap">
@@ -1396,33 +1622,94 @@
           <button class="modal-btn modal-btn-primary auth-submit" id="authSubmitBtn" type="submit">登录</button>
         </form>
       </div>
-      <div class="auth-profile-box" id="authUserView" style="display: none; min-height: 0; flex: 1;">
-        <div class="admin-panel is-active" data-account-panel="account" style="gap: 12px;">
-          <div class="account-hero-card">
-            <img class="account-hero-avatar" id="accountCardAvatar" alt="账号头像" />
-            <div class="account-hero-meta">
-              <div class="account-hero-name" id="accountCardName">-</div>
-              <div class="account-hero-sub" id="accountCardEmail">-</div>
+      <div class="settings-content" id="authUserView" style="display: none;">
+        <div class="admin-panel is-active" data-account-panel="account">
+          <div class="admin-scroll-box" style="gap: 12px;">
+            <div class="account-hero-card">
+              <img class="account-hero-avatar" id="accountCardAvatar" alt="账号头像" />
+              <div class="account-hero-meta">
+                <div class="account-hero-name" id="accountCardName">-</div>
+                <div class="account-hero-sub" id="accountCardEmail">-</div>
+              </div>
+              <span class="account-role-badge" id="accountCardBadge">普通用户</span>
             </div>
-            <span class="account-role-badge" id="accountCardBadge">普通用户</span>
+
+            <div class="ios-grouped-list">
+              <div class="ios-grouped-row"><span class="ios-grouped-label">当前账号</span><span class="ios-grouped-value" id="authUserName">-</span></div>
+              <div class="ios-grouped-row"><span class="ios-grouped-label">账号权限</span><span class="ios-grouped-value" id="authUserRole">普通用户</span></div>
+              <div class="ios-grouped-row"><span class="ios-grouped-label">绑定邮箱</span><span class="ios-grouped-value" id="authUserEmail">-</span></div>
+              <div class="ios-grouped-row"><span class="ios-grouped-label">数据同步</span><span class="ios-grouped-value" id="authSyncMode">云端 D1 + GitHub</span></div>
+            </div>
+
+            <div class="settings-card">
+              <div class="settings-card-head">
+                <div class="settings-card-title">邀请码权限解锁</div>
+                <div class="settings-card-desc" id="accountInviteStatus">注册时未填写邀请码可在此补填，以解锁更高权限</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input class="auth-input" id="redeemInviteInput" type="text" placeholder="输入邀请码（如 XXXX-XXXX-XXXX）" style="flex: 1;" />
+                <button class="tactile-btn modal-btn-primary" id="redeemInviteBtn" type="button" style="height: 36px; padding: 0 14px; border-radius: 10px; font-size: 12.5px; flex-shrink: 0;">绑定邀请码</button>
+              </div>
+            </div>
+
+            <form id="personalProfileForm" style="display: flex; flex-direction: column; gap: 12px;">
+              <div class="settings-card">
+                <div class="settings-card-head">
+                  <div class="settings-card-title">个人头像与资料</div>
+                  <div class="settings-card-desc">未填写的字段不会在前台显示；悬停头像展示昵称/性别/年龄/爱好/城市</div>
+                </div>
+                <div class="app-avatar-editor">
+                  <img class="app-avatar-preview" id="profAvatarPreview" alt="头像预览" title="点击更换头像" />
+                  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+                    <div class="admin-toolbar">
+                      <label for="profAvatar">头像</label>
+                      <div>
+                        <input type="file" id="profAvatarFileInput" accept="image/*" style="display: none;" />
+                        <button class="tactile-btn copy-btn" id="profAvatarUploadBtn" type="button">更换头像</button>
+                      </div>
+                    </div>
+                    <input class="auth-input" id="profAvatar" type="text" placeholder="留空自动生成随机头像，或上传图片" />
+                  </div>
+                </div>
+                <div class="auth-field"><label for="profName">个人昵称</label><input class="auth-input" id="profName" type="text" required /></div>
+                <div class="auth-field"><label for="profTags">个人标签（逗号分隔）</label><input class="auth-input" id="profTags" type="text" placeholder="全栈开发, 网络自动化, 极简主义" /></div>
+                <div class="admin-row-2">
+                  <div class="auth-field"><label for="profInfoName">姓名</label><input class="auth-input" id="profInfoName" type="text" placeholder="选填" /></div>
+                  <div class="auth-field"><label for="profInfoGender">性别</label><input class="auth-input" id="profInfoGender" type="text" placeholder="男 / 女 / 保密" /></div>
+                </div>
+                <div class="admin-row-2">
+                  <div class="auth-field"><label for="profInfoAge">年龄</label><input class="auth-input" id="profInfoAge" type="text" placeholder="如：24 岁" /></div>
+                  <div class="auth-field"><label for="profInfoCity">城市</label><input class="auth-input" id="profInfoCity" type="text" placeholder="如：杭州" /></div>
+                </div>
+                <div class="auth-field"><label for="profInfoHobby">爱好</label><input class="auth-input" id="profInfoHobby" type="text" placeholder="如：摄影、骑行、折腾软路由" /></div>
+                <div class="admin-row-2">
+                  <div class="auth-field"><label for="profInfoQQ">QQ</label><input class="auth-input" id="profInfoQQ" type="text" placeholder="选填" /></div>
+                  <div class="auth-field"><label for="profInfoWechat">微信</label><input class="auth-input" id="profInfoWechat" type="text" placeholder="选填" /></div>
+                </div>
+                <div class="auth-field"><label for="profInfoEmail">联系邮箱</label><input class="auth-input" id="profInfoEmail" type="email" placeholder="选填" /></div>
+              </div>
+
+              <div class="settings-footer-bar">
+                <button class="tactile-btn modal-btn" type="button" data-close-auth-modal="1" style="height: 38px;">关闭</button>
+                <button class="modal-btn modal-btn-primary" id="savePersonalProfileBtn" type="submit" style="height: 38px;">保存更改</button>
+              </div>
+            </form>
           </div>
-          <div class="ios-grouped-list">
-            <div class="ios-grouped-row"><span class="ios-grouped-label">当前账号</span><span class="ios-grouped-value" id="authUserName">-</span></div>
-            <div class="ios-grouped-row"><span class="ios-grouped-label">账号权限</span><span class="ios-grouped-value" id="authUserRole">普通用户</span></div>
-            <div class="ios-grouped-row"><span class="ios-grouped-label">数据同步</span><span class="ios-grouped-value" id="authSyncMode">云端 D1 + GitHub</span></div>
-            <span id="authUserEmail" style="display: none;">-</span>
-          </div>
-          <div class="account-quick-actions" id="accountQuickActions" style="display: none;">
-            <button class="tactile-btn account-quick-btn" type="button" id="quickToProfileBtn">编辑资料</button>
-            <button class="tactile-btn account-quick-btn" type="button" id="quickToInvitesBtn">管理邀请码</button>
-            <button class="tactile-btn account-quick-btn" type="button" id="quickToWriteBtn" style="color: var(--accent);">写文章</button>
-          </div>
-          <button class="tactile-btn ios-logout-btn" id="authLogoutBtn" type="button">退出登录</button>
         </div>
 
-        <div class="admin-panel" data-account-panel="profile">
-          <form class="admin-scroll-box" id="adminProfileForm">
-            <div id="siteConfigFields" style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="admin-panel" data-account-panel="site">
+          <div class="admin-tabs" id="siteSubTabs" role="tablist" style="margin-bottom: 10px;">
+            <button class="admin-tab is-active" type="button" data-site-tab="header">页头设置</button>
+            <button class="admin-tab" type="button" data-site-tab="bio">个人简介</button>
+            <button class="admin-tab" type="button" data-site-tab="contacts">联系方式</button>
+            <button class="admin-tab" type="button" data-site-tab="footer">页尾设置</button>
+          </div>
+          <form class="admin-scroll-box" id="siteConfigForm">
+            <div class="settings-card" data-site-panel="header">
+              <div class="settings-card-head">
+                <div class="settings-card-title">页头设置</div>
+                <div class="settings-card-desc">控制网页顶部导航标题、副标与首页 Hero 概览区</div>
+              </div>
               <div class="admin-row-3">
                 <div class="auth-field"><label for="profSiteTitle">站点名称</label><input class="auth-input" id="profSiteTitle" type="text" required /></div>
                 <div class="auth-field"><label for="profSiteSub">站点副标</label><input class="auth-input" id="profSiteSub" type="text" required /></div>
@@ -1431,68 +1718,161 @@
               <div class="auth-field"><label for="profHeroTitle">Hero 主标题</label><input class="auth-input" id="profHeroTitle" type="text" required /></div>
               <div class="auth-field"><label for="profHeroSub">Hero 简介</label><input class="auth-input" id="profHeroSub" type="text" required /></div>
             </div>
-            <div class="admin-row-2">
-              <div class="auth-field"><label for="profName">个人昵称</label><input class="auth-input" id="profName" type="text" required /></div>
-              <div class="auth-field"><label for="profTags">个人标签（逗号分隔）</label><input class="auth-input" id="profTags" type="text" placeholder="全栈开发, 网络自动化, 极简主义" /></div>
-            </div>
-            <div class="admin-row-3">
-              <div class="auth-field"><label for="profInfoName">姓名</label><input class="auth-input" id="profInfoName" type="text" placeholder="请输入姓名" /></div>
-              <div class="auth-field"><label for="profInfoGender">性别</label><input class="auth-input" id="profInfoGender" type="text" placeholder="男 / 女 / 保密" /></div>
-              <div class="auth-field"><label for="profInfoAge">年龄</label><input class="auth-input" id="profInfoAge" type="text" placeholder="如：27 岁" /></div>
-            </div>
-            <div class="auth-field">
+
+            <div class="settings-card" data-site-panel="bio" style="display: none;">
+              <div class="settings-card-head">
+                <div class="settings-card-title">个人简介（主页左侧名片）</div>
+                <div class="settings-card-desc">仅管理员可编辑；添加的资料项将直接显示在主页左侧个人简介区域</div>
+              </div>
               <div class="app-avatar-editor">
-                <img class="app-avatar-preview" id="profAvatarPreview" alt="头像预览" title="点击更换头像" />
+                <img class="app-avatar-preview" id="siteProfAvatarPreview" alt="站点头像预览" title="点击更换头像" />
                 <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
                   <div class="admin-toolbar">
-                    <label for="profAvatar">头像图片（点击左侧头像或按钮上传）</label>
+                    <label for="siteProfAvatar">主页头像</label>
                     <div>
-                      <input type="file" id="profAvatarFileInput" accept="image/*" style="display: none;" />
-                      <button class="tactile-btn copy-btn" id="profAvatarUploadBtn" type="button">更换头像</button>
+                      <input type="file" id="siteProfAvatarFileInput" accept="image/*" style="display: none;" />
+                      <button class="tactile-btn copy-btn" id="siteProfAvatarUploadBtn" type="button">更换头像</button>
                     </div>
                   </div>
-                  <input class="auth-input" id="profAvatar" type="text" placeholder="粘贴头像图片 URL 或点击更换头像" required />
+                  <input class="auth-input" id="siteProfAvatar" type="text" placeholder="粘贴头像图片 URL 或上传" />
                 </div>
               </div>
-            </div>
-            <div class="auth-field">
-              <div class="admin-toolbar">
-                <label>更多个人资料（如：爱好、城市、职业等）</label>
-                <button class="tactile-btn copy-btn" id="addExtraInfoBtn" type="button">+ 添加资料项</button>
+              <div class="admin-row-2">
+                <div class="auth-field"><label for="siteProfName">展示名称</label><input class="auth-input" id="siteProfName" type="text" required /></div>
+                <div class="auth-field"><label for="siteProfTags">个人标签（逗号分隔）</label><input class="auth-input" id="siteProfTags" type="text" placeholder="全栈开发, 网络自动化, 极简主义" /></div>
               </div>
-              <div id="adminExtraInfoEditor" style="display: flex; flex-direction: column; gap: 8px;"></div>
+              <div class="admin-row-3">
+                <div class="auth-field"><label for="siteProfInfoName">姓名</label><input class="auth-input" id="siteProfInfoName" type="text" placeholder="选填" /></div>
+                <div class="auth-field"><label for="siteProfInfoGender">性别</label><input class="auth-input" id="siteProfInfoGender" type="text" placeholder="男 / 女 / 保密" /></div>
+                <div class="auth-field"><label for="siteProfInfoAge">年龄</label><input class="auth-input" id="siteProfInfoAge" type="text" placeholder="如：27 岁" /></div>
+              </div>
+              <div class="auth-field">
+                <div class="admin-toolbar">
+                  <label>更多个人资料（显示到主页个人简介区域）</label>
+                  <button class="tactile-btn copy-btn" id="addSiteExtraInfoBtn" type="button">+ 添加资料项</button>
+                </div>
+                <div id="siteExtraInfoEditor" style="display: flex; flex-direction: column; gap: 8px;"></div>
+              </div>
             </div>
-            <div class="auth-field" id="contactConfigField">
-              <label>联系方式与二维码配置（支持直接上传真实二维码图片，留空则按内容自动生成）</label>
+
+            <div class="settings-card" id="contactConfigField" data-site-panel="contacts" style="display: none;">
+              <div class="settings-card-head">
+                <div class="settings-card-title">联系方式</div>
+                <div class="settings-card-desc">配置页尾「联系我」按钮与弹窗二维码图片（留空则自动生成）</div>
+              </div>
               <input type="file" id="contactQrFileInput" accept="image/*" style="display: none;" />
               <div class="admin-contact-row admin-contact-head">
                 <span>平台名称</span>
                 <span>展示账号</span>
-                <span>第3列：一键跳转链接</span>
-                <span>第4列：二维码图片URL或文本</span>
+                <span>一键跳转链接</span>
+                <span>二维码图片或文本</span>
                 <span>操作</span>
               </div>
               <div id="adminContactsEditor" style="display: flex; flex-direction: column; gap: 8px;"></div>
             </div>
-            <div style="display: flex; justify-content: flex-end; padding-top: 6px;">
-              <button class="modal-btn modal-btn-primary" id="adminSaveProfileBtn" type="submit" style="padding: 0 20px; height: 36px;">保存资料并提交到 GitHub</button>
+
+            <div class="settings-card" data-site-panel="footer" style="display: none;">
+              <div class="settings-card-head">
+                <div class="settings-card-title">页尾设置</div>
+                <div class="settings-card-desc">配置页面底部卡片的标题、简介、运行状态标签与版权信息</div>
+              </div>
+              <div class="admin-row-2">
+                <div class="auth-field"><label for="profFooterTitle">页尾标题</label><input class="auth-input" id="profFooterTitle" type="text" /></div>
+                <div class="auth-field"><label for="profFooterBadge">状态徽标</label><input class="auth-input" id="profFooterBadge" type="text" placeholder="如：Serverless 运行中" /></div>
+              </div>
+              <div class="auth-field"><label for="profFooterDesc">页尾简介</label><input class="auth-input" id="profFooterDesc" type="text" /></div>
+              <div class="auth-field"><label for="profFooterCopyright">版权声明</label><input class="auth-input" id="profFooterCopyright" type="text" /></div>
+            </div>
+
+            <div class="settings-footer-bar">
+              <button class="tactile-btn modal-btn" type="button" data-close-auth-modal="1" style="height: 38px;">关闭</button>
+              <button class="modal-btn modal-btn-primary" id="saveSiteConfigBtn" type="submit" style="height: 38px;">保存网站设置</button>
             </div>
           </form>
         </div>
 
         <div class="admin-panel" data-account-panel="invites">
           <div class="admin-scroll-box">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <input class="auth-input" id="inviteCustomInput" type="text" placeholder="可选：自定义邀请码（留空自动生成）" style="max-width: 280px;" />
-              <select class="auth-input" id="inviteRoleSelect" style="width: 130px;">
-                <option value="user">普通用户码</option>
-                <option value="admin">管理员码</option>
-              </select>
-              <button class="modal-btn modal-btn-primary" id="adminCreateInviteBtn" type="button" style="padding: 0 18px; height: 38px; flex-shrink: 0;">生成邀请码</button>
+            <div class="settings-card">
+              <div class="settings-card-head">
+                <div class="settings-card-title">生成邀请码</div>
+                <div class="settings-card-desc">默认按 XXXX-XXXX-XXXX 大写字母随机生成；到期或删除后绑定账号立即失效，7 天后自动注销释放用户名</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <input class="auth-input" id="inviteCustomInput" type="text" placeholder="可选自定义码（留空自动生成 XXXX-XXXX-XXXX）" style="flex: 1; min-width: 180px;" />
+                <select class="auth-input" id="inviteRoleSelect" style="width: 112px; flex-shrink: 0;">
+                  <option value="user">普通用户码</option>
+                  <option value="admin">管理员码</option>
+                </select>
+                <select class="auth-input" id="inviteDurationSelect" style="width: 112px; flex-shrink: 0;">
+                  <option value="7">7 天有效</option>
+                  <option value="30" selected>30 天有效</option>
+                  <option value="90">90 天有效</option>
+                  <option value="365">365 天有效</option>
+                  <option value="0">永久有效</option>
+                </select>
+                <button class="modal-btn modal-btn-primary" id="adminCreateInviteBtn" type="button" style="padding: 0 16px; height: 38px; flex-shrink: 0;">生成邀请码</button>
+              </div>
             </div>
-            <div id="adminInviteList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            <div class="settings-card">
+              <div class="settings-card-head">
+                <div class="settings-card-title">邀请码列表</div>
+                <div class="settings-card-desc">支持修改到期时间、复制或删除邀请码</div>
+              </div>
+              <div id="adminInviteList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+            <div class="settings-footer-bar" style="grid-template-columns: 1fr;">
+              <button class="tactile-btn modal-btn" type="button" data-close-auth-modal="1" style="height: 38px;">关闭</button>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Profile Detail Modal -->
+  <div class="contact-modal-backdrop" id="userDetailModalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="contact-modal" style="max-width: 440px; align-items: stretch;">
+      <div class="modal-head">
+        <h3 class="modal-title">用户资料</h3>
+        <button class="tactile-btn modal-close" id="userDetailModalClose" type="button" aria-label="关闭资料弹窗">✕</button>
+      </div>
+      <div class="account-hero-card">
+        <img class="account-hero-avatar" id="udAvatar" alt="用户头像" />
+        <div class="account-hero-meta">
+          <div class="account-hero-name" id="udNick">-</div>
+          <div class="account-hero-sub" id="udHandle">@user</div>
+        </div>
+        <span class="account-role-badge" id="udRoleBadge" style="display: none;">管理员</span>
+      </div>
+      <div id="udTagsWrap" class="chc-tags" style="margin-top: 0; display: none;"></div>
+      <div class="ios-grouped-list" id="udInfoList" style="display: none;"></div>
+      <div id="udEmptyHint" class="empty-state" style="padding: 14px; display: none;">该用户暂未填写更多个人资料</div>
+    </div>
+  </div>
+
+  <!-- Switch Account Modal -->
+  <div class="contact-modal-backdrop" id="switchAccountModalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="contact-modal" style="max-width: 420px; align-items: stretch;">
+      <div class="modal-head">
+        <h3 class="modal-title">切换账号</h3>
+        <button class="tactile-btn modal-close" id="switchAccountModalClose" type="button" aria-label="关闭切换账号">✕</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+        <div class="settings-card" style="gap: 8px;">
+          <div class="settings-card-head" style="padding-bottom: 4px;">
+            <div class="settings-card-title">当前账号</div>
+          </div>
+          <div id="switchCurrentAccountBox"></div>
+        </div>
+        <div class="settings-card" style="gap: 8px;">
+          <div class="settings-card-head" style="padding-bottom: 4px;">
+            <div class="settings-card-title">已登录过的账号</div>
+            <div class="settings-card-desc">点击账号即可快速切换</div>
+          </div>
+          <div id="switchHistoryList" style="display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto;"></div>
+        </div>
+        <button class="modal-btn modal-btn-primary" id="switchAddAccountBtn" type="button" style="width: 100%; height: 38px;">+ 添加新账号</button>
       </div>
     </div>
   </div>
@@ -1501,8 +1881,9 @@
   <div class="contact-modal-backdrop" id="adminModalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="admin-modal">
       <div class="modal-head">
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <h3 class="modal-title">文章管理 (Markdown)</h3>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <h3 class="modal-title" id="adminModalTitle">文章管理 (Markdown)</h3>
+          <span class="invite-status tabular" id="postWordCountHint">0 字</span>
         </div>
         <button class="tactile-btn modal-close" id="adminModalClose" type="button" aria-label="关闭文章管理">✕</button>
       </div>
@@ -1534,8 +1915,15 @@
               </div>
               <div class="auth-field"><label for="postExcerptInput">文章摘要</label><input class="auth-input" id="postExcerptInput" type="text" required /></div>
               <div class="auth-field">
-                <div class="admin-toolbar">
-                  <label for="postBodyInput">正文内容（标准 Markdown 语法）</label>
+                <div class="admin-toolbar" style="flex-wrap: wrap; gap: 8px;">
+                  <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;" id="mdQuickToolbar">
+                    <label for="postBodyInput" style="margin-right: 4px;">正文内容</label>
+                    <button class="tactile-btn copy-btn" type="button" data-md-snippet="## 小节标题&#10;" style="height: 24px; padding: 0 8px; font-size: 11px;">H2</button>
+                    <button class="tactile-btn copy-btn" type="button" data-md-wrap="**" style="height: 24px; padding: 0 8px; font-size: 11px;">粗体</button>
+                    <button class="tactile-btn copy-btn" type="button" data-md-wrap="`" style="height: 24px; padding: 0 8px; font-size: 11px;">行内代码</button>
+                    <button class="tactile-btn copy-btn" type="button" data-md-snippet="&#10;```js&#10;// 代码&#10;```&#10;" style="height: 24px; padding: 0 8px; font-size: 11px;">代码块</button>
+                    <button class="tactile-btn copy-btn" type="button" data-md-snippet="> 引用内容&#10;" style="height: 24px; padding: 0 8px; font-size: 11px;">引用</button>
+                  </div>
                   <div style="display: flex; align-items: center; gap: 8px;">
                     <label style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer;">
                       <input type="checkbox" id="postFeaturedInput" /> 设为精选
@@ -1550,7 +1938,10 @@
               </div>
               <div class="admin-toolbar" style="margin-top: auto; padding-top: 6px;">
                 <button class="tactile-btn modal-btn" id="adminDeletePostBtn" type="button" style="padding: 0 14px; height: 36px; color: #ef4444;">删除当前文章</button>
-                <button class="modal-btn modal-btn-primary" id="adminSavePostBtn" type="submit" style="padding: 0 20px; height: 36px;">保存并提交到 GitHub</button>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <button class="tactile-btn modal-btn" id="adminCloseFooterBtn" type="button" style="padding: 0 16px; height: 36px;">关闭</button>
+                  <button class="modal-btn modal-btn-primary" id="adminSavePostBtn" type="submit" style="padding: 0 20px; height: 36px;">保存并提交到 GitHub</button>
+                </div>
               </div>
             </form>
           </div>
@@ -1639,7 +2030,6 @@
     const themeText = document.getElementById("themeText");
     const articlesGrid = document.getElementById("articlesGrid");
     const panelTitleText = document.getElementById("panelTitleText");
-    const panelCountText = document.getElementById("panelCountText");
     const listView = document.getElementById("homePage");
     const readerView = document.getElementById("readerPage");
     const progressBar = document.getElementById("progressBar");
@@ -1768,6 +2158,55 @@
       return mode === "system" ? (systemDarkQuery.matches ? "dark" : "light") : mode;
     }
 
+    const SITE_FAVICON_URL = "https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/9da19e20-2f43-4863-97c7-0d87f3995645.webp";
+    let cachedFaviconImg = null;
+    function updateFaviconForTheme(effective) {
+      const link = document.getElementById("siteFavicon");
+      if (!link) return;
+      const drawFavicon = (img) => {
+        try {
+          const size = 64;
+          const radius = 18;
+          const pad = 8;
+          const canvas = document.createElement("canvas");
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return;
+
+          ctx.beginPath();
+          ctx.roundRect(1, 1, size - 2, size - 2, radius);
+          ctx.fillStyle = effective === "dark" ? "#242730" : "#ffffff";
+          ctx.fill();
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = effective === "dark" ? "rgba(255, 255, 255, 0.16)" : "rgba(15, 23, 42, 0.10)";
+          ctx.stroke();
+
+          const maxBox = size - pad * 2;
+          const scale = Math.min(maxBox / (img.naturalWidth || maxBox), maxBox / (img.naturalHeight || maxBox));
+          const w = (img.naturalWidth || maxBox) * scale;
+          const h = (img.naturalHeight || maxBox) * scale;
+          ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+
+          const dataUrl = canvas.toDataURL("image/png");
+          link.type = "image/png";
+          link.href = dataUrl;
+        } catch {}
+      };
+
+      if (cachedFaviconImg && cachedFaviconImg.complete && cachedFaviconImg.naturalWidth > 0) {
+        drawFavicon(cachedFaviconImg);
+        return;
+      }
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        cachedFaviconImg = img;
+        drawFavicon(img);
+      };
+      img.src = SITE_FAVICON_URL;
+    }
+
     function applyThemeMode(mode) {
       currentThemeMode = VALID_MODES.has(mode) ? mode : "system";
       localStorage.setItem("xxoxovx-theme", currentThemeMode);
@@ -1784,6 +2223,7 @@
         themeText.textContent = "浅色";
         themeIcon.innerHTML = '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>';
       }
+      updateFaviconForTheme(effective);
     }
 
     function applyPalette(palette) {
@@ -1793,7 +2233,21 @@
       swatchBtns.forEach((btn) => btn.classList.toggle("is-active", btn.dataset.palette === next));
     }
 
+    const accountMenuWrap = document.getElementById("accountMenuWrap");
+    const accountMenuPopover = document.getElementById("accountMenuPopover");
+
+    function setAccountMenuOpen(open) {
+      if (!accountMenuPopover) return;
+      if (open) setAppearanceOpen(false);
+      accountMenuPopover.classList.toggle("is-open", open);
+      if (authTriggerBtn) authTriggerBtn.setAttribute("aria-expanded", String(open));
+    }
+
     function setAppearanceOpen(open) {
+      if (open && accountMenuPopover) {
+        accountMenuPopover.classList.remove("is-open");
+        if (authTriggerBtn) authTriggerBtn.setAttribute("aria-expanded", "false");
+      }
       appearancePopover.classList.toggle("is-open", open);
       appearanceBtn.setAttribute("aria-expanded", String(open));
     }
@@ -1802,7 +2256,10 @@
     if (localStorage.getItem("xxoxovx-palette")) applyPalette(localStorage.getItem("xxoxovx-palette"));
     systemDarkQuery.addEventListener("change", () => { if (currentThemeMode === "system") applyThemeMode("system"); });
     appearanceBtn.addEventListener("click", (e) => { e.stopPropagation(); setAppearanceOpen(!appearancePopover.classList.contains("is-open")); });
-    document.addEventListener("click", (e) => { if (!appearanceWrap.contains(e.target)) setAppearanceOpen(false); });
+    document.addEventListener("click", (e) => {
+      if (!appearanceWrap.contains(e.target)) setAppearanceOpen(false);
+      if (accountMenuWrap && !accountMenuWrap.contains(e.target)) setAccountMenuOpen(false);
+    });
     modeBtns.forEach((btn) => btn.addEventListener("click", () => applyThemeMode(btn.dataset.themeMode)));
     swatchBtns.forEach((btn) => btn.addEventListener("click", () => applyPalette(btn.dataset.palette)));
 
@@ -1811,14 +2268,24 @@
       if (!profile) return;
       if (isSiteDefault || !siteProfile) siteProfile = JSON.parse(JSON.stringify(profile));
       currentProfile = profile;
+      if (isSiteDefault && typeof isLocalPreview !== "undefined" && isLocalPreview) {
+        try { localStorage.setItem("xxoxovx_local_site_profile", JSON.stringify(profile)); } catch {}
+      }
       document.title = profile.siteTitle || "XXOXOVX · Blog";
       document.getElementById("brandTitleEl").textContent = profile.siteTitle || "";
       document.getElementById("brandSubEl").textContent = profile.siteSub || "";
       document.getElementById("heroKickerText").textContent = profile.heroKicker || "";
       document.getElementById("heroTitleEl").textContent = profile.heroTitle || "";
       document.getElementById("heroSubEl").textContent = profile.heroSub || "";
+      const ftTitle = document.getElementById("footerTitleEl");
+      const ftDesc = document.getElementById("footerDescEl");
+      const ftBadge = document.getElementById("footerBadgeEl");
+      const ftCopy = document.getElementById("footerCopyrightEl");
+      if (ftTitle && profile.footerTitle) ftTitle.textContent = profile.footerTitle;
+      if (ftDesc && profile.footerDesc) ftDesc.textContent = profile.footerDesc;
+      if (ftBadge && profile.footerBadge) ftBadge.textContent = profile.footerBadge;
+      if (ftCopy && profile.footerCopyright) ftCopy.textContent = profile.footerCopyright;
       document.getElementById("profileAvatarImg").src = profile.avatar || "";
-      document.getElementById("brandLogoImg").src = profile.avatar || "";
       const triggerAvatarEl = document.getElementById("authTriggerAvatar");
       if (triggerAvatarEl) triggerAvatarEl.src = profile.avatar || "";
       const cardAvatarEl = document.getElementById("accountCardAvatar");
@@ -1940,7 +2407,6 @@
         return matchCat && matchQuery;
       });
       panelTitleText.textContent = state.filter === "all" ? "最新动态 · 最新发布" : state.filter;
-      panelCountText.textContent = `共 ${filtered.length} 篇`;
 
       if (filtered.length === 0) {
         articlesGrid.innerHTML = '<div class="empty-state">没有找到匹配的文章</div>';
@@ -2015,6 +2481,8 @@
       document.getElementById("readerCat").textContent = post.category;
       document.getElementById("readerDate").textContent = post.date;
       document.getElementById("readerTime").textContent = post.readTime;
+      const editBtn = document.getElementById("readerEditPostBtn");
+      if (editBtn) editBtn.style.display = currentUser?.role === "admin" ? "inline-flex" : "none";
       document.getElementById("readerTitle").textContent = post.title;
       document.getElementById("readerLead").textContent = post.excerpt;
 
@@ -2252,7 +2720,31 @@
         if (authTriggerIcon) authTriggerIcon.style.display = "none";
         if (commentGuestBar) commentGuestBar.style.display = "none";
         if (commentForm) commentForm.style.display = "flex";
+
+        const popAvatar = document.getElementById("accountPopAvatar");
+        const popName = document.getElementById("accountPopName");
+        const popBadge = document.getElementById("accountPopBadge");
+        const popSub = document.getElementById("accountPopSub");
+        const popSiteBtn = document.getElementById("popSiteSettingsBtn");
+        const popAdminBtn = document.getElementById("popAdminManageBtn");
+        const popSettingsDesc = document.getElementById("popSettingsDesc");
+        const displayNick = currentUser.profile?.profileName || currentUser.username;
+        if (popAvatar) popAvatar.src = avatarSrc;
+        if (popName) popName.textContent = displayNick;
+        if (popBadge) {
+          popBadge.textContent = isAdmin ? "管理员" : "普通用户";
+          popBadge.classList.toggle("is-admin", isAdmin);
+        }
+        if (popSub) popSub.textContent = `@${currentUser.username} · ${isAdmin ? "管理员" : "普通用户"}`;
+        if (popSiteBtn) popSiteBtn.style.display = isAdmin ? "flex" : "none";
+        if (popAdminBtn) popAdminBtn.style.display = isAdmin ? "flex" : "none";
+        if (popSettingsDesc) popSettingsDesc.textContent = "头像、个人资料、邀请码与账号信息";
+        const newPostBtn = document.getElementById("newPostHeaderBtn");
+        if (newPostBtn) newPostBtn.style.display = isAdmin ? "inline-flex" : "none";
       } else {
+        setAccountMenuOpen(false);
+        const newPostBtn = document.getElementById("newPostHeaderBtn");
+        if (newPostBtn) newPostBtn.style.display = "none";
         authTriggerText.textContent = "登录 / 注册";
         authTriggerBtn.classList.remove("is-logged-in");
         if (authTriggerAvatar) authTriggerAvatar.style.display = "none";
@@ -2265,35 +2757,14 @@
     function syncAuthUI() {
       syncTopAuthBar();
       const authModalCard = document.getElementById("authModalCard");
-      const accountAdminTabs = document.getElementById("accountAdminTabs");
       if (currentUser) {
         const isAdmin = currentUser.role === "admin";
         const avatarSrc = (!isAdmin && currentUser.profile?.avatar) || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
         authGuestView.style.display = "none";
         authUserView.style.display = "flex";
         authModalCard?.classList.add("is-admin-account");
-        if (accountAdminTabs) accountAdminTabs.style.display = "flex";
-        const profileTabBtn = document.getElementById("accountTabProfile");
-        if (profileTabBtn) profileTabBtn.textContent = isAdmin ? "界面与资料" : "我的账号资料";
-        const inviteTabBtn = document.getElementById("accountTabInvites");
-        if (inviteTabBtn) inviteTabBtn.style.display = isAdmin ? "flex" : "none";
-        const quickBox = document.getElementById("accountQuickActions");
-        if (quickBox) {
-          quickBox.style.display = "grid";
-          quickBox.style.gridTemplateColumns = isAdmin ? "repeat(3, 1fr)" : "1fr";
-          document.getElementById("quickToProfileBtn").textContent = isAdmin ? "编辑界面资料" : "编辑我的资料";
-          document.getElementById("quickToInvitesBtn").style.display = isAdmin ? "inline-flex" : "none";
-          document.getElementById("quickToWriteBtn").style.display = isAdmin ? "inline-flex" : "none";
-        }
-        const siteCfg = document.getElementById("siteConfigFields");
-        if (siteCfg) {
-          siteCfg.style.display = isAdmin ? "flex" : "none";
-          siteCfg.querySelectorAll("input").forEach((inp) => { inp.required = isAdmin; });
-        }
-        const contactCfg = document.getElementById("contactConfigField");
-        if (contactCfg) contactCfg.style.display = isAdmin ? "flex" : "none";
-        const saveProfBtn = document.getElementById("adminSaveProfileBtn");
-        if (saveProfBtn) saveProfBtn.textContent = isAdmin ? "保存界面资料并提交到 GitHub" : "保存我的账号资料";
+        const saveProfBtn = document.getElementById("savePersonalProfileBtn");
+        if (saveProfBtn) saveProfBtn.textContent = "保存更改";
         const cardAvatar = document.getElementById("accountCardAvatar");
         if (cardAvatar) cardAvatar.src = avatarSrc;
         const cardName = document.getElementById("accountCardName");
@@ -2302,17 +2773,15 @@
         if (cardEmail) cardEmail.textContent = currentUser.email || "未绑定邮箱";
         const cardBadge = document.getElementById("accountCardBadge");
         if (cardBadge) cardBadge.textContent = isAdmin ? "管理员" : "普通用户";
-        authModalTitle.textContent = "账号管理";
         document.getElementById("authUserName").textContent = currentUser.username;
         document.getElementById("authUserRole").textContent = isAdmin ? "管理员" : "普通用户";
-        document.getElementById("authUserEmail").textContent = currentUser.email || "未填写";
+        document.getElementById("authUserEmail").textContent = currentUser.email || "未绑定";
         const syncModeEl = document.getElementById("authSyncMode");
         if (syncModeEl) syncModeEl.textContent = isLocalPreview ? "本地预览模式" : (isAdmin ? "D1 + GitHub 同步" : "Cloudflare D1");
       } else {
         authGuestView.style.display = "flex";
         authUserView.style.display = "none";
-        authModalCard?.classList.remove("is-admin-account", "is-wide");
-        if (accountAdminTabs) accountAdminTabs.style.display = "none";
+        authModalCard?.classList.remove("is-admin-account", "is-wide-page");
         authModalTitle.textContent = authMode === "login" ? "账号登录" : "邀请码注册";
       }
     }
@@ -2362,13 +2831,14 @@
       authError.textContent = "";
     }
 
-    function openAuthModal() {
+    function openAuthModal(initialTab = "account") {
       setAppearanceOpen(false);
+      setAccountMenuOpen(false);
       authError.textContent = "";
       if (localAdminHint) localAdminHint.style.display = isLocalPreview && authMode === "login" ? "block" : "none";
       syncAuthUI();
       if (currentUser) {
-        switchAccountTab("account");
+        switchAccountTab(initialTab);
         fillProfileEditor();
       }
       authModalBackdrop.classList.add("is-open");
@@ -2380,11 +2850,155 @@
       authModalBackdrop.setAttribute("aria-hidden", "true");
     }
 
-    authTriggerBtn.addEventListener("click", openAuthModal);
+    authTriggerBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (currentUser) {
+        setAccountMenuOpen(!accountMenuPopover?.classList.contains("is-open"));
+      } else {
+        openAuthModal();
+      }
+    });
+    const ACCOUNT_HISTORY_KEY = "xxoxovx_account_history_v1";
+    const switchAccountModalBackdrop = document.getElementById("switchAccountModalBackdrop");
+
+    function getAccountHistory() {
+      try {
+        const arr = JSON.parse(localStorage.getItem(ACCOUNT_HISTORY_KEY) || "[]");
+        return Array.isArray(arr) ? arr : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveAccountHistory(list) {
+      try { localStorage.setItem(ACCOUNT_HISTORY_KEY, JSON.stringify(list.slice(0, 10))); } catch {}
+    }
+
+    function recordAccountHistory(user) {
+      if (!user || !user.username) return;
+      const list = getAccountHistory().filter((item) => item.username !== user.username);
+      const isAdmin = user.role === "admin";
+      const avatar = (!isAdmin && user.profile?.avatar) || currentProfile?.avatar || makeDefaultAvatar(user.username);
+      list.unshift({
+        username: user.username,
+        role: user.role || "user",
+        email: user.email || "",
+        invite_code: user.invite_code || null,
+        profile: user.profile || null,
+        profileName: user.profile?.profileName || user.username,
+        avatar,
+      });
+      saveAccountHistory(list);
+    }
+
+    function openSwitchAccountModal() {
+      setAccountMenuOpen(false);
+      setAppearanceOpen(false);
+      const curBox = document.getElementById("switchCurrentAccountBox");
+      if (currentUser) {
+        recordAccountHistory(currentUser);
+        const isAdmin = currentUser.role === "admin";
+        const avatar = (!isAdmin && currentUser.profile?.avatar) || currentProfile?.avatar || makeDefaultAvatar(currentUser.username);
+        const nick = currentUser.profile?.profileName || currentUser.username;
+        curBox.innerHTML = `
+          <div class="account-hero-card" style="padding: 10px 12px;">
+            <img class="account-hero-avatar" src="${escapeHtml(avatar)}" alt="${escapeHtml(nick)}" style="width: 38px; height: 38px;" />
+            <div class="account-hero-meta">
+              <div class="account-hero-name" style="font-size: 14px;">${escapeHtml(nick)}</div>
+              <div class="account-hero-sub">@${escapeHtml(currentUser.username)} · ${isAdmin ? "管理员" : "普通用户"}</div>
+            </div>
+            <span class="account-role-badge">当前使用</span>
+          </div>`;
+      } else {
+        curBox.innerHTML = '<div class="empty-state" style="padding: 10px;">当前未登录</div>';
+      }
+
+      const historyBox = document.getElementById("switchHistoryList");
+      const others = getAccountHistory().filter((it) => !currentUser || it.username !== currentUser.username);
+      if (!others.length) {
+        historyBox.innerHTML = '<div class="empty-state" style="padding: 12px;">暂无其他已登录过的账号</div>';
+      } else {
+        historyBox.innerHTML = others.map((it) => `
+          <div class="account-pop-item" data-switch-user="${escapeHtml(it.username)}" style="padding: 8px 10px; border: 1px solid var(--hairline); background-color: var(--bg-card-solid);">
+            <img class="account-hero-avatar" src="${escapeHtml(it.avatar || makeDefaultAvatar(it.username))}" alt="${escapeHtml(it.profileName || it.username)}" style="width: 34px; height: 34px;" />
+            <span class="account-pop-text">
+              <span class="account-pop-title">${escapeHtml(it.profileName || it.username)}</span>
+              <span class="account-pop-desc">@${escapeHtml(it.username)} · ${it.role === "admin" ? "管理员" : "普通用户"}</span>
+            </span>
+            <button class="tactile-btn copy-btn" type="button" data-forget-user="${escapeHtml(it.username)}" title="从历史移除" style="height: 26px; padding: 0 8px; font-size: 11px;">移除</button>
+          </div>`).join("");
+      }
+
+      switchAccountModalBackdrop.classList.add("is-open");
+      switchAccountModalBackdrop.setAttribute("aria-hidden", "false");
+    }
+
+    function closeSwitchAccountModal() {
+      switchAccountModalBackdrop.classList.remove("is-open");
+      switchAccountModalBackdrop.setAttribute("aria-hidden", "true");
+    }
+
+    document.getElementById("switchAccountModalClose").addEventListener("click", closeSwitchAccountModal);
+    switchAccountModalBackdrop.addEventListener("click", (e) => { if (e.target === switchAccountModalBackdrop) closeSwitchAccountModal(); });
+    document.getElementById("switchAddAccountBtn").addEventListener("click", async () => {
+      closeSwitchAccountModal();
+      authUsername.value = "";
+      authPassword.value = "";
+      if (currentUser) {
+        recordAccountHistory(currentUser);
+        await performLogout({ reopenLogin: true });
+      } else {
+        switchAuthMode("login");
+        openAuthModal();
+      }
+    });
+    document.getElementById("switchHistoryList").addEventListener("click", async (e) => {
+      const forgetBtn = e.target.closest("[data-forget-user]");
+      if (forgetBtn) {
+        e.stopPropagation();
+        const uname = forgetBtn.dataset.forgetUser;
+        saveAccountHistory(getAccountHistory().filter((it) => it.username !== uname));
+        openSwitchAccountModal();
+        return;
+      }
+      const row = e.target.closest("[data-switch-user]");
+      if (!row) return;
+      const targetUsername = row.dataset.switchUser;
+      const saved = getAccountHistory().find((it) => it.username === targetUsername);
+      if (!saved) return;
+      closeSwitchAccountModal();
+      if (isLocalPreview) {
+        currentUser = {
+          username: saved.username,
+          role: saved.role || "user",
+          email: saved.email || "",
+          invite_code: saved.invite_code || null,
+          profile: saved.profile || null,
+        };
+        try { sessionStorage.setItem(LOCAL_ADMIN_KEY, JSON.stringify(currentUser)); } catch {}
+        recordAccountHistory(currentUser);
+        syncAuthUI();
+        if (state.currentPostId) loadComments(state.currentPostId);
+        showToast(`已切换至账号：${saved.profileName || saved.username}`);
+      } else {
+        await performLogout({ reopenLogin: false });
+        switchAuthMode("login");
+        authUsername.value = saved.username;
+        openAuthModal();
+        setTimeout(() => authPassword.focus(), 120);
+        showToast(`请输入 ${saved.username} 的密码以完成切换`);
+      }
+    });
+
+    document.getElementById("popSiteSettingsBtn")?.addEventListener("click", () => openAuthModal("site"));
+    document.getElementById("popAdminManageBtn")?.addEventListener("click", () => openAuthModal("invites"));
+    document.getElementById("popAccountSettingsBtn")?.addEventListener("click", () => openAuthModal("account"));
+    document.getElementById("popSwitchAccountBtn")?.addEventListener("click", openSwitchAccountModal);
+    document.getElementById("popLogoutBtn")?.addEventListener("click", () => performLogout({ reopenLogin: false }));
     document.getElementById("authModalClose").addEventListener("click", closeAuthModal);
     tabLogin.addEventListener("click", () => switchAuthMode("login"));
     tabRegister.addEventListener("click", () => switchAuthMode("register"));
-    document.getElementById("commentLoginBtn").addEventListener("click", openAuthModal);
+    document.getElementById("commentLoginBtn").addEventListener("click", () => openAuthModal());
 
     authForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -2397,7 +3011,6 @@
 
       if (authMode === "register") {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { authError.textContent = "请输入有效的邮箱地址"; return; }
-        if (!inviteCode) { authError.textContent = "请输入邀请码"; return; }
         if (password !== confirm) { authError.textContent = "两次输入的密码不一致"; return; }
       }
 
@@ -2407,9 +3020,10 @@
           username,
           role: isDemoAdmin ? "admin" : "user",
           email: isDemoAdmin ? "admin@xxoxovx.dev" : "user@xxoxovx.dev",
-          profile: null,
+          profile: isDemoAdmin ? null : { avatar: makeDefaultAvatar(username, true), profileName: username, tags: [], info: {} },
         };
         try { sessionStorage.setItem(LOCAL_ADMIN_KEY, JSON.stringify(currentUser)); } catch {}
+        recordAccountHistory(currentUser);
         syncTopAuthBar();
         closeAuthModal();
         setTimeout(() => { authForm.reset(); syncAuthUI(); }, 230);
@@ -2427,6 +3041,7 @@
         const data = await res.json();
         if (!res.ok) { authError.textContent = data.error || "操作失败"; return; }
         currentUser = data.user;
+        recordAccountHistory(currentUser);
         syncTopAuthBar();
         closeAuthModal();
         setTimeout(() => { authForm.reset(); syncAuthUI(); }, 230);
@@ -2439,16 +3054,21 @@
       }
     });
 
-    document.getElementById("authLogoutBtn").addEventListener("click", async () => {
+    async function performLogout({ reopenLogin = false } = {}) {
+      setAccountMenuOpen(false);
       try { sessionStorage.removeItem(LOCAL_ADMIN_KEY); } catch {}
       try { await fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "logout" }) }); } catch {}
       currentUser = null;
       syncTopAuthBar();
       closeAuthModal();
-      setTimeout(() => { switchAuthMode("login"); syncAuthUI(); }, 230);
-      showToast("已退出登录");
+      setTimeout(() => {
+        switchAuthMode("login");
+        syncAuthUI();
+        if (reopenLogin) openAuthModal();
+      }, 230);
+      showToast(reopenLogin ? "已退出当前账号，请登录" : "已退出登录");
       if (state.currentPostId) loadComments(state.currentPostId);
-    });
+    }
 
     // Comments
     const commentListEl = document.getElementById("commentList");
@@ -2477,6 +3097,146 @@
       return head + tail;
     }
 
+    function makeDefaultAvatar(name, randomize = false) {
+      const palettes = [
+        ["#34d399", "#059669"],
+        ["#60a5fa", "#2563eb"],
+        ["#a78bfa", "#7c3aed"],
+        ["#f472b6", "#db2777"],
+        ["#fbbf24", "#d97706"],
+        ["#2dd4bf", "#0d9488"],
+        ["#fb7185", "#e11d48"],
+        ["#818cf8", "#4f46e5"],
+      ];
+      const str = String(name || "?");
+      let idx = 0;
+      if (randomize) {
+        idx = Math.floor(Math.random() * palettes.length);
+      } else {
+        for (let i = 0; i < str.length; i++) idx = (idx * 31 + str.charCodeAt(i)) % palettes.length;
+      }
+      const [c1, c2] = palettes[idx];
+      const ch = encodeURIComponent((str.trim()[0] || "?").toUpperCase());
+      return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='${c1}'/><stop offset='100%' stop-color='${c2}'/></linearGradient></defs><rect width='80' height='80' rx='40' fill='url(%23g)'/><circle cx='58' cy='20' r='16' fill='rgba(255,255,255,0.16)'/><text x='50%' y='53%' dominant-baseline='middle' text-anchor='middle' font-family='system-ui,sans-serif' font-size='34' font-weight='600' fill='%23ffffff'>${ch}</text></svg>`;
+    }
+
+    const commentAuthorStore = new Map();
+    const userDetailModalBackdrop = document.getElementById("userDetailModalBackdrop");
+
+    function resolveCommentProfile(c) {
+      let prof = c.author_profile;
+      if (!prof && currentUser && c.user_id === currentUser.id && currentUser.profile) {
+        prof = currentUser.profile;
+      }
+      if (!prof && c.author_role === "admin") {
+        prof = currentProfile;
+      }
+      const nick = (prof && prof.profileName) ? prof.profileName : c.username;
+      const avatar = (prof && prof.avatar) ? prof.avatar : makeDefaultAvatar(nick);
+      return { prof: prof || {}, nick, avatar, isAdmin: c.author_role === "admin" };
+    }
+
+    function openUserDetailModal(c) {
+      const { prof, nick, avatar, isAdmin } = resolveCommentProfile(c);
+      const infoObj = prof.info || {};
+      const tags = Array.isArray(prof.tags) ? prof.tags.filter(Boolean).slice(0, 8) : [];
+      const rows = [
+        ["姓名", infoObj.name],
+        ["性别", infoObj.gender],
+        ["年龄", infoObj.age],
+        ["爱好", infoObj.hobby],
+        ["城市", infoObj.city],
+        ["QQ", infoObj.qq],
+        ["微信", infoObj.wechat],
+        ["邮箱", infoObj.email],
+        ...(Array.isArray(infoObj.extraInfo) ? infoObj.extraInfo.map((it) => [it.label, it.value]) : []),
+      ].filter(([k, v]) => String(k || "").trim() && String(v || "").trim());
+
+      document.getElementById("udAvatar").src = avatar;
+      document.getElementById("udNick").textContent = nick;
+      document.getElementById("udHandle").textContent = `@${c.username}`;
+      const roleEl = document.getElementById("udRoleBadge");
+      roleEl.style.display = isAdmin ? "inline-flex" : "none";
+
+      const tagsEl = document.getElementById("udTagsWrap");
+      if (tags.length) {
+        tagsEl.innerHTML = tags.map((t) => `<span class="chc-tag">${escapeHtml(t)}</span>`).join("");
+        tagsEl.style.display = "flex";
+      } else {
+        tagsEl.style.display = "none";
+      }
+
+      const listEl = document.getElementById("udInfoList");
+      const emptyEl = document.getElementById("udEmptyHint");
+      if (rows.length) {
+        listEl.innerHTML = rows.map(([k, v]) => `
+          <div class="ios-grouped-row">
+            <span class="ios-grouped-label">${escapeHtml(k)}</span>
+            <span class="ios-grouped-value">${escapeHtml(v)}</span>
+          </div>`).join("");
+        listEl.style.display = "flex";
+        emptyEl.style.display = "none";
+      } else {
+        listEl.style.display = "none";
+        emptyEl.style.display = tags.length ? "none" : "block";
+      }
+
+      userDetailModalBackdrop.classList.add("is-open");
+      userDetailModalBackdrop.setAttribute("aria-hidden", "false");
+    }
+
+    function closeUserDetailModal() {
+      userDetailModalBackdrop.classList.remove("is-open");
+      userDetailModalBackdrop.setAttribute("aria-hidden", "true");
+    }
+    document.getElementById("userDetailModalClose").addEventListener("click", closeUserDetailModal);
+    userDetailModalBackdrop.addEventListener("click", (e) => { if (e.target === userDetailModalBackdrop) closeUserDetailModal(); });
+
+    function renderCommentAuthor(c) {
+      commentAuthorStore.set(String(c.id), c);
+      const { prof, nick, avatar, isAdmin } = resolveCommentProfile(c);
+      const infoObj = prof.info || {};
+      const hoverRows = [
+        ["性别", infoObj.gender],
+        ["年龄", infoObj.age],
+        ["爱好", infoObj.hobby],
+        ["城市", infoObj.city],
+      ].filter(([, v]) => String(v || "").trim());
+
+      const infoHtml = hoverRows.length
+        ? `<div class="chc-info">${hoverRows.map(([k, v]) => `<div class="chc-info-row"><span class="chc-info-k">${escapeHtml(k)}</span><span class="chc-info-v">${escapeHtml(v)}</span></div>`).join("")}</div>`
+        : "";
+
+      return `
+        <div class="comment-author-wrap">
+          <div class="comment-avatar-wrap" tabindex="0" data-comment-author="${escapeHtml(String(c.id))}" title="点击查看全部资料">
+            <img class="comment-avatar" src="${escapeHtml(avatar)}" alt="${escapeHtml(nick)}" loading="lazy" />
+            <div class="comment-hover-card">
+              <div class="chc-header">
+                <img class="chc-avatar" src="${escapeHtml(avatar)}" alt="${escapeHtml(nick)}" />
+                <div class="chc-names">
+                  <div class="chc-nick">${escapeHtml(nick)}${isAdmin ? '<span class="comment-role-badge">管理员</span>' : ""}</div>
+                  <div class="chc-handle">@${escapeHtml(c.username)}</div>
+                </div>
+              </div>
+              ${infoHtml}
+            </div>
+          </div>
+          <div class="comment-author-meta">
+            <span class="comment-author">${escapeHtml(nick)}</span>
+            ${isAdmin ? '<span class="comment-role-badge">管理员</span>' : ""}
+          </div>
+        </div>
+      `;
+    }
+
+    commentListEl.addEventListener("click", (e) => {
+      const wrap = e.target.closest("[data-comment-author]");
+      if (!wrap) return;
+      const c = commentAuthorStore.get(wrap.dataset.commentAuthor);
+      if (c) openUserDetailModal(c);
+    });
+
     async function loadComments(postId) {
       commentListEl.innerHTML = '<div class="empty-state" style="padding: 16px;">正在加载评论...</div>';
       const renderList = (list) => {
@@ -2492,7 +3252,7 @@
           return `
             <div class="comment-item" data-comment-item="${c.id}">
               <div class="comment-meta">
-                <span class="comment-author">${escapeHtml(c.username)}</span>
+                ${renderCommentAuthor(c)}
                 <div class="comment-right">
                   <span>${formatIsoTime(c.created_at)}</span>
                   ${canDel ? `<div class="comment-del-wrap"><button class="comment-del-btn" type="button" data-del-comment="${c.id}">删除</button></div>` : ""}
@@ -2510,7 +3270,29 @@
       } catch {
         if (isLocalPreview) {
           renderList([
-            { id: 1, user_id: -1, username: "demo_reader", content: "排版和动效都很克制舒服，阅读体验非常流畅！", created_at: new Date().toISOString() },
+            {
+              id: 1,
+              user_id: -1,
+              username: "demo_reader",
+              author_role: "user",
+              author_profile: {
+                profileName: "林屿",
+                avatar: makeDefaultAvatar("林"),
+                tags: ["前端设计", "极简主义", "摄影"],
+                info: { name: "林屿", gender: "男", age: "24", hobby: "摄影 / 骑行", city: "杭州", qq: "10240888", wechat: "linyu_dev", email: "linyu@example.com", extraInfo: [] },
+              },
+              content: "排版和动效都很克制舒服，阅读体验非常流畅！",
+              created_at: new Date().toISOString(),
+            },
+            {
+              id: 2,
+              user_id: 1,
+              username: "admin",
+              author_role: "admin",
+              author_profile: currentProfile,
+              content: "欢迎大家在评论区交流想法。",
+              created_at: new Date(Date.now() - 3600000).toISOString(),
+            },
           ]);
         } else {
           commentsCountEl.textContent = "0 条评论";
@@ -2701,7 +3483,6 @@
 
     // Admin Console & Account Management Tabs
     const adminModalBackdrop = document.getElementById("adminModalBackdrop");
-    const accountTabs = document.querySelectorAll("[data-account-tab]");
     const accountPanels = document.querySelectorAll("[data-account-panel]");
     const adminPostListEl = document.getElementById("adminPostList");
     const postBodyInput = document.getElementById("postBodyInput");
@@ -2711,23 +3492,38 @@
     let isPreviewMode = false;
     let pendingQrIdx = null;
 
+    const ACCOUNT_PAGE_TITLES = {
+      account: "账号设置",
+      site: "网站设置",
+      invites: "邀请码管理",
+    };
+
+    function switchSiteSubTab(name) {
+      document.querySelectorAll("[data-site-tab]").forEach((b) => b.classList.toggle("is-active", b.dataset.siteTab === name));
+      document.querySelectorAll("[data-site-panel]").forEach((p) => {
+        p.style.display = p.dataset.sitePanel === name ? "flex" : "none";
+      });
+    }
+    document.querySelectorAll("[data-site-tab]").forEach((btn) => {
+      btn.addEventListener("click", () => switchSiteSubTab(btn.dataset.siteTab));
+    });
+
     function switchAccountTab(tabName) {
-      accountTabs.forEach((t) => t.classList.toggle("is-active", t.dataset.accountTab === tabName));
-      accountPanels.forEach((p) => p.classList.toggle("is-active", p.dataset.accountPanel === tabName));
+      const page = ACCOUNT_PAGE_TITLES[tabName] ? tabName : "account";
+      accountPanels.forEach((p) => p.classList.toggle("is-active", p.dataset.accountPanel === page));
       const modalCard = document.getElementById("authModalCard");
       if (modalCard && currentUser) {
-        modalCard.classList.toggle("is-wide", tabName !== "account");
+        modalCard.classList.toggle("is-wide-page", page === "site" || page === "invites");
       }
-      if (tabName === "profile" && currentUser) fillProfileEditor();
-      if (tabName === "invites" && currentUser?.role === "admin") loadAdminInvites();
+      if (currentUser) authModalTitle.textContent = ACCOUNT_PAGE_TITLES[page];
+      if ((page === "account" || page === "site") && currentUser) fillProfileEditor();
+      if (page === "site") switchSiteSubTab("header");
+      if (page === "invites" && currentUser?.role === "admin") loadAdminInvites();
     }
-    accountTabs.forEach((t) => t.addEventListener("click", () => switchAccountTab(t.dataset.accountTab)));
-    document.getElementById("quickToProfileBtn")?.addEventListener("click", () => switchAccountTab("profile"));
-    document.getElementById("quickToInvitesBtn")?.addEventListener("click", () => switchAccountTab("invites"));
-    document.getElementById("quickToWriteBtn")?.addEventListener("click", () => {
-      closeAuthModal();
-      openAdminModal();
+    document.querySelectorAll("[data-close-auth-modal]").forEach((btn) => {
+      btn.addEventListener("click", closeAuthModal);
     });
+    document.getElementById("newPostHeaderBtn")?.addEventListener("click", () => openAdminModal(true));
 
     function setMarkdownPreview(preview) {
       isPreviewMode = preview;
@@ -2752,21 +3548,60 @@
         </button>`).join("");
     }
 
+    function updatePostWordCount() {
+      const text = postBodyInput.value.trim();
+      const chars = text.replace(/\s+/g, "").length;
+      const hint = document.getElementById("postWordCountHint");
+      if (hint) hint.textContent = `${chars} 字`;
+      if (!editingPostId) {
+        const mins = Math.max(1, Math.ceil(chars / 350));
+        const rt = document.getElementById("postReadTimeInput");
+        if (rt) rt.value = `${mins} 分钟`;
+      }
+    }
+    postBodyInput.addEventListener("input", updatePostWordCount);
+
+    document.getElementById("mdQuickToolbar")?.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      if (isPreviewMode) setMarkdownPreview(false);
+      const start = postBodyInput.selectionStart ?? postBodyInput.value.length;
+      const end = postBodyInput.selectionEnd ?? start;
+      const val = postBodyInput.value;
+      if (btn.dataset.mdSnippet) {
+        const snippet = btn.dataset.mdSnippet;
+        postBodyInput.value = val.slice(0, start) + snippet + val.slice(end);
+        postBodyInput.focus();
+        postBodyInput.setSelectionRange(start + snippet.length, start + snippet.length);
+      } else if (btn.dataset.mdWrap) {
+        const w = btn.dataset.mdWrap;
+        const selected = val.slice(start, end) || "文本";
+        const replacement = `${w}${selected}${w}`;
+        postBodyInput.value = val.slice(0, start) + replacement + val.slice(end);
+        postBodyInput.focus();
+        postBodyInput.setSelectionRange(start + w.length, start + w.length + selected.length);
+      }
+      updatePostWordCount();
+    });
+
     function fillPostEditor(post) {
       setMarkdownPreview(false);
+      const modalTitle = document.getElementById("adminModalTitle");
       if (!post) {
         editingPostId = null;
+        if (modalTitle) modalTitle.textContent = "新建文章 (Markdown)";
         document.getElementById("postTitleInput").value = "";
         document.getElementById("postIdInput").value = `post-${Date.now()}`;
         document.getElementById("postCategoryInput").value = "技术手记";
         document.getElementById("postDateInput").value = new Date().toISOString().slice(0, 10);
-        document.getElementById("postReadTimeInput").value = "5 分钟";
+        document.getElementById("postReadTimeInput").value = "1 分钟";
         document.getElementById("postExcerptInput").value = "";
         postBodyInput.value = "## 小节标题\n\n在这里开始用 **Markdown** 写作...\n";
         document.getElementById("postFeaturedInput").checked = false;
         document.getElementById("adminDeletePostBtn").style.visibility = "hidden";
       } else {
         editingPostId = post.id;
+        if (modalTitle) modalTitle.textContent = "编辑文章 (Markdown)";
         document.getElementById("postTitleInput").value = post.title;
         document.getElementById("postIdInput").value = post.id;
         document.getElementById("postCategoryInput").value = post.category;
@@ -2777,22 +3612,39 @@
         document.getElementById("postFeaturedInput").checked = Boolean(post.featured);
         document.getElementById("adminDeletePostBtn").style.visibility = "visible";
       }
+      updatePostWordCount();
       renderAdminPostList();
     }
 
-    function renderExtraInfoEditor(list = []) {
-      const box = document.getElementById("adminExtraInfoEditor");
+    const MAX_SITE_EXTRA_INFO = 4;
+    function updateSiteExtraAddBtn() {
+      const box = document.getElementById("siteExtraInfoEditor");
+      const btn = document.getElementById("addSiteExtraInfoBtn");
+      if (!box || !btn) return;
+      const count = box.querySelectorAll(".admin-extra-row").length;
+      btn.disabled = count >= MAX_SITE_EXTRA_INFO;
+      btn.textContent = count >= MAX_SITE_EXTRA_INFO ? `+ 添加资料项 (${count}/${MAX_SITE_EXTRA_INFO})` : `+ 添加资料项 (${count}/${MAX_SITE_EXTRA_INFO})`;
+    }
+
+    function renderSiteExtraInfoEditor(list = []) {
+      const box = document.getElementById("siteExtraInfoEditor");
       if (!box) return;
-      box.innerHTML = list.map((item) => `
+      box.innerHTML = list.slice(0, MAX_SITE_EXTRA_INFO).map((item) => `
         <div class="admin-extra-row">
           <input class="auth-input" data-exkey="label" value="${escapeHtml(item.label || "")}" placeholder="名称（如：爱好）" />
           <input class="auth-input" data-exkey="value" value="${escapeHtml(item.value || "")}" placeholder="内容（如：摄影 / 骑行）" />
           <button class="tactile-btn copy-btn" type="button" data-del-extra="1" style="height: 36px; color: #ef4444;">删除</button>
         </div>`).join("");
+      updateSiteExtraAddBtn();
     }
 
-    document.getElementById("addExtraInfoBtn").addEventListener("click", () => {
-      const box = document.getElementById("adminExtraInfoEditor");
+    document.getElementById("addSiteExtraInfoBtn")?.addEventListener("click", () => {
+      const box = document.getElementById("siteExtraInfoEditor");
+      if (!box) return;
+      if (box.querySelectorAll(".admin-extra-row").length >= MAX_SITE_EXTRA_INFO) {
+        showToast("最多只能添加 4 条资料项");
+        return;
+      }
       const row = document.createElement("div");
       row.className = "admin-extra-row";
       row.innerHTML = `
@@ -2800,12 +3652,16 @@
         <input class="auth-input" data-exkey="value" placeholder="内容（如：摄影 / 骑行）" />
         <button class="tactile-btn copy-btn" type="button" data-del-extra="1" style="height: 36px; color: #ef4444;">删除</button>`;
       box.appendChild(row);
+      updateSiteExtraAddBtn();
       row.querySelector('[data-exkey="label"]')?.focus();
     });
 
-    document.getElementById("adminExtraInfoEditor").addEventListener("click", (e) => {
+    document.getElementById("siteExtraInfoEditor")?.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-del-extra]");
-      if (btn) btn.closest(".admin-extra-row")?.remove();
+      if (btn) {
+        btn.closest(".admin-extra-row")?.remove();
+        updateSiteExtraAddBtn();
+      }
     });
 
     function fillProfileEditor() {
@@ -2820,24 +3676,53 @@
               name: userProf.info?.name || "",
               gender: userProf.info?.gender || "",
               age: userProf.info?.age || "",
-              extraInfo: Array.isArray(userProf.info?.extraInfo) ? userProf.info.extraInfo : [],
+              hobby: userProf.info?.hobby || "",
+              city: userProf.info?.city || "",
+              qq: userProf.info?.qq || "",
+              wechat: userProf.info?.wechat || "",
+              email: userProf.info?.email || "",
             },
           }
         : currentProfile;
-      document.getElementById("profSiteTitle").value = currentProfile.siteTitle || "";
-      document.getElementById("profSiteSub").value = currentProfile.siteSub || "";
-      document.getElementById("profHeroKicker").value = currentProfile.heroKicker || "";
-      document.getElementById("profHeroTitle").value = currentProfile.heroTitle || "";
-      document.getElementById("profHeroSub").value = currentProfile.heroSub || "";
       document.getElementById("profName").value = targetProf.profileName || "";
       document.getElementById("profTags").value = Array.isArray(targetProf.tags) ? targetProf.tags.join(", ") : "";
       document.getElementById("profInfoName").value = targetProf.info?.name || "";
       document.getElementById("profInfoGender").value = targetProf.info?.gender || "";
       document.getElementById("profInfoAge").value = targetProf.info?.age || "";
+      document.getElementById("profInfoHobby").value = targetProf.info?.hobby || "";
+      document.getElementById("profInfoCity").value = targetProf.info?.city || "";
+      document.getElementById("profInfoQQ").value = targetProf.info?.qq || "";
+      document.getElementById("profInfoWechat").value = targetProf.info?.wechat || "";
+      document.getElementById("profInfoEmail").value = targetProf.info?.email || "";
       document.getElementById("profAvatar").value = targetProf.avatar || "";
       const avPreview = document.getElementById("profAvatarPreview");
       if (avPreview) avPreview.src = targetProf.avatar || "";
-      renderExtraInfoEditor(Array.isArray(targetProf.info?.extraInfo) ? targetProf.info.extraInfo : []);
+
+      const inviteStatusEl = document.getElementById("accountInviteStatus");
+      if (inviteStatusEl) {
+        inviteStatusEl.textContent = currentUser?.invite_code
+          ? `已绑定邀请码：${currentUser.invite_code}（可输入新邀请码升级权限）`
+          : (currentUser?.role === "admin" ? "当前为管理员权限" : "注册时未填写邀请码可在此补填，以解锁更高权限");
+      }
+
+      document.getElementById("profSiteTitle").value = currentProfile.siteTitle || "";
+      document.getElementById("profSiteSub").value = currentProfile.siteSub || "";
+      document.getElementById("profHeroKicker").value = currentProfile.heroKicker || "";
+      document.getElementById("profHeroTitle").value = currentProfile.heroTitle || "";
+      document.getElementById("profHeroSub").value = currentProfile.heroSub || "";
+      document.getElementById("siteProfAvatar").value = currentProfile.avatar || "";
+      const siteAvPreview = document.getElementById("siteProfAvatarPreview");
+      if (siteAvPreview) siteAvPreview.src = currentProfile.avatar || "";
+      document.getElementById("siteProfName").value = currentProfile.profileName || "";
+      document.getElementById("siteProfTags").value = Array.isArray(currentProfile.tags) ? currentProfile.tags.join(", ") : "";
+      document.getElementById("siteProfInfoName").value = currentProfile.info?.name || "";
+      document.getElementById("siteProfInfoGender").value = currentProfile.info?.gender || "";
+      document.getElementById("siteProfInfoAge").value = currentProfile.info?.age || "";
+      renderSiteExtraInfoEditor(Array.isArray(currentProfile.info?.extraInfo) ? currentProfile.info.extraInfo : []);
+      document.getElementById("profFooterTitle").value = currentProfile.footerTitle || document.getElementById("footerTitleEl")?.textContent || "";
+      document.getElementById("profFooterDesc").value = currentProfile.footerDesc || document.getElementById("footerDescEl")?.textContent || "";
+      document.getElementById("profFooterBadge").value = currentProfile.footerBadge || document.getElementById("footerBadgeEl")?.textContent || "";
+      document.getElementById("profFooterCopyright").value = currentProfile.footerCopyright || document.getElementById("footerCopyrightEl")?.textContent || "";
 
       const contactsList = currentProfile.contacts || [];
       document.getElementById("adminContactsEditor").innerHTML = contactsList.map((c, idx) => `
@@ -2850,9 +3735,9 @@
         </div>`).join("");
     }
 
-    function openAdminModal() {
+    function openAdminModal(isNew = false) {
       if (!currentUser || currentUser.role !== "admin") return;
-      fillPostEditor(POSTS[0] || null);
+      fillPostEditor(isNew ? null : (POSTS[0] || null));
       adminModalBackdrop.classList.add("is-open");
       adminModalBackdrop.setAttribute("aria-hidden", "false");
     }
@@ -2862,9 +3747,15 @@
     }
 
     document.getElementById("adminModalClose").addEventListener("click", closeAdminModal);
+    document.getElementById("adminCloseFooterBtn")?.addEventListener("click", closeAdminModal);
+    document.getElementById("readerEditPostBtn")?.addEventListener("click", () => {
+      if (!currentUser || currentUser.role !== "admin" || !state.currentPostId) return;
+      const target = POSTS.find((p) => p.id === state.currentPostId);
+      if (!target) return;
+      openAdminModal(false);
+      fillPostEditor(target);
+    });
     contactModalBackdrop.addEventListener("click", (e) => { if (e.target === contactModalBackdrop) closeContactModal(); });
-    authModalBackdrop.addEventListener("click", (e) => { if (e.target === authModalBackdrop) closeAuthModal(); });
-    adminModalBackdrop.addEventListener("click", (e) => { if (e.target === adminModalBackdrop) closeAdminModal(); });
     adminPostListEl.addEventListener("click", (e) => {
       const item = e.target.closest("[data-edit-post]");
       if (item) fillPostEditor(POSTS.find((p) => p.id === item.dataset.editPost));
@@ -2923,6 +3814,29 @@
         const avPreview = document.getElementById("profAvatarPreview");
         if (avPreview) avPreview.src = res.url;
         showToast("头像上传成功，请记得点击保存");
+      } catch (err) {
+        showToast(err.message);
+      } finally {
+        e.target.value = "";
+      }
+    });
+
+    document.getElementById("siteProfAvatarUploadBtn")?.addEventListener("click", () => document.getElementById("siteProfAvatarFileInput")?.click());
+    document.getElementById("siteProfAvatarPreview")?.addEventListener("click", () => document.getElementById("siteProfAvatarFileInput")?.click());
+    document.getElementById("siteProfAvatar")?.addEventListener("input", (e) => {
+      const avPreview = document.getElementById("siteProfAvatarPreview");
+      if (avPreview && e.target.value.trim()) avPreview.src = e.target.value.trim();
+    });
+    document.getElementById("siteProfAvatarFileInput")?.addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      showToast("正在上传站点头像...");
+      try {
+        const res = await uploadImageFile(file);
+        document.getElementById("siteProfAvatar").value = res.url;
+        const avPreview = document.getElementById("siteProfAvatarPreview");
+        if (avPreview) avPreview.src = res.url;
+        showToast("站点头像上传成功，请记得点击保存网站设置");
       } catch (err) {
         showToast(err.message);
       } finally {
@@ -3024,9 +3938,133 @@
       }
     });
 
-    document.getElementById("adminProfileForm").addEventListener("submit", async (e) => {
+    async function saveAdminSiteProfile(nextSiteProfile, btn, defaultLabel, successMsg, localSuccessMsg) {
+      btn.disabled = true; btn.textContent = "正在提交...";
+      try {
+        const res = await fetch("/api/content", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type: "profile", profile: nextSiteProfile }),
+        });
+        const data = await res.json();
+        if (!res.ok) { showToast(data.error || "保存失败"); return; }
+        applyProfile(nextSiteProfile, true);
+        showToast(successMsg);
+      } catch {
+        if (isLocalPreview) {
+          applyProfile(nextSiteProfile, true);
+          showToast(localSuccessMsg);
+        } else {
+          showToast("保存失败");
+        }
+      } finally {
+        btn.disabled = false; btn.textContent = defaultLabel;
+      }
+    }
+
+    document.getElementById("redeemInviteBtn")?.addEventListener("click", async () => {
+      const input = document.getElementById("redeemInviteInput");
+      const code = String(input?.value || "").trim().toUpperCase();
+      if (!code) { showToast("请输入邀请码"); return; }
+      const btn = document.getElementById("redeemInviteBtn");
+      btn.disabled = true;
+      try {
+        const res = await fetch("/api/auth", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "redeem_invite", inviteCode: code }),
+        });
+        const data = await res.json();
+        if (!res.ok) { showToast(data.error || "绑定失败"); return; }
+        currentUser = data.user;
+        if (input) input.value = "";
+        syncAuthUI();
+        fillProfileEditor();
+        showToast(currentUser.role === "admin" ? "邀请码绑定成功，已解锁管理员权限" : "邀请码绑定成功");
+      } catch {
+        if (isLocalPreview) {
+          const matched = localDemoInvites.find((it) => it.code === code);
+          if (!matched) { showToast("本地预览：邀请码无效"); return; }
+          currentUser = { ...currentUser, role: matched.role, invite_code: matched.code };
+          matched.used_by = currentUser.username;
+          try { sessionStorage.setItem(LOCAL_ADMIN_KEY, JSON.stringify(currentUser)); } catch {}
+          if (input) input.value = "";
+          syncAuthUI();
+          fillProfileEditor();
+          showToast(currentUser.role === "admin" ? "本地预览已解锁管理员权限" : "本地预览已绑定邀请码");
+        } else {
+          showToast("网络异常，绑定失败");
+        }
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById("personalProfileForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const isAdmin = currentUser?.role === "admin";
+      const tags = document.getElementById("profTags").value
+        .split(/[,，]/)
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .slice(0, 8);
+      const rawAvatar = document.getElementById("profAvatar").value.trim();
+      const nickVal = document.getElementById("profName").value.trim() || currentUser?.username || "User";
+      const personalPayload = {
+        avatar: rawAvatar || makeDefaultAvatar(nickVal, true),
+        profileName: nickVal,
+        tags,
+        info: {
+          name: document.getElementById("profInfoName").value.trim(),
+          gender: document.getElementById("profInfoGender").value.trim(),
+          age: document.getElementById("profInfoAge").value.trim(),
+          hobby: document.getElementById("profInfoHobby").value.trim(),
+          city: document.getElementById("profInfoCity").value.trim(),
+          qq: document.getElementById("profInfoQQ").value.trim(),
+          wechat: document.getElementById("profInfoWechat").value.trim(),
+          email: document.getElementById("profInfoEmail").value.trim(),
+          extraInfo: Array.isArray(currentUser?.profile?.info?.extraInfo) ? currentUser.profile.info.extraInfo : [],
+        },
+      };
+      const btn = document.getElementById("savePersonalProfileBtn");
+      if (isAdmin) {
+        const nextSiteProfile = {
+          ...currentProfile,
+          ...personalPayload,
+          info: { ...personalPayload.info, extraInfo: currentProfile.info?.extraInfo || [] },
+        };
+        await saveAdminSiteProfile(nextSiteProfile, btn, "保存更改", "个人资料已保存到 GitHub", "本地预览已更新个人资料");
+        return;
+      }
+      btn.disabled = true; btn.textContent = "正在提交...";
+      try {
+        const res = await fetch("/api/auth", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "update_profile", profile: personalPayload }),
+        });
+        const data = await res.json();
+        if (!res.ok) { showToast(data.error || "保存账号资料失败"); return; }
+        currentUser = data.user;
+        syncAuthUI();
+        showToast("个人资料已保存");
+      } catch {
+        if (isLocalPreview) {
+          currentUser = { ...currentUser, profile: personalPayload };
+          try { sessionStorage.setItem(LOCAL_ADMIN_KEY, JSON.stringify(currentUser)); } catch {}
+          syncAuthUI();
+          showToast("本地预览已保存个人资料");
+        } else {
+          showToast("保存失败");
+        }
+      } finally {
+        btn.disabled = false; btn.textContent = "保存个人资料";
+      }
+    });
+
+    document.getElementById("siteConfigForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (currentUser?.role !== "admin") return;
       const updatedContacts = (currentProfile.contacts || []).map((c, idx) => {
         const row = document.querySelector(`[data-contact-idx="${idx}"]`);
         if (!row) return c;
@@ -3036,81 +4074,103 @@
         const qr = row.querySelector('[data-ckey="qr"]').value.trim();
         return { ...c, label, value, url, qr: qr || (url.startsWith("http") ? url : value) };
       });
-      const extraInfo = Array.from(document.querySelectorAll("#adminExtraInfoEditor .admin-extra-row"))
+      const siteExtraInfo = Array.from(document.querySelectorAll("#siteExtraInfoEditor .admin-extra-row"))
         .map((row) => ({
           label: row.querySelector('[data-exkey="label"]').value.trim(),
           value: row.querySelector('[data-exkey="value"]').value.trim(),
         }))
         .filter((item) => item.label && item.value);
-      const tags = document.getElementById("profTags").value
+      const siteTags = document.getElementById("siteProfTags").value
         .split(/[,，]/)
         .map((s) => s.trim())
         .filter(Boolean)
         .slice(0, 8);
-      const personalPayload = {
-        avatar: document.getElementById("profAvatar").value.trim(),
-        profileName: document.getElementById("profName").value.trim(),
-        tags,
-        info: {
-          name: document.getElementById("profInfoName").value.trim(),
-          gender: document.getElementById("profInfoGender").value.trim(),
-          age: document.getElementById("profInfoAge").value.trim(),
-          extraInfo,
-        },
-      };
       const nextSiteProfile = {
+        ...currentProfile,
         siteTitle: document.getElementById("profSiteTitle").value.trim(),
         siteSub: document.getElementById("profSiteSub").value.trim(),
         heroKicker: document.getElementById("profHeroKicker").value.trim(),
         heroTitle: document.getElementById("profHeroTitle").value.trim(),
         heroSub: document.getElementById("profHeroSub").value.trim(),
-        ...personalPayload,
+        avatar: document.getElementById("siteProfAvatar").value.trim() || currentProfile.avatar,
+        profileName: document.getElementById("siteProfName").value.trim() || currentProfile.profileName,
+        tags: siteTags,
+        info: {
+          ...(currentProfile.info || {}),
+          name: document.getElementById("siteProfInfoName").value.trim(),
+          gender: document.getElementById("siteProfInfoGender").value.trim(),
+          age: document.getElementById("siteProfInfoAge").value.trim(),
+          extraInfo: siteExtraInfo,
+        },
         contacts: updatedContacts,
+        footerTitle: document.getElementById("profFooterTitle").value.trim(),
+        footerDesc: document.getElementById("profFooterDesc").value.trim(),
+        footerBadge: document.getElementById("profFooterBadge").value.trim(),
+        footerCopyright: document.getElementById("profFooterCopyright").value.trim(),
       };
-
-      const btn = document.getElementById("adminSaveProfileBtn");
-      btn.disabled = true; btn.textContent = "正在提交...";
-      try {
-        if (isAdmin) {
-          const res = await fetch("/api/content", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ type: "profile", profile: nextSiteProfile }),
-          });
-          const data = await res.json();
-          if (!res.ok) { showToast(data.error || "保存资料失败"); return; }
-          applyProfile(nextSiteProfile, true);
-          showToast("界面资料与二维码已保存到 GitHub");
-        } else {
-          const res = await fetch("/api/auth", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "update_profile", profile: personalPayload }),
-          });
-          const data = await res.json();
-          if (!res.ok) { showToast(data.error || "保存账号资料失败"); return; }
-          currentUser = data.user;
-          syncAuthUI();
-          showToast("个人账号资料已保存");
-        }
-      } catch {
-        if (isLocalPreview) {
-          if (isAdmin) {
-            applyProfile(nextSiteProfile, true);
-            showToast("本地预览已更新界面资料（线上将同步到 GitHub）");
-          } else {
-            currentUser = { ...currentUser, profile: personalPayload };
-            try { sessionStorage.setItem(LOCAL_ADMIN_KEY, JSON.stringify(currentUser)); } catch {}
-            syncAuthUI();
-            showToast("本地预览已保存我的账号资料");
-          }
-        } else {
-          showToast("保存失败");
-        }
-      } finally {
-        btn.disabled = false; btn.textContent = isAdmin ? "保存界面资料并提交到 GitHub" : "保存我的账号资料";
-      }
+      const btn = document.getElementById("saveSiteConfigBtn");
+      await saveAdminSiteProfile(nextSiteProfile, btn, "保存网站设置", "网站设置（页头/个人简介/联系方式/页尾）已保存到 GitHub", "本地预览已更新网站设置");
     });
+
+    function generateLocalInviteCode() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let raw = "";
+      for (let i = 0; i < 12; i++) raw += chars[Math.floor(Math.random() * chars.length)];
+      return `${raw.slice(0, 4)}-${raw.slice(4, 8)}-${raw.slice(8, 12)}`;
+    }
+
+    let localDemoInvites = [
+      { code: "ABCD-EFGH-IJKL", role: "admin", duration_days: 0, expires_at: null, used_by: null },
+      { code: "MNOP-QRST-UVWX", role: "user", duration_days: 30, expires_at: new Date(Date.now() + 30 * 86400000).toISOString(), used_by: "guest_demo" },
+    ];
+
+    function formatInviteMeta(inv) {
+      const durText = !inv.expires_at
+        ? "永久有效"
+        : (() => {
+            const diffDays = Math.ceil((Date.parse(inv.expires_at) - Date.now()) / 86400000);
+            if (diffDays <= 0) return "已过期（绑定账号已失效）";
+            return `到期 ${inv.expires_at.slice(0, 10)}（剩余 ${diffDays} 天）`;
+          })();
+      const bindText = inv.used_by
+        ? `绑定用户：${escapeHtml(inv.used_by)}${inv.user_disabled_at ? "（已失效，7天后注销）" : ""}`
+        : "未绑定用户";
+      return { durText, bindText };
+    }
+
+    function renderInviteList(invites) {
+      const box = document.getElementById("adminInviteList");
+      if (!invites.length) {
+        box.innerHTML = '<div class="empty-state" style="padding: 16px;">暂无邀请码</div>';
+        return;
+      }
+      box.innerHTML = invites.map((inv) => {
+        const { durText, bindText } = formatInviteMeta(inv);
+        const dateVal = inv.expires_at ? inv.expires_at.slice(0, 10) : "";
+        return `
+          <div class="invite-item-card" data-invite-row="${escapeHtml(inv.code)}">
+            <div class="invite-item-top">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span class="invite-code">${escapeHtml(inv.code)}</span>
+                <span class="account-role-badge" style="padding: 2px 8px;">${inv.role === "admin" ? "管理员" : "普通用户"}</span>
+                <span class="invite-status">${escapeHtml(durText)}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <button class="tactile-btn copy-btn" type="button" data-copy-invite="${escapeHtml(inv.code)}">复制</button>
+                <button class="tactile-btn copy-btn" type="button" data-del-invite="${escapeHtml(inv.code)}" style="color:#ef4444;">删除</button>
+              </div>
+            </div>
+            <div class="invite-item-bottom">
+              <span class="invite-status">${bindText}</span>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <input class="invite-date-input" type="date" value="${escapeHtml(dateVal)}" data-invite-date="${escapeHtml(inv.code)}" />
+                <button class="tactile-btn copy-btn" type="button" data-save-expiry="${escapeHtml(inv.code)}">修改到期</button>
+                <button class="tactile-btn copy-btn" type="button" data-perm-expiry="${escapeHtml(inv.code)}">设为永久</button>
+              </div>
+            </div>
+          </div>`;
+      }).join("");
+    }
 
     async function loadAdminInvites() {
       const box = document.getElementById("adminInviteList");
@@ -3119,31 +4179,10 @@
         const res = await fetch("/api/invites");
         const data = await res.json();
         if (!res.ok) { box.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "加载失败")}</div>`; return; }
-        const invites = data.invites || [];
-        if (!invites.length) { box.innerHTML = '<div class="empty-state" style="padding: 16px;">暂无邀请码</div>'; return; }
-        box.innerHTML = invites.map((inv) => `
-          <div class="invite-item">
-            <div><span class="invite-code">${escapeHtml(inv.code)}</span> <span class="invite-status">[${inv.role === "admin" ? "管理员" : "普通用户"}]</span></div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="invite-status">${inv.used_by ? `已由 ${escapeHtml(inv.used_by)} 使用` : "未使用"}</span>
-              <button class="tactile-btn copy-btn" type="button" data-copy-invite="${escapeHtml(inv.code)}">复制</button>
-              <button class="tactile-btn copy-btn" type="button" data-del-invite="${escapeHtml(inv.code)}" style="color:#ef4444;">删除</button>
-            </div>
-          </div>`).join("");
+        renderInviteList(data.invites || []);
       } catch {
         if (isLocalPreview) {
-          const demoInvites = [
-            { code: "PREVIEW-ADMIN-01", role: "admin", used_by: null },
-            { code: "PREVIEW-USER-02", role: "user", used_by: "guest_demo" },
-          ];
-          box.innerHTML = demoInvites.map((inv) => `
-            <div class="invite-item">
-              <div><span class="invite-code">${escapeHtml(inv.code)}</span> <span class="invite-status">[${inv.role === "admin" ? "管理员" : "普通用户"}]</span></div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="invite-status">${inv.used_by ? `已由 ${escapeHtml(inv.used_by)} 使用` : "未使用（本地预览示例）"}</span>
-                <button class="tactile-btn copy-btn" type="button" data-copy-invite="${escapeHtml(inv.code)}">复制</button>
-              </div>
-            </div>`).join("");
+          renderInviteList(localDemoInvites);
         } else {
           box.innerHTML = '<div class="empty-state">加载失败</div>';
         }
@@ -3151,34 +4190,96 @@
     }
 
     document.getElementById("adminCreateInviteBtn").addEventListener("click", async () => {
-      const code = document.getElementById("inviteCustomInput").value.trim();
+      const code = document.getElementById("inviteCustomInput").value.trim().toUpperCase();
       const role = document.getElementById("inviteRoleSelect").value;
-      const res = await fetch("/api/invites", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code, role }) });
-      const data = await res.json();
-      if (res.ok) { document.getElementById("inviteCustomInput").value = ""; showToast(`已生成：${data.invite.code}`); loadAdminInvites(); }
-      else showToast(data.error || "生成失败");
+      const durationDays = Number(document.getElementById("inviteDurationSelect").value || 0);
+      try {
+        const res = await fetch("/api/invites", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code, role, durationDays }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          document.getElementById("inviteCustomInput").value = "";
+          showToast(`已生成：${data.invite.code}`);
+          loadAdminInvites();
+        } else {
+          showToast(data.error || "生成失败");
+        }
+      } catch {
+        if (isLocalPreview) {
+          const nextCode = code || generateLocalInviteCode();
+          const expiresAt = durationDays > 0 ? new Date(Date.now() + durationDays * 86400000).toISOString() : null;
+          localDemoInvites.unshift({ code: nextCode, role, duration_days: durationDays, expires_at: expiresAt, used_by: null });
+          document.getElementById("inviteCustomInput").value = "";
+          showToast(`本地预览已生成：${nextCode}`);
+          renderInviteList(localDemoInvites);
+        } else {
+          showToast("生成失败");
+        }
+      }
     });
 
     document.getElementById("adminInviteList").addEventListener("click", async (e) => {
       const cBtn = e.target.closest("[data-copy-invite]");
       if (cBtn) { triggerCopyFeedback(cBtn, cBtn.dataset.copyInvite); return; }
+
+      const saveExpBtn = e.target.closest("[data-save-expiry]");
+      const permExpBtn = e.target.closest("[data-perm-expiry]");
+      if (saveExpBtn || permExpBtn) {
+        const code = (saveExpBtn || permExpBtn).dataset.saveExpiry || (saveExpBtn || permExpBtn).dataset.permExpiry;
+        let expiresAt = null;
+        if (saveExpBtn) {
+          const dateInput = document.querySelector(`[data-invite-date="${CSS.escape(code)}"]`);
+          if (!dateInput || !dateInput.value) { showToast("请先选择到期日期"); return; }
+          expiresAt = new Date(`${dateInput.value}T23:59:59`).toISOString();
+        }
+        try {
+          const res = await fetch("/api/invites", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "update_expiry", code, expiresAt }),
+          });
+          if (res.ok) { showToast(expiresAt ? "已更新到期时间" : "已设为永久有效"); loadAdminInvites(); }
+          else { const d = await res.json(); showToast(d.error || "更新失败"); }
+        } catch {
+          if (isLocalPreview) {
+            localDemoInvites = localDemoInvites.map((it) => it.code === code ? { ...it, expires_at: expiresAt } : it);
+            showToast(expiresAt ? "本地预览已更新到期时间" : "本地预览已设为永久有效");
+            renderInviteList(localDemoInvites);
+          }
+        }
+        return;
+      }
+
       const dBtn = e.target.closest("[data-del-invite]");
       if (dBtn) {
-        const res = await fetch(`/api/invites?code=${encodeURIComponent(dBtn.dataset.delInvite)}`, { method: "DELETE" });
-        if (res.ok) { showToast("已删除"); loadAdminInvites(); }
+        const code = dBtn.dataset.delInvite;
+        try {
+          const res = await fetch(`/api/invites?code=${encodeURIComponent(code)}`, { method: "DELETE" });
+          if (res.ok) { showToast("已删除邀请码（绑定账号已失效，7天后自动注销）"); loadAdminInvites(); }
+        } catch {
+          if (isLocalPreview) {
+            localDemoInvites = localDemoInvites.filter((it) => it.code !== code);
+            showToast("本地预览已删除邀请码");
+            renderInviteList(localDemoInvites);
+          }
+        }
       }
     });
 
     document.addEventListener("keydown", (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setAppearanceOpen(false); closeAdminModal(); closeAuthModal(); closeContactModal();
+        setAppearanceOpen(false); setAccountMenuOpen(false); closeAdminModal(); closeAuthModal(); closeContactModal(); closeUserDetailModal(); closeSwitchAccountModal();
         if (state.currentPostId) closeReader();
         searchInput.focus();
       } else if (e.key === "Escape") {
         if (appearancePopover.classList.contains("is-open")) setAppearanceOpen(false);
-        else if (adminModalBackdrop.classList.contains("is-open")) closeAdminModal();
-        else if (authModalBackdrop.classList.contains("is-open")) closeAuthModal();
+        else if (accountMenuPopover && accountMenuPopover.classList.contains("is-open")) setAccountMenuOpen(false);
+        else if (switchAccountModalBackdrop.classList.contains("is-open")) closeSwitchAccountModal();
+        else if (userDetailModalBackdrop.classList.contains("is-open")) closeUserDetailModal();
         else if (contactModalBackdrop.classList.contains("is-open")) closeContactModal();
         else if (state.currentPostId) closeReader();
       } else if (state.currentPostId && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) {
@@ -3200,6 +4301,12 @@
     }
     window.addEventListener("scroll", updateProgress, { passive: true });
 
+    if (isLocalPreview) {
+      try {
+        const savedSite = localStorage.getItem("xxoxovx_local_site_profile");
+        if (savedSite) currentProfile = { ...currentProfile, ...JSON.parse(savedSite) };
+      } catch {}
+    }
     applyProfile(currentProfile);
     renderCarousel();
     renderArticles();

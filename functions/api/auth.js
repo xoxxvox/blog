@@ -7,6 +7,7 @@ import {
   getSessionUser,
   buildSessionCookie,
   clearSessionCookie,
+  cleanupExpiredAccounts,
 } from "./_lib.js";
 
 async function ensureProfileColumn(env) {
@@ -50,6 +51,24 @@ export async function onRequestGet({ request, env }) {
   });
 }
 
+function generateRandomAvatar(seed) {
+  const palettes = [
+    ["#34d399", "#059669"],
+    ["#60a5fa", "#2563eb"],
+    ["#a78bfa", "#7c3aed"],
+    ["#f472b6", "#db2777"],
+    ["#fbbf24", "#d97706"],
+    ["#2dd4bf", "#0d9488"],
+    ["#fb7185", "#e11d48"],
+    ["#818cf8", "#4f46e5"],
+  ];
+  const idx = Math.floor(Math.random() * palettes.length);
+  const [c1, c2] = palettes[idx];
+  const ch = encodeURIComponent((String(seed || "?").trim()[0] || "?").toUpperCase());
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='${c1}'/><stop offset='100%' stop-color='${c2}'/></linearGradient></defs><rect width='80' height='80' rx='40' fill='url(%23g)'/><circle cx='58' cy='20' r='16' fill='rgba(255,255,255,0.16)'/><text x='50%' y='53%' dominant-baseline='middle' text-anchor='middle' font-family='system-ui,sans-serif' font-size='34' font-weight='600' fill='%23ffffff'>${ch}</text></svg>`;
+  return `data:image/svg+xml;utf8,${svg}`;
+}
+
 export async function onRequestPost({ request, env }) {
   if (!env.DB) {
     return errorJson("尚未绑定 D1 数据库（变量名需为 DB）", 500);
@@ -76,6 +95,7 @@ export async function onRequestPost({ request, env }) {
 
   if (action === "login") {
     await ensureProfileColumn(env);
+    await cleanupExpiredAccounts(env);
     const username = String(body.username || "").trim();
     const password = String(body.password || "");
     if (!username || !password) {
@@ -83,13 +103,16 @@ export async function onRequestPost({ request, env }) {
     }
 
     const user = await env.DB.prepare(
-      "SELECT id, username, email, password_hash, role, profile_json FROM users WHERE LOWER(username) = LOWER(?)"
+      "SELECT id, username, email, password_hash, role, profile_json, disabled_at FROM users WHERE LOWER(username) = LOWER(?)"
     )
       .bind(username)
       .first();
 
     if (!user || !(await verifyPassword(password, user.password_hash))) {
       return errorJson("用户名或密码错误", 401);
+    }
+    if (user.role !== "admin" && user.disabled_at) {
+      return errorJson("该账号关联的邀请码已过期或被删除，账号已失效（失效7天后自动注销）", 403);
     }
 
     const token = await createSession(env, user.id);
@@ -123,9 +146,6 @@ export async function onRequestPost({ request, env }) {
     if (password.length < 6) {
       return errorJson("密码长度至少 6 位", 400);
     }
-    if (!inviteCode) {
-      return errorJson("请输入邀请码", 400);
-    }
 
     const dup = await env.DB.prepare(
       "SELECT id FROM users WHERE LOWER(username) = LOWER(?)"
@@ -143,31 +163,53 @@ export async function onRequestPost({ request, env }) {
     let assignedRole = "user";
     let matchedInvite = null;
 
-    if (isFirstUser && bootstrapCode && inviteCode === bootstrapCode) {
-      assignedRole = "admin";
-    } else {
-      matchedInvite = await env.DB.prepare(
-        "SELECT code, role, used_by FROM invites WHERE code = ?"
-      )
-        .bind(inviteCode)
-        .first();
+    if (inviteCode) {
+      if (isFirstUser && bootstrapCode && inviteCode === bootstrapCode) {
+        assignedRole = "admin";
+      } else {
+        matchedInvite = await env.DB.prepare(
+          "SELECT code, role, expires_at, used_by FROM invites WHERE code = ?"
+        )
+          .bind(inviteCode.toUpperCase())
+          .first();
 
-      if (!matchedInvite) {
-        return errorJson("邀请码无效", 403);
+        if (!matchedInvite) {
+          return errorJson("邀请码无效", 403);
+        }
+        if (matchedInvite.used_by) {
+          return errorJson("该邀请码已被使用", 403);
+        }
+        if (matchedInvite.expires_at && Date.parse(matchedInvite.expires_at) <= Date.now()) {
+          return errorJson("该邀请码已过期", 403);
+        }
+        assignedRole = matchedInvite.role === "admin" ? "admin" : "user";
       }
-      if (matchedInvite.used_by) {
-        return errorJson("该邀请码已被使用", 403);
-      }
-      assignedRole = matchedInvite.role === "admin" ? "admin" : "user";
     }
 
     const nowIso = new Date().toISOString();
     const passwordHash = await hashPassword(password);
+    const initialProfile = {
+      avatar: generateRandomAvatar(username),
+      profileName: username,
+      tags: [],
+      info: {
+        name: "",
+        gender: "",
+        age: "",
+        hobby: "",
+        city: "",
+        qq: "",
+        wechat: "",
+        email: "",
+        extraInfo: [],
+      },
+      contacts: [],
+    };
 
     const insertRes = await env.DB.prepare(
-      "INSERT INTO users (username, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, ?)"
+      "INSERT INTO users (username, email, password_hash, role, invite_code, profile_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
     )
-      .bind(username, email, passwordHash, assignedRole, nowIso)
+      .bind(username, email, passwordHash, assignedRole, matchedInvite ? matchedInvite.code : null, JSON.stringify(initialProfile), nowIso)
       .run();
 
     if (matchedInvite) {
@@ -188,6 +230,7 @@ export async function onRequestPost({ request, env }) {
           username,
           email,
           role: assignedRole,
+          profile: initialProfile,
         },
       },
       201,
@@ -212,6 +255,11 @@ export async function onRequestPost({ request, env }) {
         name: String(body.profile.info?.name || "").trim(),
         gender: String(body.profile.info?.gender || "").trim(),
         age: String(body.profile.info?.age || "").trim(),
+        hobby: String(body.profile.info?.hobby || "").trim(),
+        city: String(body.profile.info?.city || "").trim(),
+        qq: String(body.profile.info?.qq || "").trim(),
+        wechat: String(body.profile.info?.wechat || "").trim(),
+        email: String(body.profile.info?.email || "").trim(),
         extraInfo: Array.isArray(body.profile.info?.extraInfo)
           ? body.profile.info.extraInfo
               .map((item) => ({
@@ -227,7 +275,7 @@ export async function onRequestPost({ request, env }) {
     await env.DB.prepare("UPDATE users SET profile_json = ? WHERE id = ?")
       .bind(JSON.stringify(cleanProfile), sessionUser.id)
       .run();
-    return json({
+      return json({
       ok: true,
       user: {
         id: sessionUser.id,
@@ -235,6 +283,51 @@ export async function onRequestPost({ request, env }) {
         email: sessionUser.email,
         role: sessionUser.role,
         profile: cleanProfile,
+      },
+    });
+  }
+
+  if (action === "redeem_invite") {
+    const sessionUser = await getSessionUser(request, env);
+    if (!sessionUser) return errorJson("请先登录", 401);
+    const inviteCode = String(body.inviteCode || "").trim().toUpperCase();
+    if (!inviteCode) return errorJson("请输入邀请码", 400);
+
+    const matchedInvite = await env.DB.prepare(
+      "SELECT code, role, expires_at, used_by FROM invites WHERE code = ?"
+    )
+      .bind(inviteCode)
+      .first();
+
+    if (!matchedInvite) return errorJson("邀请码无效", 403);
+    if (matchedInvite.used_by && matchedInvite.used_by !== sessionUser.username) {
+      return errorJson("该邀请码已被其他用户使用", 403);
+    }
+    if (matchedInvite.expires_at && Date.parse(matchedInvite.expires_at) <= Date.now()) {
+      return errorJson("该邀请码已过期", 403);
+    }
+
+    const nowIso = new Date().toISOString();
+    const nextRole = matchedInvite.role === "admin" ? "admin" : sessionUser.role;
+    if (!matchedInvite.used_by) {
+      await env.DB.prepare("UPDATE invites SET used_by = ?, used_at = ? WHERE code = ?")
+        .bind(sessionUser.username, nowIso, matchedInvite.code)
+        .run();
+    }
+    await env.DB.prepare("UPDATE users SET role = ?, invite_code = ?, disabled_at = NULL WHERE id = ?")
+      .bind(nextRole, matchedInvite.code, sessionUser.id)
+      .run();
+
+    const row = await env.DB.prepare("SELECT profile_json FROM users WHERE id = ?").bind(sessionUser.id).first();
+    return json({
+      ok: true,
+      user: {
+        id: sessionUser.id,
+        username: sessionUser.username,
+        email: sessionUser.email,
+        role: nextRole,
+        invite_code: matchedInvite.code,
+        profile: parseUserProfile(row?.profile_json),
       },
     });
   }

@@ -6,13 +6,57 @@ export async function onRequestGet({ request, env }) {
   const postId = String(url.searchParams.get("postId") || "").trim();
   if (!postId) return errorJson("缺少 postId", 400);
 
-  const { results } = await env.DB.prepare(
-    "SELECT id, post_id, user_id, username, content, created_at FROM comments WHERE post_id = ? ORDER BY id DESC LIMIT 100"
-  )
-    .bind(postId)
-    .all();
+  let results = [];
+  try {
+    const res = await env.DB.prepare(
+      `SELECT c.id, c.post_id, c.user_id, c.username, c.content, c.created_at,
+              u.role AS author_role, u.profile_json AS author_profile_json
+       FROM comments c
+       LEFT JOIN users u ON c.user_id = u.id
+       WHERE c.post_id = ?
+       ORDER BY c.id DESC
+       LIMIT 100`
+    )
+      .bind(postId)
+      .all();
+    results = res.results || [];
+  } catch {
+    const res = await env.DB.prepare(
+      `SELECT c.id, c.post_id, c.user_id, c.username, c.content, c.created_at,
+              u.role AS author_role
+       FROM comments c
+       LEFT JOIN users u ON c.user_id = u.id
+       WHERE c.post_id = ?
+       ORDER BY c.id DESC
+       LIMIT 100`
+    )
+      .bind(postId)
+      .all();
+    results = res.results || [];
+  }
 
-  return json({ comments: results || [] });
+  const comments = results.map((row) => {
+    let authorProfile = null;
+    if (row.author_profile_json) {
+      try {
+        authorProfile = JSON.parse(row.author_profile_json);
+      } catch {
+        authorProfile = null;
+      }
+    }
+    return {
+      id: row.id,
+      post_id: row.post_id,
+      user_id: row.user_id,
+      username: row.username,
+      content: row.content,
+      created_at: row.created_at,
+      author_role: row.author_role || "user",
+      author_profile: authorProfile,
+    };
+  });
+
+  return json({ comments });
 }
 
 export async function onRequestPost({ request, env }) {
