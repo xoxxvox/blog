@@ -936,6 +936,9 @@
     .reader-body h1 { margin: 28px 0 12px 0; font-size: 20px; font-weight: 600; }
     .reader-body h2 { margin: 26px 0 10px 0; font-size: 17.5px; font-weight: 600; letter-spacing: -0.015em; }
     .reader-body h3 { margin: 22px 0 8px 0; font-size: 15.5px; font-weight: 600; }
+    .reader-body h4 { margin: 18px 0 6px 0; font-size: 14.5px; font-weight: 600; }
+    .reader-body h5 { margin: 16px 0 6px 0; font-size: 13.5px; font-weight: 600; }
+    .reader-body h6 { margin: 14px 0 4px 0; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); }
     .reader-body p { margin: 0 0 18px 0; }
     .reader-body ul, .reader-body ol { margin: 0 0 18px 0; padding-left: 24px; }
     .reader-body li { margin-bottom: 6px; }
@@ -3917,9 +3920,13 @@
         if (cbMatch) { closeLists(); html.push(codeBlocks[Number(cbMatch[1])]); continue; }
 
         if (/^---+$/.test(trimmed) || /^\*\*\*+$/.test(trimmed)) { closeLists(); html.push("<hr />"); continue; }
-        if (trimmed.startsWith("### ")) { closeLists(); html.push(`<h3>${inlineMd(trimmed.slice(4))}</h3>`); continue; }
-        if (trimmed.startsWith("## ")) { closeLists(); html.push(`<h2>${inlineMd(trimmed.slice(3))}</h2>`); continue; }
-        if (trimmed.startsWith("# ")) { closeLists(); html.push(`<h1>${inlineMd(trimmed.slice(2))}</h1>`); continue; }
+        const headingMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
+        if (headingMatch) {
+          const level = headingMatch[1].length;
+          closeLists();
+          html.push(`<h${level}>${inlineMd(headingMatch[2])}</h${level}>`);
+          continue;
+        }
         if (trimmed.startsWith("> ")) { closeLists(); html.push(`<blockquote>${inlineMd(trimmed.slice(2))}</blockquote>`); continue; }
 
         if (/^[-*+]\s+/.test(trimmed)) {
