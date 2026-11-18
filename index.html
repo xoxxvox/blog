@@ -841,11 +841,11 @@
 
     .reader-page, .console-page {
       display: none; width: 100%;
-      opacity: 1; transform: translateY(0); filter: blur(0);
+      opacity: 1; transform: none; filter: none;
       transition: opacity 240ms var(--spring), transform 260ms var(--spring), filter 200ms var(--ease);
-      will-change: opacity, transform, filter;
     }
     .reader-page.is-open, .console-page.is-open { display: block; }
+    .reader-page.is-open { padding-bottom: 96px; }
     .reader-page.is-enter-prep, .console-page.is-enter-prep { opacity: 0; transform: translateY(10px); filter: blur(4px); transition: none; }
     .reader-page.is-leaving, .console-page.is-leaving { opacity: 0; transform: translateY(-8px); filter: blur(4px); pointer-events: none; }
     .console-container { width: 100%; padding: 26px 32px 32px; margin: 4px auto 32px; display: flex; flex-direction: column; gap: 18px; }
@@ -990,15 +990,29 @@
 
     /* Reader Actions Bar (Like / Comment / Share) */
     .reader-actions-bar {
-      margin: 28px auto 0; width: fit-content; max-width: 100%;
-      padding: 6px 8px; border-radius: 999px;
+      position: fixed;
+      left: 50%;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      transform: translateX(-50%);
+      z-index: 55;
+      margin: 0;
+      width: fit-content;
+      max-width: calc(100vw - 24px);
+      padding: 6px 8px;
+      border-radius: 999px;
       background-color: var(--bg-card-solid);
-      -webkit-backdrop-filter: blur(22px) saturate(190%); backdrop-filter: blur(22px) saturate(190%);
+      -webkit-backdrop-filter: blur(26px) saturate(210%); backdrop-filter: blur(26px) saturate(210%);
       border: 1px solid var(--ink-border);
-      box-shadow: var(--shadow-btn);
-      display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px;
+      box-shadow: var(--shadow-float);
+      display: none; align-items: center; justify-content: center; flex-wrap: nowrap; gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
     }
-    .reader-actions-group { display: flex; align-items: center; gap: 4px; }
+    body.is-reader-open .reader-actions-bar,
+    body:has(#readerPage.is-open) .reader-actions-bar { display: flex; }
+    .reader-actions-bar::-webkit-scrollbar { display: none; }
+    .reader-actions-group { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+    .reader-actions-bar .action-pill-btn { flex-shrink: 0; white-space: nowrap; }
     .action-pill-btn {
       position: relative;
       height: 34px; padding: 0 14px; border-radius: 99px; font-size: 13px; font-weight: 500;
@@ -3165,35 +3179,6 @@
           <p class="reader-lead" id="readerLead"></p>
           <div class="reader-body" id="readerBody"></div>
 
-          <div class="reader-actions-bar" id="readerActionsBar" aria-label="文章互动">
-            <div class="reader-actions-group">
-              <button class="tactile-btn action-pill-btn" id="likePostBtn" type="button">
-                <span class="action-icon-wrap">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                </span>
-                <span>点赞</span>
-                <span class="action-pill-count" id="likeCountText">0</span>
-              </button>
-              <button class="tactile-btn action-pill-btn" id="favPostBtn" type="button">
-                <span class="action-icon-wrap">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                </span>
-                <span>收藏</span>
-                <span class="action-pill-count" id="favCountText">0</span>
-              </button>
-              <button class="tactile-btn action-pill-btn" id="jumpCommentBtn" type="button">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                <span>评论</span>
-                <span class="action-pill-count" id="actionCommentCount">0</span>
-              </button>
-            </div>
-            <button class="tactile-btn action-pill-btn" id="sharePostBtn" type="button">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
-              <span>转发分享</span>
-              <span class="action-pill-count" id="shareCountText">0</span>
-            </button>
-          </div>
-
           <section class="reader-comments" id="readerComments" aria-label="文章评论">
             <div class="comments-head">
               <h2 class="comments-title">评论交流</h2>
@@ -3873,6 +3858,35 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="reader-actions-bar" id="readerActionsBar" aria-label="文章互动">
+    <div class="reader-actions-group">
+      <button class="tactile-btn action-pill-btn" id="likePostBtn" type="button">
+        <span class="action-icon-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </span>
+        <span>点赞</span>
+        <span class="action-pill-count" id="likeCountText">0</span>
+      </button>
+      <button class="tactile-btn action-pill-btn" id="favPostBtn" type="button">
+        <span class="action-icon-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </span>
+        <span>收藏</span>
+        <span class="action-pill-count" id="favCountText">0</span>
+      </button>
+      <button class="tactile-btn action-pill-btn" id="jumpCommentBtn" type="button">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>评论</span>
+        <span class="action-pill-count" id="actionCommentCount">0</span>
+      </button>
+    </div>
+    <button class="tactile-btn action-pill-btn" id="sharePostBtn" type="button">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+      <span>转发分享</span>
+      <span class="action-pill-count" id="shareCountText">0</span>
+    </button>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite">
@@ -7227,6 +7241,16 @@
           }
         });
       });
+
+      // Sync body.is-reader-open for viewport-fixed bottom dock
+      const readerEl = document.getElementById("readerPage");
+      if (readerEl) {
+        const syncReaderOpen = () => {
+          document.body.classList.toggle("is-reader-open", readerEl.classList.contains("is-open"));
+        };
+        syncReaderOpen();
+        new MutationObserver(syncReaderOpen).observe(readerEl, { attributes: true, attributeFilter: ["class"] });
+      }
     })();
   </script>
 </body>
