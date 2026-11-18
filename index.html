@@ -336,9 +336,9 @@
     .toast {
       position: fixed;
       left: 50%;
-      top: 22px;
+      top: 58px;
       transform: translateX(-50%) translateY(-10px) scale(0.96);
-      padding: 8px 18px 8px 10px;
+      padding: 9px 20px;
       border-radius: 99px;
       background-color: var(--bg-card-solid);
       color: var(--text-primary);
@@ -354,19 +354,62 @@
       line-height: 1.35;
       opacity: 0;
       pointer-events: none;
+      overflow: visible;
       z-index: 260;
       box-shadow: var(--shadow-float);
-      transition: opacity 180ms var(--ease), transform 240ms var(--spring);
+      transition: opacity 200ms var(--ease-in), transform 200ms var(--ease-in);
     }
     .toast.is-visible {
       opacity: 1;
       transform: translateX(-50%) translateY(0) scale(1);
+      transition: opacity 220ms var(--ease), transform 240ms var(--spring);
+    }
+    .toast-bot-head {
+      position: absolute; left: 50%; top: -30px; transform: translateX(-50%);
+      width: 56px; height: 35px; pointer-events: none; z-index: -1;
+      filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.16));
+    }
+    .toast.is-visible .toast-bot-head { animation: toastBotPeek 2.4s ease-in-out infinite; }
+    .toast.is-error .toast-bot-head { animation: toastBotAlert 360ms ease 2; }
+    .toast.is-error .toast-bot-eye { fill: #ef4444; }
+    .toast-bot-paws {
+      position: absolute; left: 50%; top: -8px; transform: translateX(-50%);
+      width: calc(100% - 26px); min-width: 92px; max-width: 240px;
+      display: flex; justify-content: space-between; pointer-events: none; z-index: 2;
+    }
+    .toast-bot-paw {
+      width: 22px; height: 13px; border-radius: 99px;
+      background-color: var(--robot-body); border: 1.5px solid var(--ink-border);
+      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center; gap: 2.5px;
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.12), inset 0 1px 1px var(--glass-highlight);
+    }
+    .toast-bot-paw span { width: 1.8px; height: 5px; border-radius: 2px; background-color: var(--robot-ink); opacity: 0.45; }
+    .toast-bot-paw.is-left { transform: rotate(-10deg); }
+    .toast-bot-paw.is-right { transform: rotate(10deg); }
+    .toast-bot-feet {
+      position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%);
+      width: 58px; display: flex; justify-content: space-between; pointer-events: none; z-index: -1;
+    }
+    .toast-bot-foot {
+      width: 16px; height: 10px; border-radius: 99px;
+      background-color: var(--robot-accent); border: 1.5px solid var(--ink-border);
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.14);
+    }
+    @keyframes toastBotPeek {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-2px); }
+    }
+    @keyframes toastBotAlert {
+      0%, 100% { transform: translateX(-50%) rotate(0deg); }
+      25% { transform: translateX(-54%) rotate(-6deg); }
+      75% { transform: translateX(-46%) rotate(6deg); }
     }
     .toast-badge {
       width: 22px;
       height: 22px;
       border-radius: 99px;
-      display: inline-flex;
+      display: none;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
@@ -375,11 +418,13 @@
       box-shadow: 0 2px 8px var(--accent-soft);
     }
     .toast.is-error .toast-badge {
+      display: inline-flex;
       background-color: #ef4444;
       color: #ffffff;
       box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
     }
     .toast.is-loading .toast-badge {
+      display: inline-flex;
       background-color: var(--accent-soft);
       color: var(--accent);
       box-shadow: none;
@@ -3909,6 +3954,25 @@
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite">
+    <svg class="toast-bot-head" viewBox="0 0 108 68" fill="none" aria-hidden="true">
+      <line x1="54" y1="6" x2="54" y2="16" stroke="var(--robot-ink)" stroke-width="3.2" stroke-linecap="round"/>
+      <circle cx="54" cy="5" r="4.5" fill="var(--accent)" stroke="var(--robot-ink)" stroke-width="2.5"/>
+      <rect x="7" y="29" width="9" height="22" rx="4.5" fill="var(--robot-accent)" stroke="var(--robot-ink)" stroke-width="2.5"/>
+      <rect x="92" y="29" width="9" height="22" rx="4.5" fill="var(--robot-accent)" stroke="var(--robot-ink)" stroke-width="2.5"/>
+      <rect x="16" y="16" width="76" height="52" rx="14" fill="var(--robot-body)" stroke="var(--robot-ink)" stroke-width="3.2"/>
+      <rect x="26" y="25" width="56" height="33" rx="8" fill="var(--robot-screen)" stroke="var(--robot-ink)" stroke-width="2"/>
+      <circle class="toast-bot-eye" cx="43" cy="39" r="5" fill="var(--robot-eye)"/>
+      <circle class="toast-bot-eye" cx="65" cy="39" r="5" fill="var(--robot-eye)"/>
+      <circle class="toast-bot-eye" cx="54" cy="49" r="2.2" fill="var(--robot-eye)"/>
+    </svg>
+    <div class="toast-bot-paws" aria-hidden="true">
+      <div class="toast-bot-paw is-left"><span></span><span></span><span></span></div>
+      <div class="toast-bot-paw is-right"><span></span><span></span><span></span></div>
+    </div>
+    <div class="toast-bot-feet" aria-hidden="true">
+      <div class="toast-bot-foot"></div>
+      <div class="toast-bot-foot"></div>
+    </div>
     <span class="toast-badge" id="toastBadge" aria-hidden="true"></span>
     <span class="toast-msg" id="toastMsg"></span>
   </div>
@@ -4126,63 +4190,44 @@
 
     const SITE_FAVICON_URL = "https://imghub-8t7.pages.dev/api/image?storage=r2&key=images%2F2026-11%2F1794894628657-Gemini_Generated_Image_9p6wa39p6wa39.jpg";
     let cachedFaviconImg = null;
-    function updateFaviconForTheme(effective) {
+    function updateFaviconForTheme() {
       const link = document.getElementById("siteFavicon");
       if (!link) return;
       const drawFavicon = (img) => {
         try {
           const size = 64;
-          const outerRadius = 18;
-          const innerPad = 8;
-          const innerRadius = Math.max(4, outerRadius - innerPad);
-          const outerBox = size - 4;
-          const innerBox = outerBox - innerPad * 2;
           const canvas = document.createElement("canvas");
           canvas.width = size;
           canvas.height = size;
           const ctx = canvas.getContext("2d");
           if (!ctx) return;
 
-          ctx.save();
-          ctx.shadowColor = effective === "dark" ? "rgba(0, 0, 0, 0.48)" : "rgba(15, 23, 42, 0.18)";
-          ctx.shadowBlur = 4;
-          ctx.shadowOffsetY = 1;
-          ctx.beginPath();
-          ctx.roundRect(2, 2, outerBox, outerBox, outerRadius);
-          ctx.fillStyle = effective === "dark" ? "#242730" : "#ffffff";
+          const roundRectPath = (x, y, w, h, r) => {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+          };
+          // 与 imghub 一致：外层圆角底框与描边 (rx=18)
+          roundRectPath(2, 2, 60, 60, 18);
+          ctx.fillStyle = "#fffdf5";
           ctx.fill();
-          ctx.restore();
-
-          ctx.save();
-          ctx.beginPath();
-          ctx.roundRect(2 + innerPad, 2 + innerPad, innerBox, innerBox, innerRadius);
-          ctx.clip();
-          const iw = img.naturalWidth || innerBox;
-          const ih = img.naturalHeight || innerBox;
-          const scale = Math.max(innerBox / iw, innerBox / ih);
-          const w = iw * scale;
-          const h = ih * scale;
-          ctx.drawImage(img, 2 + innerPad + (innerBox - w) / 2, 2 + innerPad + (innerBox - h) / 2, w, h);
-          ctx.restore();
-
-          ctx.beginPath();
-          ctx.roundRect(2, 2, outerBox, outerBox, outerRadius);
           ctx.lineWidth = 3;
-          ctx.strokeStyle = effective === "dark" ? "rgba(255, 255, 255, 0.42)" : "rgba(42, 36, 30, 0.68)";
+          ctx.strokeStyle = "#2a241e";
           ctx.stroke();
+          // 内层同心圆角裁切 (pad=5 -> rx=18-5=13)
+          ctx.save();
+          roundRectPath(7, 7, 50, 50, 13);
+          ctx.clip();
+          ctx.drawImage(img, 7, 7, 50, 50);
+          ctx.restore();
 
           const dataUrl = canvas.toDataURL("image/png");
-          const nextLink = document.createElement("link");
-          nextLink.id = "siteFavicon";
-          nextLink.rel = "icon";
-          nextLink.type = "image/png";
-          nextLink.href = dataUrl;
-          const oldLink = document.getElementById("siteFavicon");
-          if (oldLink && oldLink.parentNode) {
-            oldLink.parentNode.replaceChild(nextLink, oldLink);
-          } else {
-            document.head.appendChild(nextLink);
-          }
+          link.type = "image/png";
+          link.href = dataUrl;
         } catch {}
       };
 
@@ -4190,20 +4235,13 @@
         drawFavicon(cachedFaviconImg);
         return;
       }
-      const proxySrc = `/api/image?proxy=${encodeURIComponent(SITE_FAVICON_URL)}`;
-      const loadImg = (src, allowFallback) => {
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.onload = () => {
-          cachedFaviconImg = img;
-          drawFavicon(img);
-        };
-        img.onerror = () => {
-          if (allowFallback) loadImg(SITE_FAVICON_URL, false);
-        };
-        img.src = src;
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        cachedFaviconImg = img;
+        drawFavicon(img);
       };
-      loadImg(proxySrc, true);
+      img.src = SITE_FAVICON_URL;
     }
 
     function setIconSmooth(svgEl, nextHtml) {
@@ -4744,7 +4782,7 @@
       } else if (resolved === "loading") {
         toastBadgeEl.innerHTML = '<span class="toast-spinner"></span>';
       } else {
-        toastBadgeEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+        toastBadgeEl.innerHTML = "";
       }
       toastMsgEl.textContent = text;
       toastEl.classList.add("is-visible");
