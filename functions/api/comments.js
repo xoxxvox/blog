@@ -85,6 +85,12 @@ export async function onRequestPost({ request, env }) {
     .bind(postId, user.id, user.username, content, nowIso)
     .run();
 
+  let authorProfile = null;
+  try {
+    const userRow = await env.DB.prepare("SELECT profile_json FROM users WHERE id = ?").bind(user.id).first();
+    if (userRow?.profile_json) authorProfile = JSON.parse(userRow.profile_json);
+  } catch {}
+
   return json(
     {
       comment: {
@@ -94,6 +100,8 @@ export async function onRequestPost({ request, env }) {
         username: user.username,
         content,
         created_at: nowIso,
+        author_role: user.role || "user",
+        author_profile: authorProfile,
       },
     },
     201

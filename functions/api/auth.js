@@ -61,12 +61,22 @@ function generateRandomAvatar(seed) {
     ["#2dd4bf", "#0d9488"],
     ["#fb7185", "#e11d48"],
     ["#818cf8", "#4f46e5"],
+    ["#38bdf8", "#0284c7"],
+    ["#c084fc", "#9333ea"],
   ];
   const idx = Math.floor(Math.random() * palettes.length);
+  const pattern = Math.floor(Math.random() * 3);
   const [c1, c2] = palettes[idx];
-  const ch = encodeURIComponent((String(seed || "?").trim()[0] || "?").toUpperCase());
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='${c1}'/><stop offset='100%' stop-color='${c2}'/></linearGradient></defs><rect width='80' height='80' rx='40' fill='url(%23g)'/><circle cx='58' cy='20' r='16' fill='rgba(255,255,255,0.16)'/><text x='50%' y='53%' dominant-baseline='middle' text-anchor='middle' font-family='system-ui,sans-serif' font-size='34' font-weight='600' fill='%23ffffff'>${ch}</text></svg>`;
-  return `data:image/svg+xml;utf8,${svg}`;
+  const ch = (String(seed || "?").trim()[0] || "?").toUpperCase();
+  const safeCh = ch.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const decor =
+    pattern === 0
+      ? `<circle cx='60' cy='20' r='18' fill='rgba(255,255,255,0.16)'/><circle cx='18' cy='66' r='12' fill='rgba(255,255,255,0.10)'/>`
+      : pattern === 1
+      ? `<rect x='46' y='-6' width='36' height='36' rx='10' transform='rotate(24 64 12)' fill='rgba(255,255,255,0.15)'/><circle cx='16' cy='62' r='10' fill='rgba(255,255,255,0.10)'/>`
+      : `<circle cx='40' cy='40' r='34' fill='none' stroke='rgba(255,255,255,0.16)' stroke-width='2' stroke-dasharray='6 6'/><circle cx='62' cy='22' r='12' fill='rgba(255,255,255,0.14)'/>`;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='${c1}'/><stop offset='100%' stop-color='${c2}'/></linearGradient></defs><rect width='80' height='80' rx='40' fill='url(#g)'/>${decor}<text x='50%' y='53%' dominant-baseline='middle' text-anchor='middle' font-family='system-ui,-apple-system,sans-serif' font-size='34' font-weight='600' fill='#ffffff'>${safeCh}</text></svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
 export async function onRequestPost({ request, env }) {

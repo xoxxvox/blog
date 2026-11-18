@@ -899,7 +899,7 @@
       transition: opacity 220ms var(--spring), transform 220ms var(--spring);
     }
     .reader-page.is-open, .console-page.is-open { display: block; }
-    .reader-page.is-open { padding-bottom: 96px; }
+    .reader-page.is-open { padding-bottom: 48px; }
     .reader-page.is-enter-prep, .console-page.is-enter-prep { opacity: 0; transform: translate3d(0, 14px, 0); transition: none; }
     .reader-page.is-leaving, .console-page.is-leaving {
       opacity: 0; transform: translate3d(0, -14px, 0); pointer-events: none;
@@ -953,21 +953,37 @@
       border-color: #ef4444;
     }
     @media (max-width: 720px) { .console-container { padding: 18px; } }
-    .reader-shell { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); gap: 24px; align-items: start; margin: 4px auto 32px auto; }
-    .reader-shell > :not(.toc-aside) { grid-column: span 9; min-width: 0; }
+    .reader-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 268px;
+      gap: 24px;
+      align-items: start;
+      margin: 4px auto 32px auto;
+    }
+    .reader-shell > :not(.toc-aside) { min-width: 0; }
 
     .toc-aside {
-      order: -1;
-      grid-column: span 3;
       position: sticky;
       top: 24px;
-      padding: 16px 14px;
+      padding: 18px 16px;
       border-radius: 18px;
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
-    .toc-aside .reader-back { width: 100%; justify-content: center; }
+    .reader-top-left {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      min-width: 0;
+    }
+    .reader-top-sep {
+      width: 1px;
+      height: 14px;
+      background-color: var(--hairline-strong);
+      flex-shrink: 0;
+    }
     .reader-progress-card {
       display: flex;
       align-items: center;
@@ -984,8 +1000,10 @@
       color: var(--accent);
     }
     .reader-page.is-focus .toc-aside { display: none; }
+    .reader-page.is-focus .reader-shell {
+      grid-template-columns: minmax(0, 1fr);
+    }
     .reader-page.is-focus .reader-shell > :not(.toc-aside) {
-      grid-column: 1 / -1;
       max-width: 820px;
       margin: 0 auto;
       width: 100%;
@@ -1001,12 +1019,21 @@
     .toc-link:hover { color: var(--text-primary); background-color: var(--bg-raised); }
     .toc-link.is-active { color: var(--accent); background-color: var(--accent-soft); border-left-color: var(--accent); font-weight: 500; }
 
-    .reader-container { width: 100%; padding: 32px 42px 44px 42px; }
-    .reader-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 16px; margin-bottom: 24px; border-bottom: 1px solid var(--hairline); }
-    .reader-back { height: 34px; padding: 0 14px 0 11px; border-radius: 10px; font-size: 13px; font-weight: 500; }
-    .reader-title { margin: 0 0 10px 0; font-size: 24px; font-weight: 600; line-height: 1.32; letter-spacing: -0.02em; }
-    .reader-lead { margin: 0 0 24px 0; padding-bottom: 18px; border-bottom: 1px solid var(--hairline); font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
-    .reader-body { font-size: 14.5px; line-height: 1.78; }
+    .reader-container { width: 100%; padding: 32px 48px 44px 48px; }
+    .reader-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 16px; margin-bottom: 26px; border-bottom: 1px solid var(--hairline); }
+    .reader-back { height: 32px; padding: 0 12px 0 10px; border-radius: 99px; font-size: 12.5px; font-weight: 500; }
+    .reader-title { margin: 0 0 14px 0; font-size: clamp(24px, 2.5vw, 30px); font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; }
+    .reader-lead {
+      margin: 0 0 28px 0;
+      padding: 12px 16px;
+      border-left: 3px solid var(--accent);
+      background-color: var(--bg-subcard);
+      border-radius: 0 10px 10px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.72;
+    }
+    .reader-body { font-size: 15px; line-height: 1.82; }
     .reader-body h1 { margin: 28px 0 12px 0; font-size: 20px; font-weight: 600; }
     .reader-body h2 { margin: 26px 0 10px 0; font-size: 17.5px; font-weight: 600; letter-spacing: -0.015em; }
     .reader-body h3 { margin: 22px 0 8px 0; font-size: 15.5px; font-weight: 600; }
@@ -1047,28 +1074,16 @@
 
     /* Reader Actions Bar (Like / Comment / Share) */
     .reader-actions-bar {
-      position: fixed;
-      left: 50%;
-      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-      transform: translateX(-50%);
-      z-index: 55;
-      margin: 0;
+      margin: 36px auto 8px auto;
       width: fit-content;
-      max-width: calc(100vw - 24px);
-      padding: 6px 8px;
+      max-width: 100%;
+      padding: 6px 10px;
       border-radius: 999px;
-      background-color: var(--bg-card-solid);
-      -webkit-backdrop-filter: blur(26px) saturate(210%); backdrop-filter: blur(26px) saturate(210%);
-      border: 1px solid var(--ink-border);
-      box-shadow: var(--shadow-float);
-      display: none; align-items: center; justify-content: center; flex-wrap: nowrap; gap: 4px;
-      overflow-x: auto;
-      scrollbar-width: none;
+      background-color: var(--bg-subcard);
+      border: 1px solid var(--hairline-strong);
+      display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px;
     }
-    body.is-reader-open .reader-actions-bar,
-    body:has(#readerPage.is-open) .reader-actions-bar { display: flex; }
-    .reader-actions-bar::-webkit-scrollbar { display: none; }
-    .reader-actions-group { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+    .reader-actions-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
     .reader-actions-bar .action-pill-btn { flex-shrink: 0; white-space: nowrap; }
     .action-pill-btn {
       position: relative;
@@ -2257,9 +2272,9 @@
       }
       .right-col { grid-column: 1 / -1; min-height: 0; }
       .content-panel { height: auto; min-height: 520px; }
-      .reader-shell { gap: 18px; }
-      .toc-aside { grid-column: 1 / -1; position: static; }
-      .reader-shell > :not(.toc-aside) { grid-column: 1 / -1; }
+      .reader-shell { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+      .toc-aside { position: static; }
+      .reader-container { padding: 24px 24px 32px 24px; }
     }
 
     @media (max-width: 768px) {
@@ -3221,9 +3236,14 @@
       <div class="reader-shell">
         <article class="surface reader-container">
           <div class="reader-top" style="flex-wrap: wrap; gap: 10px;">
-            <div class="article-card-footer tabular" style="border-top: none; padding-top: 0; gap: 12px; align-items: center;">
+            <div class="reader-top-left tabular">
+              <button class="tactile-btn reader-back" id="backToListBtn" type="button">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+                <span>返回首页</span>
+              </button>
+              <span class="reader-top-sep" aria-hidden="true"></span>
               <span class="article-tag" id="readerCat"></span>
-              <span id="readerDate"></span>
+              <span id="readerDate" style="font-size: 12.5px; color: var(--text-muted);"></span>
               <button class="tactile-btn copy-btn" id="readerEditPostBtn" type="button" style="display: none; height: 26px; padding: 0 10px; font-size: 11.5px;">编辑文章</button>
             </div>
             <div class="reader-font-controls apple-pop-anchor">
@@ -3248,6 +3268,44 @@
           <p class="reader-lead" id="readerLead"></p>
           <div class="reader-body" id="readerBody"></div>
 
+          <div class="reader-actions-bar" id="readerActionsBar" aria-label="文章互动">
+            <div class="reader-actions-group">
+              <button class="tactile-btn action-pill-btn" id="likePostBtn" type="button">
+                <span class="action-icon-wrap">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                </span>
+                <span>点赞</span>
+                <span class="action-pill-count" id="likeCountText">0</span>
+              </button>
+              <button class="tactile-btn action-pill-btn" id="favPostBtn" type="button">
+                <span class="action-icon-wrap">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </span>
+                <span>收藏</span>
+                <span class="action-pill-count" id="favCountText">0</span>
+              </button>
+              <button class="tactile-btn action-pill-btn" id="jumpCommentBtn" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span>评论</span>
+                <span class="action-pill-count" id="actionCommentCount">0</span>
+              </button>
+              <button class="tactile-btn action-pill-btn" id="sharePostBtn" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+                <span>转发分享</span>
+                <span class="action-pill-count" id="shareCountText">0</span>
+              </button>
+            </div>
+          </div>
+
+          <nav class="reader-pager">
+            <button class="tactile-btn pager-btn" id="prevPostBtn" type="button">
+              <span class="pager-dir">← 上一篇</span><span class="pager-title" id="prevPostTitle"></span>
+            </button>
+            <button class="tactile-btn pager-btn is-next" id="nextPostBtn" type="button">
+              <span class="pager-dir">下一篇 →</span><span class="pager-title" id="nextPostTitle"></span>
+            </button>
+          </nav>
+
           <section class="reader-comments" id="readerComments" aria-label="文章评论">
             <div class="comments-head">
               <h2 class="comments-title">评论交流</h2>
@@ -3266,22 +3324,9 @@
             </form>
             <div class="comment-list" id="commentList"></div>
           </section>
-
-          <nav class="reader-pager">
-            <button class="tactile-btn pager-btn" id="prevPostBtn" type="button">
-              <span class="pager-dir">← 上一篇</span><span class="pager-title" id="prevPostTitle"></span>
-            </button>
-            <button class="tactile-btn pager-btn is-next" id="nextPostBtn" type="button">
-              <span class="pager-dir">下一篇 →</span><span class="pager-title" id="nextPostTitle"></span>
-            </button>
-          </nav>
         </article>
 
         <aside class="surface toc-aside" id="tocAside" aria-label="文章目录">
-          <button class="tactile-btn reader-back" id="backToListBtn" type="button">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
-            <span>返回首页</span>
-          </button>
           <div class="reader-progress-card">
             <span style="color: var(--text-muted);">阅读进度</span>
             <span class="reader-progress-pct tabular"><span id="readerProgressPct">0%</span> · <span id="readerTime"></span></span>
@@ -3925,35 +3970,6 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="reader-actions-bar" id="readerActionsBar" aria-label="文章互动">
-    <div class="reader-actions-group">
-      <button class="tactile-btn action-pill-btn" id="likePostBtn" type="button">
-        <span class="action-icon-wrap">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-        </span>
-        <span>点赞</span>
-        <span class="action-pill-count" id="likeCountText">0</span>
-      </button>
-      <button class="tactile-btn action-pill-btn" id="favPostBtn" type="button">
-        <span class="action-icon-wrap">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </span>
-        <span>收藏</span>
-        <span class="action-pill-count" id="favCountText">0</span>
-      </button>
-      <button class="tactile-btn action-pill-btn" id="jumpCommentBtn" type="button">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <span>评论</span>
-        <span class="action-pill-count" id="actionCommentCount">0</span>
-      </button>
-    </div>
-    <button class="tactile-btn action-pill-btn" id="sharePostBtn" type="button">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
-      <span>转发分享</span>
-      <span class="action-pill-count" id="shareCountText">0</span>
-    </button>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite">
@@ -5148,7 +5164,8 @@
         authTriggerBtn.title = displayNick;
         authTriggerBtn.setAttribute("aria-label", `账号：${displayNick}`);
         authTriggerBtn.classList.add("is-logged-in");
-        const avatarSrc = (!isAdmin && currentUser.profile?.avatar) || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
+        const rawAvatarSrc = (!isAdmin && currentUser.profile?.avatar) || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
+        const avatarSrc = sanitizeAvatarUrl(rawAvatarSrc, displayNick, isAdmin);
         if (authTriggerAvatar) {
           authTriggerAvatar.src = avatarSrc;
           authTriggerAvatar.style.display = "block";
@@ -5236,7 +5253,8 @@
       const authModalCard = document.getElementById("authModalCard");
       if (currentUser) {
         const isAdmin = currentUser.role === "admin";
-        const avatarSrc = (!isAdmin && currentUser.profile?.avatar) || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
+        const rawAvatarSrc = (!isAdmin && currentUser.profile?.avatar) || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
+        const avatarSrc = sanitizeAvatarUrl(rawAvatarSrc, displayNick, isAdmin);
         authGuestView.style.display = "none";
         authUserView.style.display = "flex";
         setRobotVisibility(false);
@@ -5752,33 +5770,59 @@
         ["#2dd4bf", "#0d9488"],
         ["#fb7185", "#e11d48"],
         ["#818cf8", "#4f46e5"],
+        ["#38bdf8", "#0284c7"],
+        ["#c084fc", "#9333ea"],
       ];
       const str = String(name || "?");
       let idx = 0;
+      let pattern = 0;
       if (randomize) {
         idx = Math.floor(Math.random() * palettes.length);
+        pattern = Math.floor(Math.random() * 3);
       } else {
         for (let i = 0; i < str.length; i++) idx = (idx * 31 + str.charCodeAt(i)) % palettes.length;
+        pattern = str.charCodeAt(0) % 3;
       }
       const [c1, c2] = palettes[idx];
-      const ch = encodeURIComponent((str.trim()[0] || "?").toUpperCase());
-      return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='${c1}'/><stop offset='100%' stop-color='${c2}'/></linearGradient></defs><rect width='80' height='80' rx='40' fill='url(%23g)'/><circle cx='58' cy='20' r='16' fill='rgba(255,255,255,0.16)'/><text x='50%' y='53%' dominant-baseline='middle' text-anchor='middle' font-family='system-ui,sans-serif' font-size='34' font-weight='600' fill='%23ffffff'>${ch}</text></svg>`;
+      const ch = (str.trim()[0] || "?").toUpperCase()
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      const decor =
+        pattern === 0
+          ? `<circle cx='60' cy='20' r='18' fill='rgba(255,255,255,0.16)'/><circle cx='18' cy='66' r='12' fill='rgba(255,255,255,0.10)'/>`
+          : pattern === 1
+          ? `<rect x='46' y='-6' width='36' height='36' rx='10' transform='rotate(24 64 12)' fill='rgba(255,255,255,0.15)'/><circle cx='16' cy='62' r='10' fill='rgba(255,255,255,0.10)'/>`
+          : `<circle cx='40' cy='40' r='34' fill='none' stroke='rgba(255,255,255,0.16)' stroke-width='2' stroke-dasharray='6 6'/><circle cx='62' cy='22' r='12' fill='rgba(255,255,255,0.14)'/>`;
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='${c1}'/><stop offset='100%' stop-color='${c2}'/></linearGradient></defs><rect width='80' height='80' rx='40' fill='url(#g)'/>${decor}<text x='50%' y='53%' dominant-baseline='middle' text-anchor='middle' font-family='system-ui,-apple-system,sans-serif' font-size='34' font-weight='600' fill='#ffffff'>${ch}</text></svg>`;
+      return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+    }
+
+    function sanitizeAvatarUrl(rawUrl, fallbackName, isAdmin = false) {
+      const url = String(rawUrl || "").trim();
+      const isBrokenInlineSvg = url.startsWith("data:image/svg+xml") && url.includes("#");
+      if (!url || isBrokenInlineSvg) {
+        if (isAdmin && currentProfile?.avatar && !currentProfile.avatar.includes("#")) {
+          return currentProfile.avatar;
+        }
+        return makeDefaultAvatar(fallbackName);
+      }
+      return url;
     }
 
     const commentAuthorStore = new Map();
     const userDetailModalBackdrop = document.getElementById("userDetailModalBackdrop");
 
     function resolveCommentProfile(c) {
+      const isAdmin = c.author_role === "admin";
       let prof = c.author_profile;
       if (!prof && currentUser && c.user_id === currentUser.id && currentUser.profile) {
         prof = currentUser.profile;
       }
-      if (!prof && c.author_role === "admin") {
+      if (!prof && isAdmin) {
         prof = currentProfile;
       }
-      const nick = (prof && prof.profileName) ? prof.profileName : c.username;
-      const avatar = (prof && prof.avatar) ? prof.avatar : makeDefaultAvatar(nick);
-      return { prof: prof || {}, nick, avatar, isAdmin: c.author_role === "admin" };
+      const nick = (prof && prof.profileName) ? prof.profileName : (isAdmin && currentProfile?.profileName ? currentProfile.profileName : c.username);
+      const avatar = sanitizeAvatarUrl(prof && prof.avatar, nick, isAdmin);
+      return { prof: prof || {}, nick, avatar, isAdmin };
     }
 
     function openUserDetailModal(c) {
@@ -5852,13 +5896,14 @@
         ? `<div class="chc-info">${hoverRows.map(([k, v]) => `<div class="chc-info-row"><span class="chc-info-k">${escapeHtml(k)}</span><span class="chc-info-v">${escapeHtml(v)}</span></div>`).join("")}</div>`
         : "";
 
+      const fallbackAvatar = escapeHtml(makeDefaultAvatar(nick));
       return `
         <div class="comment-author-wrap">
           <div class="comment-avatar-wrap" tabindex="0" data-comment-author="${escapeHtml(String(c.id))}" title="点击查看全部资料">
-            <img class="comment-avatar" src="${escapeHtml(avatar)}" alt="${escapeHtml(nick)}" loading="lazy" />
+            <img class="comment-avatar" src="${escapeHtml(avatar)}" alt="${escapeHtml(nick)}" loading="lazy" onerror="this.onerror=null;this.src='${fallbackAvatar}';" />
             <div class="comment-hover-card">
               <div class="chc-header">
-                <img class="chc-avatar" src="${escapeHtml(avatar)}" alt="${escapeHtml(nick)}" />
+                <img class="chc-avatar" src="${escapeHtml(avatar)}" alt="${escapeHtml(nick)}" onerror="this.onerror=null;this.src='${fallbackAvatar}';" />
                 <div class="chc-names">
                   <div class="chc-nick">${escapeHtml(nick)}${isAdmin ? '<span class="comment-role-badge">管理员</span>' : ""}</div>
                   <div class="chc-handle">@${escapeHtml(c.username)}</div>
