@@ -15,6 +15,11 @@
     "name": "SoxMoox",
     "gender": "男",
     "age": "27 岁",
+    "hobby": "",
+    "city": "",
+    "qq": "",
+    "wechat": "",
+    "email": "",
     "extraInfo": [
       {
         "label": "爱好",
