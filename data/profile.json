@@ -32,23 +32,23 @@
       "label": "QQ",
       "modalTitle": "QQ 联系方式",
       "fieldLabel": "QQ 号码",
-      "value": "10086001",
+      "value": "927839469",
       "url": "tencent://message/?uin=10086001&Site=&Menu=yes",
-      "qr": "https://img.xxoxovx.cc/api/image?storage=r2&key=images%2F2026-11%2F1795015449028-7866.png"
+      "qr": "https://img.xxoxovx.cc/api/image?storage=r2&key=images%2F2026-11%2F1795015446766-7999.png"
     },
     {
       "label": "WeChat",
       "modalTitle": "WeChat 联系方式",
       "fieldLabel": "微信号",
-      "value": "soxmoox_wx",
+      "value": "SoxMoox",
       "url": "weixin://",
-      "qr": "/api/image?key=images%2F1794763965543-7866.png"
+      "qr": "https://img.xxoxovx.cc/api/image?storage=r2&key=images%2F2026-11%2F1795015446766-7999.png"
     },
     {
       "label": "Telegram",
       "modalTitle": "Telegram 联系方式",
       "fieldLabel": "用户名",
-      "value": "@xxoxovx",
+      "value": "@soxmoox",
       "url": "https://t.me/xxoxovx",
       "qr": "https://t.me/xxoxovx"
     },
