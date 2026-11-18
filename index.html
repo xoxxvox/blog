@@ -350,15 +350,13 @@
       font-weight: 500;
       line-height: 1.35;
       opacity: 0;
-      filter: blur(4px);
       pointer-events: none;
       z-index: 260;
       box-shadow: var(--shadow-float);
-      transition: opacity 200ms var(--ease), transform 260ms var(--spring), filter 200ms var(--ease);
+      transition: opacity 180ms var(--ease), transform 240ms var(--spring);
     }
     .toast.is-visible {
       opacity: 1;
-      filter: blur(0);
       transform: translateX(-50%) translateY(0) scale(1);
     }
     .toast-badge {
@@ -655,9 +653,10 @@
       color: var(--text-secondary);
       cursor: pointer;
       white-space: nowrap;
-      transition: color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+      transition: color var(--t-fast) var(--ease), transform 90ms var(--ease);
     }
     .cat-pill:hover { color: var(--text-primary); }
+    .cat-pill:active { transform: scale(0.96); }
     .cat-pill:active { transform: scale(0.96); }
     .cat-pill.is-active { color: var(--accent-contrast); }
 
@@ -1160,10 +1159,10 @@
       -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
       display: flex; align-items: center; justify-content: center;
       padding: 20px; opacity: 0; visibility: hidden; pointer-events: none;
-      transition: opacity 200ms var(--ease), visibility 0s linear 200ms;
+      transition: opacity 160ms var(--ease), visibility 0s linear 160ms;
     }
     [data-theme="dark"] .contact-modal-backdrop { background-color: rgba(0, 0, 0, 0.55); }
-    .contact-modal-backdrop.is-open { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 200ms var(--ease), visibility 0s linear 0s; }
+    .contact-modal-backdrop.is-open { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 240ms var(--ease), visibility 0s linear 0s; }
 
     .contact-modal {
       position: relative;
@@ -1174,9 +1173,9 @@
       box-shadow: var(--shadow-float);
       display: flex; flex-direction: column; align-items: center; gap: 15px;
       opacity: 0;
-      filter: blur(4px);
-      transform: scale(0.96) translateY(8px);
-      transition: opacity 200ms var(--ease), transform 240ms var(--spring), filter 200ms var(--ease);
+      transform: scale(0.95) translateY(8px);
+      transform-origin: center;
+      transition: opacity 160ms var(--ease), transform 170ms var(--ease);
     }
     [data-theme="dark"] .contact-modal {
       box-shadow: var(--shadow-float);
@@ -1191,7 +1190,11 @@
       background-color: var(--bg-card-solid);
       box-shadow: var(--shadow-float);
     }
-    .contact-modal-backdrop.is-open .contact-modal { opacity: 1; filter: blur(0); transform: scale(1) translateY(0); }
+    .contact-modal-backdrop.is-open .contact-modal {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      transition: opacity 240ms var(--ease), transform 280ms var(--spring);
+    }
 
     /* Robot Buddy for Auth Modal */
     .robot-buddy {
@@ -1359,10 +1362,10 @@
       -webkit-backdrop-filter: saturate(210%) blur(28px); backdrop-filter: saturate(210%) blur(28px);
       border: 1px solid var(--ink-border); box-shadow: var(--shadow-float);
       display: flex; flex-direction: column; gap: 14px;
-      opacity: 0; visibility: hidden; filter: blur(4px); transform: translateY(-6px) scale(0.97); transform-origin: top right;
-      transition: opacity 180ms var(--ease), transform 220ms var(--spring), filter 180ms var(--ease), visibility 180ms; z-index: 40;
+      opacity: 0; visibility: hidden; transform: translateY(-6px) scale(0.95); transform-origin: top right;
+      transition: opacity 130ms var(--ease), transform 140ms var(--ease), visibility 0s linear 140ms; z-index: 40;
     }
-    .appearance-popover.is-open { opacity: 1; visibility: visible; filter: blur(0); transform: translateY(0) scale(1); }
+    .appearance-popover.is-open { opacity: 1; visibility: visible; transform: translateY(0) scale(1); transition: opacity 180ms var(--ease), transform 200ms var(--spring), visibility 0s linear 0s; }
     .popover-section { display: flex; flex-direction: column; gap: 8px; }
     .popover-head-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
     .popover-label { font-size: 11px; font-weight: 500; color: var(--text-muted); }
@@ -1500,11 +1503,11 @@
       border: 1px solid var(--ink-border); box-shadow: var(--shadow-float);
       display: flex; flex-direction: column; gap: 10px;
       opacity: 0; visibility: hidden; pointer-events: none;
-      transform: translateY(-6px) scale(0.97); transform-origin: top right;
-      transition: opacity 160ms var(--ease), transform 220ms var(--spring), visibility 160ms;
+      transform: translateY(-6px) scale(0.95); transform-origin: top right;
+      transition: opacity 130ms var(--ease), transform 140ms var(--ease), visibility 0s linear 140ms;
       z-index: 45;
     }
-    .account-popover.is-open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0) scale(1); }
+    .account-popover.is-open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0) scale(1); transition: opacity 180ms var(--ease), transform 200ms var(--spring), visibility 0s linear 0s; }
     .account-bot-pill {
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
       padding: 6px 10px; border-radius: 12px;
@@ -1550,14 +1553,14 @@
     .account-pop-item {
       width: 100%; display: flex; align-items: center; gap: 12px; padding: 9px 10px;
       border: none; border-radius: 12px; background: transparent; cursor: pointer; text-align: left;
-      transition: background-color 160ms var(--ease), transform 180ms var(--spring), box-shadow 160ms var(--ease);
+      transition: background-color 140ms var(--ease), transform 90ms var(--ease);
     }
-    .account-pop-item:hover { background-color: var(--bg-raised); box-shadow: inset 3px 0 0 var(--accent); }
-    .account-pop-item:active { transform: scale(0.985); }
+    .account-pop-item:hover { background-color: var(--bg-raised); }
+    .account-pop-item:active { transform: scale(0.98); }
     .account-pop-icon {
       width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
       display: grid; place-items: center;
-      background-color: var(--bg-subcard); border: 1.5px solid var(--ink-border); color: var(--text-secondary);
+      background-color: var(--bg-subcard); border: 1px solid var(--hairline); color: var(--text-secondary);
     }
     .account-pop-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
     .account-pop-title { font-size: 13.5px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
@@ -1929,10 +1932,10 @@
       background-color: var(--bg-card-solid); border: 1px solid var(--ink-border);
       -webkit-backdrop-filter: blur(30px) saturate(210%); backdrop-filter: blur(30px) saturate(210%);
       box-shadow: var(--shadow-float); display: flex; flex-direction: column; gap: 14px;
-      opacity: 0; filter: blur(4px);
-      transform: scale(0.96) translateY(8px); transition: opacity 200ms var(--ease), transform 240ms var(--spring), filter 200ms var(--ease); overflow: hidden;
+      transform-origin: center; opacity: 0;
+      transform: scale(0.95) translateY(8px); transition: opacity 160ms var(--ease), transform 170ms var(--ease); overflow: hidden;
     }
-    .contact-modal-backdrop.is-open .admin-modal { opacity: 1; filter: blur(0); transform: scale(1) translateY(0); }
+    .contact-modal-backdrop.is-open .admin-modal { opacity: 1; transform: scale(1) translateY(0); transition: opacity 240ms var(--ease), transform 280ms var(--spring); }
     .admin-tabs {
       width: 100%; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; padding: 3px;
       border-radius: 11px; background-color: var(--bg-raised); border: 1px solid var(--hairline);
