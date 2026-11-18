@@ -63,6 +63,7 @@
       --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
       --ease: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-in: cubic-bezier(0.4, 0, 1, 1);
       --spring: cubic-bezier(0.16, 1, 0.3, 1);
       --bounce: cubic-bezier(0.22, 1, 0.36, 1);
       --t-fast: 150ms;
@@ -763,8 +764,11 @@
     }
     .article-card:hover { background-color: var(--bg-card-solid); border-color: var(--accent); box-shadow: var(--shadow-card); transform: translateY(-2px); }
     .article-card:active { transform: scale(0.985); }
-    .article-card.is-entering { animation: cardEnter 220ms var(--ease) both; }
-    @keyframes cardEnter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .article-card.is-entering { animation: cardEnter 280ms var(--spring) both; }
+    @keyframes cardEnter {
+      from { opacity: 0; transform: translate3d(0, 14px, 0) scale(0.97); }
+      to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    }
     .carousel-content,
     .carousel-visual {
       transition: opacity 240ms var(--spring), transform 260ms var(--spring), filter 200ms var(--ease);
@@ -828,26 +832,31 @@
     .article-tag { color: var(--accent); font-weight: 500; }
     .empty-state { grid-column: 1 / -1; padding: 36px 16px; text-align: center; color: var(--text-muted); font-size: 13px; }
 
-    /* Standalone Reader Page */
+    /* Standalone Reader & Console Page Relay Transition (~0.4s) */
     .home-page {
       display: flex; flex-direction: column; gap: 20px;
-      opacity: 1; transform: translateY(0); filter: blur(0);
-      transition: opacity 240ms var(--spring), transform 260ms var(--spring), filter 200ms var(--ease);
-      will-change: opacity, transform, filter;
+      opacity: 1; transform: translate3d(0, 0, 0);
+      transition: opacity 220ms var(--spring), transform 220ms var(--spring);
     }
-    .home-page.is-enter-prep { opacity: 0; transform: translateY(10px); filter: blur(4px); transition: none; }
-    .home-page.is-leaving { opacity: 0; transform: translateY(-8px); filter: blur(4px); pointer-events: none; }
+    .home-page.is-enter-prep { opacity: 0; transform: translate3d(0, 14px, 0); transition: none; }
+    .home-page.is-leaving {
+      opacity: 0; transform: translate3d(0, -14px, 0); pointer-events: none;
+      transition: opacity 200ms var(--ease-in), transform 200ms var(--ease-in);
+    }
     .home-page.is-hidden { display: none; }
 
     .reader-page, .console-page {
       display: none; width: 100%;
-      opacity: 1; transform: none; filter: none;
-      transition: opacity 240ms var(--spring), transform 260ms var(--spring), filter 200ms var(--ease);
+      opacity: 1; transform: none;
+      transition: opacity 220ms var(--spring), transform 220ms var(--spring);
     }
     .reader-page.is-open, .console-page.is-open { display: block; }
     .reader-page.is-open { padding-bottom: 96px; }
-    .reader-page.is-enter-prep, .console-page.is-enter-prep { opacity: 0; transform: translateY(10px); filter: blur(4px); transition: none; }
-    .reader-page.is-leaving, .console-page.is-leaving { opacity: 0; transform: translateY(-8px); filter: blur(4px); pointer-events: none; }
+    .reader-page.is-enter-prep, .console-page.is-enter-prep { opacity: 0; transform: translate3d(0, 14px, 0); transition: none; }
+    .reader-page.is-leaving, .console-page.is-leaving {
+      opacity: 0; transform: translate3d(0, -14px, 0); pointer-events: none;
+      transition: opacity 200ms var(--ease-in), transform 200ms var(--ease-in);
+    }
     .console-container { width: 100%; padding: 26px 32px 32px; margin: 4px auto 32px; display: flex; flex-direction: column; gap: 18px; }
     .console-top-tabs { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .console-page .site-rail-layout { min-height: 460px; }
@@ -1179,7 +1188,7 @@
       -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
       display: flex; align-items: center; justify-content: center;
       padding: 20px; opacity: 0; visibility: hidden; pointer-events: none;
-      transition: opacity 160ms var(--ease), visibility 0s linear 160ms;
+      transition: opacity 200ms var(--ease-in), visibility 0s linear 200ms;
     }
     [data-theme="dark"] .contact-modal-backdrop { background-color: rgba(0, 0, 0, 0.55); }
     .contact-modal-backdrop.is-open { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 240ms var(--ease), visibility 0s linear 0s; }
@@ -1195,7 +1204,7 @@
       opacity: 0;
       transform: scale(0.95) translateY(8px);
       transform-origin: center;
-      transition: opacity 160ms var(--ease), transform 170ms var(--ease);
+      transition: opacity 200ms var(--ease-in), transform 200ms var(--ease-in);
     }
     [data-theme="dark"] .contact-modal {
       box-shadow: var(--shadow-float);
@@ -1383,9 +1392,9 @@
       border: 1px solid var(--ink-border); box-shadow: var(--shadow-float);
       display: flex; flex-direction: column; gap: 14px;
       opacity: 0; visibility: hidden; transform: translateY(-6px) scale(0.95); transform-origin: top right;
-      transition: opacity 130ms var(--ease), transform 140ms var(--ease), visibility 0s linear 140ms; z-index: 40;
+      transition: opacity 200ms var(--ease-in), transform 200ms var(--ease-in), visibility 0s linear 200ms; z-index: 40;
     }
-    .appearance-popover.is-open { opacity: 1; visibility: visible; transform: translateY(0) scale(1); transition: opacity 180ms var(--ease), transform 200ms var(--spring), visibility 0s linear 0s; }
+    .appearance-popover.is-open { opacity: 1; visibility: visible; transform: translateY(0) scale(1); transition: opacity 220ms var(--ease), transform 240ms var(--spring), visibility 0s linear 0s; }
     .popover-section { display: flex; flex-direction: column; gap: 8px; }
     .popover-head-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
     .popover-label { font-size: 11px; font-weight: 500; color: var(--text-muted); }
@@ -1524,14 +1533,14 @@
       display: flex; flex-direction: column; gap: 10px;
       opacity: 0; visibility: hidden; pointer-events: none;
       transform: translateY(-6px) scale(0.95); transform-origin: top right;
-      transition: opacity 130ms var(--ease), transform 140ms var(--ease), visibility 0s linear 140ms;
+      transition: opacity 200ms var(--ease-in), transform 200ms var(--ease-in), visibility 0s linear 200ms;
       z-index: 65;
     }
     [data-theme="dark"] .account-popover {
       background-color: rgba(20, 28, 44, 0.96);
       border-color: var(--ink-border);
     }
-    .account-popover.is-open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0) scale(1); transition: opacity 180ms var(--ease), transform 200ms var(--spring), visibility 0s linear 0s; }
+    .account-popover.is-open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0) scale(1); transition: opacity 220ms var(--ease), transform 240ms var(--spring), visibility 0s linear 0s; }
     .account-bot-pill {
       display: inline-flex; align-items: center; gap: 5px;
       padding: 3px 8px; border-radius: 999px;
@@ -1564,7 +1573,7 @@
       border: 1px solid var(--ink-border); box-shadow: var(--shadow-float);
       opacity: 0; visibility: hidden; pointer-events: none;
       transform-origin: top right; transform: translateY(-6px) scale(0.95);
-      transition: opacity 130ms var(--ease), transform 140ms var(--ease), visibility 0s linear 140ms;
+      transition: opacity 200ms var(--ease-in), transform 200ms var(--ease-in), visibility 0s linear 200ms;
       z-index: 70;
     }
     .apple-popover.is-up {
@@ -1574,7 +1583,7 @@
     .apple-popover.is-open {
       opacity: 1; visibility: visible; pointer-events: auto;
       transform: translateY(0) scale(1);
-      transition: opacity 180ms var(--ease), transform 200ms var(--spring), visibility 0s linear 0s;
+      transition: opacity 220ms var(--ease), transform 240ms var(--spring), visibility 0s linear 0s;
     }
     .apple-pop-row {
       display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 2px;
@@ -2047,7 +2056,7 @@
       -webkit-backdrop-filter: blur(30px) saturate(210%); backdrop-filter: blur(30px) saturate(210%);
       box-shadow: var(--shadow-float); display: flex; flex-direction: column; gap: 14px;
       transform-origin: center; opacity: 0;
-      transform: scale(0.95) translateY(8px); transition: opacity 160ms var(--ease), transform 170ms var(--ease); overflow: hidden;
+      transform: scale(0.95) translateY(8px); transition: opacity 200ms var(--ease-in), transform 200ms var(--ease-in); overflow: hidden;
     }
     .contact-modal-backdrop.is-open .admin-modal { opacity: 1; transform: scale(1) translateY(0); transition: opacity 240ms var(--ease), transform 280ms var(--spring); }
     .admin-tabs {
@@ -2086,6 +2095,7 @@
     }
     .admin-post-item:hover { background-color: var(--bg-raised); }
     .admin-post-item:active { transform: scale(0.98); }
+    .admin-post-item.is-entering { animation: cardEnter 240ms var(--spring) both; }
     .admin-post-item.is-active {
       border-color: rgba(0, 122, 255, 0.22); background-color: var(--accent-soft);
     }
@@ -4695,7 +4705,7 @@
       isFirstRender = false;
       articlesGrid.innerHTML = pageItems
         .map((post, idx) => `
-          <article class="article-card is-entering" style="animation-delay: ${baseDelay + Math.min(idx, 5) * 100}ms" data-id="${escapeHtml(post.id)}" tabindex="0" role="button">
+          <article class="article-card is-entering" style="animation-delay: ${baseDelay + Math.min(idx, 12) * 50}ms" data-id="${escapeHtml(post.id)}" tabindex="0" role="button">
             <div>
               <h3 class="article-card-title">${escapeHtml(post.title)}</h3>
               <p class="article-card-desc">${escapeHtml(post.excerpt)}</p>
@@ -4814,11 +4824,15 @@
       if (transitionTimer) clearTimeout(transitionTimer);
       populateReader(post, idx);
       if (wasOpen) {
-        readerView.classList.add("is-enter-prep");
-        void readerView.offsetWidth;
-        requestAnimationFrame(() => readerView.classList.remove("is-enter-prep"));
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        updateProgress();
+        readerView.classList.add("is-leaving");
+        transitionTimer = setTimeout(() => {
+          readerView.classList.remove("is-leaving");
+          readerView.classList.add("is-enter-prep");
+          void readerView.offsetWidth;
+          requestAnimationFrame(() => readerView.classList.remove("is-enter-prep"));
+          window.scrollTo({ top: 0, behavior: "instant" });
+          updateProgress();
+        }, 200);
         return;
       }
       listView.classList.remove("is-enter-prep");
@@ -4832,7 +4846,7 @@
         requestAnimationFrame(() => readerView.classList.remove("is-enter-prep"));
         window.scrollTo({ top: 0, behavior: "instant" });
         updateProgress();
-      }, 170);
+      }, 200);
     }
 
     function closeReader() {
@@ -4850,7 +4864,7 @@
         window.scrollTo({ top: 0, behavior: "instant" });
         updateProgress();
         requestAnimationFrame(() => moveCatIndicator(document.querySelector(".cat-pill.is-active")));
-      }, 170);
+      }, 200);
     }
 
     document.getElementById("backToListBtn").addEventListener("click", closeReader);
@@ -4871,7 +4885,8 @@
 
     function openConsolePage(tabName = "account") {
       if (!consoleView) return;
-      if (!consoleView.classList.contains("is-open")) {
+      const alreadyOpen = consoleView.classList.contains("is-open");
+      if (!alreadyOpen) {
         consoleReturnPostId = state.currentPostId || null;
       }
       setAppearanceOpen(false);
@@ -4884,28 +4899,38 @@
       if (navInvites) navInvites.style.display = isAdmin ? "" : "none";
 
       switchAccountTab(tabName);
+      if (alreadyOpen) return;
 
-      if (state.currentPostId) {
-        state.currentPostId = null;
-        readerView.classList.remove("is-open", "is-leaving", "is-enter-prep");
-      }
-      listView.classList.add("is-hidden");
-      listView.classList.remove("is-leaving", "is-enter-prep");
-      consoleView.classList.remove("is-leaving");
-      consoleView.classList.add("is-open", "is-enter-prep");
-      void consoleView.offsetWidth;
-      requestAnimationFrame(() => consoleView.classList.remove("is-enter-prep"));
-      window.scrollTo({ top: 0, behavior: "instant" });
-      updateProgress();
+      if (transitionTimer) clearTimeout(transitionTimer);
+      const activeFrom = state.currentPostId ? readerView : listView;
+      if (state.currentPostId) state.currentPostId = null;
+      activeFrom.classList.remove("is-enter-prep");
+      activeFrom.classList.add("is-leaving");
+
+      transitionTimer = setTimeout(() => {
+        if (activeFrom === readerView) {
+          readerView.classList.remove("is-open", "is-leaving", "is-enter-prep");
+        } else {
+          listView.classList.add("is-hidden");
+          listView.classList.remove("is-leaving", "is-enter-prep");
+        }
+        consoleView.classList.remove("is-leaving");
+        consoleView.classList.add("is-open", "is-enter-prep");
+        void consoleView.offsetWidth;
+        requestAnimationFrame(() => consoleView.classList.remove("is-enter-prep"));
+        window.scrollTo({ top: 0, behavior: "instant" });
+        updateProgress();
+      }, 200);
     }
 
     function closeConsolePage() {
       if (!consoleView || !consoleView.classList.contains("is-open")) return;
       const returnId = consoleReturnPostId;
       consoleReturnPostId = null;
+      if (transitionTimer) clearTimeout(transitionTimer);
       consoleView.classList.remove("is-enter-prep");
       consoleView.classList.add("is-leaving");
-      setTimeout(() => {
+      transitionTimer = setTimeout(() => {
         consoleView.classList.remove("is-open", "is-leaving");
         if (returnId) {
           openReader(returnId);
@@ -4918,7 +4943,7 @@
         window.scrollTo({ top: 0, behavior: "instant" });
         updateProgress();
         requestAnimationFrame(() => moveCatIndicator(document.querySelector(".cat-pill.is-active")));
-      }, 170);
+      }, 200);
     }
 
     document.querySelectorAll("[data-rail-toggle]").forEach((btn) => {
@@ -6152,8 +6177,8 @@
     postPreviewToggleBtn.addEventListener("click", () => setMarkdownPreview(!isPreviewMode));
 
     function renderAdminPostList() {
-      adminPostListEl.innerHTML = POSTS.map((p) => `
-        <button type="button" class="admin-post-item ${p.id === editingPostId ? "is-active" : ""}" data-edit-post="${escapeHtml(p.id)}">
+      adminPostListEl.innerHTML = POSTS.map((p, idx) => `
+        <button type="button" class="admin-post-item is-entering ${p.id === editingPostId ? "is-active" : ""}" style="animation-delay: ${Math.min(idx, 12) * 50}ms" data-edit-post="${escapeHtml(p.id)}">
           <span class="admin-post-item-title">${escapeHtml(p.title)}</span>
           <span class="admin-post-item-meta">${escapeHtml(p.category)} · ${escapeHtml(p.date)}</span>
         </button>`).join("");
