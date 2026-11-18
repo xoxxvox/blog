@@ -13,7 +13,11 @@ export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
   const proxyUrl = url.searchParams.get("proxy") || "";
   if (proxyUrl) {
-    if (!proxyUrl.startsWith("https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/")) {
+    const allowedOrigins = [
+      "https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/",
+      "https://imghub-8t7.pages.dev/",
+    ];
+    if (!allowedOrigins.some((origin) => proxyUrl.startsWith(origin))) {
       return errorJson("不允许代理该图片地址", 403);
     }
     try {

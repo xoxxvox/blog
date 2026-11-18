@@ -3983,8 +3983,8 @@
         try {
           const size = 64;
           const outerRadius = 18;
-          const innerPad = 4;
-          const innerRadius = outerRadius - innerPad;
+          const innerPad = 8;
+          const innerRadius = Math.max(4, outerRadius - innerPad);
           const outerBox = size - 4;
           const innerBox = outerBox - innerPad * 2;
           const canvas = document.createElement("canvas");
@@ -4017,8 +4017,8 @@
 
           ctx.beginPath();
           ctx.roundRect(2, 2, outerBox, outerBox, outerRadius);
-          ctx.lineWidth = 2;
-          ctx.strokeStyle = effective === "dark" ? "rgba(255, 255, 255, 0.24)" : "rgba(15, 23, 42, 0.14)";
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = effective === "dark" ? "rgba(255, 255, 255, 0.42)" : "rgba(42, 36, 30, 0.68)";
           ctx.stroke();
 
           const dataUrl = canvas.toDataURL("image/png");
