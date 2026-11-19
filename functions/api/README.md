@@ -6,6 +6,7 @@
 
 | 文件名 | 对应路由 | 职责说明 |
 | :--- | :--- | :--- |
+| `_middleware.js` | （全局 CORS 中间件，不对外暴露） | 拦截 `/api/*` 请求与 `OPTIONS` 预检，按 `ADMIN_ORIGIN` 白名单附加 `Access-Control-Allow-Origin` 与 `Access-Control-Allow-Credentials: true` |
 | `_lib.js` | （内部公共模块，不对外暴露） | 提供统一 JSON 响应、PBKDF2 密码哈希与校验、Cookie 会话读写、GitHub Contents API 读写封装 |
 | `auth.js` | `/api/auth` | 处理当前登录态查询（`GET`）、登录 / 邀请码注册 / 退出登录（`POST`） |
 | `content.js` | `/api/content` | 从 GitHub 读取 `data/posts.json` 与 `data/profile.json`（`GET`）；管理员保存文章或资料并自动提交到 GitHub（`POST`） |
@@ -18,4 +19,4 @@
 
 - **D1 数据库绑定**：变量名 `DB`
 - **R2 存储桶绑定（推荐）**：变量名 `IMAGES`
-- **环境变量（Secrets）**：`GITHUB_TOKEN`、`GITHUB_OWNER`、`GITHUB_REPO`、`GITHUB_BRANCH`、`ADMIN_INVITE_CODE`
+- **环境变量（Secrets）**：`GITHUB_TOKEN`、`GITHUB_OWNER`、`GITHUB_REPO`、`GITHUB_BRANCH`、`ADMIN_INVITE_CODE`、`ADMIN_ORIGIN`（独立后台完整来源，如 `https://admin.xxx.com`）

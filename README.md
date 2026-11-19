@@ -1,42 +1,44 @@
-# XXOXOVX · Blog
+# XXOXOVX · Blog（纯净前端 + API 仓库）
 
-基于 **Cloudflare Pages + Pages Functions + D1 数据库 + GitHub 存储** 构建的极简个人技术博客系统。
+公开展示前端与 Cloudflare Pages Functions 后端接口仓库（部署域名例如 `blog.xxx.com`）。
+前台页面 `index.html` 已彻底剥离所有后台管理面板、登录弹窗、编辑按钮及相关 CSS/JS，仅保留纯展示与只读数据拉取逻辑。
 
-## 目录结构树形图
+## 目录结构
 
 ```text
-xxoxovx-blog/
-├── README.md                  # 项目总览与目录树形说明（本文件）
-├── index.html                 # 前端单页应用（首页、阅读器、评论区、登录注册、管理后台 UI）
-├── schema.sql                 # Cloudflare D1 数据库建表脚本（用户、邀请码、会话、评论表）
-├── data/                      # 博客结构化内容存储目录（由管理后台自动提交更新）
-│   ├── README.md              # data 目录说明文档
-│   ├── posts.json             # 文章列表与正文数据
-│   └── profile.json           # 站点标题、Hero 简介、头像与个人联系方式配置
-├── images/                    # 图片资源存储目录（由管理后台上传自动提交到此）
-│   ├── README.md              # images 目录说明文档
-│   └── .gitkeep               # 空目录占位文件（确保 Git 保留该目录）
-└── functions/                 # Cloudflare Pages Functions 后端函数根目录（不可改名）
-    ├── README.md              # functions 目录说明文档
-    └── api/                   # 映射为 /api/* 的服务端接口目录
-        ├── README.md          # api 接口详细说明文档
-        ├── _lib.js            # 公共工具库（密码加密、Cookie 会话、GitHub API 读写封装）
-        ├── auth.js            # /api/auth：登录、邀请码注册、退出、会话查询
-        ├── content.js         # /api/content：读取与保存 posts.json / profile.json 到 GitHub
-        ├── upload.js          # /api/upload：管理员上传图片并写入 GitHub images/ 目录
-        ├── image.js           # /api/image：从 GitHub 代理读取图片资源（支持私有仓库）
-        ├── comments.js        # /api/comments：文章评论的查询、发表与删除
-        └── invites.js         # /api/invites：管理员生成、查看与删除注册邀请码
+blog-frontend/
+├── README.md                  # 项目说明
+├── index.html                 # 纯净前端单页（零后台痕迹，仅保留阅读与只读展示）
+├── schema.sql                 # Cloudflare D1 数据库初始化脚本
+├── data/                      # 博客结构化数据（由独立后台通过 GitHub API 自动提交更新）
+│   ├── README.md
+│   ├── posts.json
+│   ├── profile.json
+│   └── posts/
+├── images/                    # 备用图片目录（未绑定 R2 时回退写入此处）
+│   └── README.md
+└── functions/                 # Cloudflare Pages Functions 接口目录（挂载于 /api/*）
+    ├── README.md
+    └── api/
+        ├── README.md
+        ├── _middleware.js     # 全局 CORS 中间件（放行 ADMIN_ORIGIN 跨域携带 Cookie 请求）
+        ├── _lib.js            # 公共工具库（已将 Cookie 升级为 SameSite=None; Secure）
+        ├── auth.js            # 登录 / 退出 / 会话查询
+        ├── content.js         # 读取与写入 GitHub 仓库的 posts.json / profile.json / posts/*.md
+        ├── comments.js        # 评论读取与管理
+        ├── invites.js         # 邀请码管理
+        ├── upload.js          # 图片上传（R2 优先，GitHub 兜底）
+        └── image.js           # 图片代理读取
 ```
 
-## 存储分工说明
+## Cloudflare Pages 环境变量与绑定
 
-- **GitHub 仓库**：存放前端代码、文章数据（`data/posts.json`）、个人资料（`data/profile.json`），以及未启用 R2 时的备用图片目录（`images/`）。
-- **Cloudflare R2（推荐用于图片）**：绑定变量名 `IMAGES`，专门存放后台上传的头像与文章配图（支持最大 10MB、零流量费、不撑大 Git 仓库）。
-- **Cloudflare D1 数据库**：存放用户账号（`users`）、邀请码（`invites`）、登录会话（`sessions`）与文章评论（`comments`）。
-- **Cloudflare Pages**：托管静态页面并运行 `functions/api/` 下的无服务器后端接口。
-
-## 后续管理提示
-
-- **目录命名约定**：`functions/api/` 为 Cloudflare Pages 路由约定目录，请勿重命名，否则 `/api/*` 接口将失效。
-- **日常更新**：文章发布、资料修改、头像与配图上传均可在网页登录管理员账号后通过「管理后台」完成，系统会自动提交保存到 GitHub。
+- **D1 绑定**：变量名 `DB`
+- **R2 绑定（推荐）**：变量名 `IMAGES`
+- **环境变量（Secrets）**：
+  - `GITHUB_TOKEN`：具有本仓库 `Contents: Read and write` 权限的 PAT
+  - `GITHUB_OWNER`：GitHub 用户名
+  - `GITHUB_REPO`：本前端仓库名（例如 `blog-frontend`）
+  - `GITHUB_BRANCH`：分支名（默认 `main`）
+  - `ADMIN_INVITE_CODE`：首个管理员初始化邀请码
+  - `ADMIN_ORIGIN`：**新增必填**，独立后台的完整来源地址（例如 `https://admin.xxx.com`，多个来源用英文逗号分隔）
