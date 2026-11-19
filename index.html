@@ -3017,6 +3017,49 @@
       font-size: 12.5px;
       color: var(--text-secondary);
     }
+
+    /* Emil: quiet depth, stable type and short, purposeful feedback. */
+    :root {
+      --shadow-card: 0 1px 3px rgb(0 0 0 / 0.025), 0 5px 18px rgb(0 0 0 / 0.035);
+      --shadow-float: 0 2px 6px rgb(0 0 0 / 0.035), 0 12px 32px rgb(0 0 0 / 0.07);
+      --shadow-focus: 0 2px 5px rgb(0 0 0 / 0.06), 0 6px 18px rgb(0 0 0 / 0.07);
+    }
+    html[data-theme="dark"] {
+      --shadow-card: 0 1px 3px rgb(0 0 0 / 0.10), 0 5px 18px rgb(0 0 0 / 0.12);
+      --shadow-float: 0 2px 6px rgb(0 0 0 / 0.12), 0 12px 32px rgb(0 0 0 / 0.18);
+      --shadow-focus: 0 2px 6px rgb(0 0 0 / 0.16), 0 6px 18px rgb(0 0 0 / 0.20);
+      --fw-semibold: 500;
+    }
+    button, input, select, textarea { font-variant-numeric: tabular-nums; }
+    .surface, .article-card, .article-card:hover, .contact-card, .settings-card { border-color: transparent; }
+    .article-card { background: var(--bg-subcard); height: auto; min-width: 0; }
+    .article-card:hover { transform: none; }
+    .article-card-title, .pager-title, h1, h2, h3, h4 { text-wrap: balance; }
+    p, .article-card-desc, .comment-content { text-wrap: pretty; overflow-wrap: anywhere; }
+    .main-grid { height: auto; grid-auto-rows: auto; }
+    .left-col, .right-col { min-height: 0; }
+    .content-panel { height: auto; min-height: 0; flex: 1; }
+    .articles-grid { grid-auto-rows: auto; align-items: stretch; flex: 0 1 auto; overflow-y: visible; }
+    .content-panel { --nested-radius: 12px; padding: 20px; border-radius: calc(var(--nested-radius) + 20px); }
+    .content-panel .article-card { border-radius: var(--nested-radius); }
+    .wave-char, .wave-tail { animation-duration: 240ms; animation-timing-function: var(--ease-out); will-change: auto; }
+    .comment-content { animation: none; }
+    .auth-input, .float-input, .comment-textarea { border-color: transparent; background-color: var(--bg-subcard); }
+    .auth-input:focus, .float-input:focus, .comment-textarea:focus {
+      border-color: transparent; background-color: var(--bg-subcard); box-shadow: var(--shadow-focus);
+    }
+    html[data-theme="dark"] :is(.article-card-title, .carousel-title, .reader-title, .panel-title, .card-heading, .comments-title, .modal-title) { font-weight: 500; }
+    .tactile-btn svg, button svg { flex-shrink: 0; vertical-align: middle; }
+    button:focus-visible, a:focus-visible, [role="button"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    @media (hover: none) {
+      .tactile-btn:hover { transform: none; }
+    }
+    @media (max-width: 600px) {
+      .content-panel { padding: 14px; border-radius: calc(var(--nested-radius) + 14px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
   </style>
 </head>
 <body>
@@ -5597,14 +5640,15 @@ syncAuthUI();
 
     function renderWaveText(text) {
       const chars = Array.from(String(text || ""));
-      const limit = 72;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return escapeHtml(text);
+      const limit = 48;
       const head = chars.slice(0, limit)
         .map((ch, i) => ch === " " || ch === "\n"
           ? ch
-          : `<span class="wave-char" style="animation-delay: ${Math.min(i, limit) * 14}ms">${escapeHtml(ch)}</span>`)
+          : `<span class="wave-char" style="animation-delay: ${Math.min(i, limit) * 6}ms">${escapeHtml(ch)}</span>`)
         .join("");
       const tail = chars.length > limit
-        ? `<span class="wave-tail" style="animation-delay: ${limit * 14}ms">${escapeHtml(chars.slice(limit).join(""))}</span>`
+        ? `<span class="wave-tail" style="animation-delay: ${limit * 6}ms">${escapeHtml(chars.slice(limit).join(""))}</span>`
         : "";
       return head + tail;
     }
