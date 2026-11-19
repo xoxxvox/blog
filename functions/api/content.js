@@ -38,25 +38,20 @@ function formatPostMarkdown(post) {
   return lines.join("\n");
 }
 
-export async function onRequestGet({ env }) {
-  try {
-    const [postsFile, profileFile] = await Promise.all([
-      githubGetFile(env, POSTS_PATH),
-      githubGetFile(env, PROFILE_PATH),
-    ]);
-    return json({
-      posts: postsFile ? JSON.parse(postsFile.text) : null,
-      profile: profileFile ? JSON.parse(profileFile.text) : null,
-      source: "github",
-    });
-  } catch (err) {
-    return json({
-      posts: null,
-      profile: null,
-      source: "fallback",
-      warning: err.message,
-    });
+export async function onRequestGet({ request, env }) {
+  async function readContent(path) {
+    try {
+      const file = await githubGetFile(env, path);
+      if (file) return { value: JSON.parse(file.text), live: true };
+    } catch {}
+    try {
+      const response = await env.ASSETS.fetch(new URL(`/${path}`, request.url));
+      if (response.ok) return { value: await response.json(), live: false };
+    } catch {}
+    return { value: null, live: false };
   }
+  const [posts, profile] = await Promise.all([readContent(POSTS_PATH), readContent(PROFILE_PATH)]);
+  return json({ posts: posts.value, profile: profile.value, source: posts.live && profile.live ? "github" : "fallback" });
 }
 
 export async function onRequestPost({ request, env }) {
