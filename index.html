@@ -4077,7 +4077,7 @@
       return mode === "system" ? (systemDarkQuery.matches ? "dark" : "light") : mode;
     }
 
-    const SITE_FAVICON_URL = "https://imghub-8t7.pages.dev/api/image?storage=r2&key=images%2F2026-11%2F1794894628657-Gemini_Generated_Image_9p6wa39p6wa39.jpg";
+    let SITE_FAVICON_URL = "https://imghub-8t7.pages.dev/api/image?storage=r2&key=images%2F2026-11%2F1794894628657-Gemini_Generated_Image_9p6wa39p6wa39.jpg";
     let cachedFaviconImg = null;
     function updateFaviconForTheme() {
       const link = document.getElementById("siteFavicon");
@@ -4124,13 +4124,21 @@
         drawFavicon(cachedFaviconImg);
         return;
       }
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => {
-        cachedFaviconImg = img;
-        drawFavicon(img);
+      const loadForCanvas = (src, allowProxyFallback = true) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          cachedFaviconImg = img;
+          drawFavicon(img);
+        };
+        img.onerror = () => {
+          if (allowProxyFallback && /^https?:\/\//i.test(src)) {
+            loadForCanvas(`/api/image?proxy=${encodeURIComponent(src)}`, false);
+          }
+        };
+        img.src = src;
       };
-      img.src = SITE_FAVICON_URL;
+      loadForCanvas(SITE_FAVICON_URL, true);
     }
 
     function setIconSmooth(svgEl, nextHtml) {
@@ -4433,6 +4441,15 @@
 
     // Profile rendering
     function applyProfile(profile, isSiteDefault = false) {
+      if (profile.siteLogo) {
+        const logoEl = document.getElementById("brandLogoImg");
+        if (logoEl) logoEl.src = profile.siteLogo;
+        if (SITE_FAVICON_URL !== profile.siteLogo) {
+          SITE_FAVICON_URL = profile.siteLogo;
+          cachedFaviconImg = null;
+        }
+        if (typeof updateFaviconForTheme === "function") updateFaviconForTheme();
+      }
       if (!profile) return;
       if (isSiteDefault || !siteProfile) siteProfile = JSON.parse(JSON.stringify(profile));
       currentProfile = profile;
@@ -5009,7 +5026,7 @@ document.getElementById("readerTitle").textContent = post.title;
         authTriggerBtn.title = displayNick;
         authTriggerBtn.setAttribute("aria-label", `账号：${displayNick}`);
         authTriggerBtn.classList.add("is-logged-in");
-        const rawAvatarSrc = (!isAdmin && currentUser.profile?.avatar) || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
+        const rawAvatarSrc = currentUser.profile?.avatar || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
         const avatarSrc = sanitizeAvatarUrl(rawAvatarSrc, displayNick, isAdmin);
         if (authTriggerAvatar) {
           authTriggerAvatar.src = avatarSrc;
@@ -5090,8 +5107,8 @@ authTriggerText.textContent = "登录 / 注册";
       const authModalCard = document.getElementById("authModalCard");
       if (currentUser) {
         const isAdmin = currentUser.role === "admin";
-        const displayNick = (!isAdmin && currentUser.profile?.profileName) || (isAdmin && currentProfile?.profileName) || currentUser.username || "User";
-        const rawAvatarSrc = (!isAdmin && currentUser.profile?.avatar) || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
+        const displayNick = currentUser.profile?.profileName || (isAdmin && currentProfile?.profileName) || currentUser.username || "User";
+        const rawAvatarSrc = currentUser.profile?.avatar || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
         const avatarSrc = sanitizeAvatarUrl(rawAvatarSrc, displayNick, isAdmin);
         authGuestView.style.display = "none";
         authUserView.style.display = "flex";
@@ -5355,7 +5372,7 @@ syncAuthUI();
       if (!user || !user.username) return;
       const list = getAccountHistory().filter((item) => item.username !== user.username);
       const isAdmin = user.role === "admin";
-      const avatar = (!isAdmin && user.profile?.avatar) || currentProfile?.avatar || makeDefaultAvatar(user.username);
+      const avatar = user.profile?.avatar || currentProfile?.avatar || makeDefaultAvatar(user.username);
       list.unshift({
         username: user.username,
         role: user.role || "user",
@@ -5375,7 +5392,7 @@ syncAuthUI();
       if (currentUser) {
         recordAccountHistory(currentUser);
         const isAdmin = currentUser.role === "admin";
-        const avatar = (!isAdmin && currentUser.profile?.avatar) || currentProfile?.avatar || makeDefaultAvatar(currentUser.username);
+        const avatar = currentUser.profile?.avatar || currentProfile?.avatar || makeDefaultAvatar(currentUser.username);
         const nick = currentUser.profile?.profileName || currentUser.username;
         curBox.innerHTML = `
           <div class="account-hero-card" style="padding: 10px 12px;">
