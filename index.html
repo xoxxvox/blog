@@ -3179,7 +3179,7 @@
     <header class="top-bar">
       <div class="brand" id="brandBtn" tabindex="0" role="button" aria-label="返回首页">
         <div class="brand-icon">
-          <img id="brandLogoImg" src="https://imghub-8t7.pages.dev/api/image?storage=r2&key=images%2F2026-11%2F1794894628657-Gemini_Generated_Image_9p6wa39p6wa39.jpg" alt="XXOXOVX Logo" />
+          <img id="brandLogoImg" src="./assets/site-logo.png" alt="XXOXOVX Logo" onerror="this.onerror=null;this.src='./assets/site-logo.png';" />
         </div>
         <div class="brand-text">
           <span class="brand-title" id="brandTitleEl">XXOXOVX  ·  BLOG</span>
@@ -3354,7 +3354,7 @@
           <section class="surface profile-card" aria-label="个人简介">
             <div class="profile-head">
               <div class="avatar-ring">
-                <img id="profileAvatarImg" src="https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/836ce0fa-8ecc-4d16-a805-6ce2860ae4ab.webp" alt="XXOXOVX 头像" />
+                <img id="profileAvatarImg" src="./assets/site-logo.png" alt="XXOXOVX 头像" onerror="this.onerror=null;this.src='./assets/site-logo.png';" />
               </div>
               <div class="profile-name" id="profileNameEl">XXOXOVX</div>
             </div>
@@ -4000,7 +4000,7 @@
       heroKicker: "Tech Archive · 2026",
       heroTitle: "xxoxovx 的个人技术档案",
       heroSub: "记录软路由折腾、网络自动化与云原生 Serverless 实践，在纯净通透的秩序感中保持克制而高效的数字生活。",
-      avatar: "https://pub-105437dbb4d349c4ba6d4580b46b8611.r2.dev/836ce0fa-8ecc-4d16-a805-6ce2860ae4ab.webp",
+      avatar: "./assets/site-logo.png",
       profileName: "XXOXOVX",
       tags: ["全栈开发", "网络自动化", "极简主义"],
       info: { name: "SoxMoox", gender: "男", age: "27 岁", extraInfo: [{ label: "爱好", value: "摄影 / 骑行" }] },
@@ -4539,9 +4539,9 @@
       else photo.removeAttribute("src");
       document.getElementById("profilePhotoCaption").textContent = profile.profilePhotoCaption || "";
       const avatar = document.getElementById("profileAvatarImg");
-      avatar.hidden = !profile.avatar;
-      if (profile.avatar) avatar.src = profile.avatar;
-      else avatar.removeAttribute("src");
+      avatar.hidden = false;
+      avatar.onerror = () => { avatar.onerror = null; avatar.src = "./assets/site-logo.png"; };
+      avatar.src = profile.avatar || "./assets/site-logo.png";
       document.getElementById("profileNameEl").textContent = profile.profileName || "";
       const tagsEl = document.getElementById("profileTagsEl");
       if (tagsEl) {
@@ -4566,7 +4566,10 @@
     function applyProfile(profile, isSiteDefault = false) {
       if (profile.siteLogo) {
         const logoEl = document.getElementById("brandLogoImg");
-        if (logoEl) logoEl.src = profile.siteLogo;
+        if (logoEl) {
+          logoEl.onerror = () => { logoEl.onerror = null; logoEl.src = "./assets/site-logo.png"; };
+          logoEl.src = profile.siteLogo;
+        }
         if (SITE_FAVICON_URL !== profile.siteLogo) {
           SITE_FAVICON_URL = profile.siteLogo;
           cachedFaviconImg = null;

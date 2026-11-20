@@ -1,11 +1,11 @@
 {
   "siteTitle": "XXOXOVX  ·  BLOG",
   "siteSub": "Notes & Tech",
-  "siteLogo": "https://imghub-api.xxoxovx.cc/api/image?storage=r2&key=images%2F2026-11%2F1794894628657-Gemini_Generated_Image_9p6wa39p6wa39.jpg",
+  "siteLogo": "./assets/site-logo.png",
   "heroKicker": "Tech Archive · 2026",
   "heroTitle": "XXOXOVX 的个人技术档案",
   "heroSub": "记录软路由折腾、网络自动化与云原生 Serverless 实践，在纯净通透的秩序感中保持克制而高效的数字生活。",
-  "avatar": "https://imghub-api.xxoxovx.cc/api/image?storage=r2&key=images%2F2026-11%2F1794894628657-Gemini_Generated_Image_9p6wa39p6wa39.jpg",
+  "avatar": "./assets/site-logo.png",
   "profileName": "XXOXOVX",
   "tags": [
     "全栈开发",
