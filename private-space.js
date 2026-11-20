@@ -2,6 +2,43 @@
   const $ = id => document.getElementById(id);
   const model = { posts: [], category: "all", query: "", page: 1, identity: "", loaded: false, loading: false, revision: 0 };
   const allowed = key => currentUser && hasLevelPermission(key);
+  let privateBio = null, bioIdentity = "", bioRevision = 0;
+  let introLayout = null, resizeFrame = 0;
+  function beginIntroLayout() {
+    if (introLayout) return;
+    const card = document.querySelector('.profile-card'), panel = $('blogPrivatePanel');
+    introLayout = { height: card.style.height, overflow: card.style.overflowY, panelMin: panel.style.minHeight, carouselDisplay: $("carouselBox").style.display };
+    const height = card.getBoundingClientRect().height;
+    const panelHeight = $('publicPostsPanel').getBoundingClientRect().height;
+    card.style.height = `${height}px`; card.style.overflowY = 'auto'; panel.style.minHeight = `${panelHeight}px`;
+  }
+  function restoreIntroLayout() {
+    if (!introLayout) return;
+    const card = document.querySelector('.profile-card');
+    card.style.height = introLayout.height; card.style.overflowY = introLayout.overflow; $('blogPrivatePanel').style.minHeight = introLayout.panelMin;
+    introLayout = null;
+  }
+  window.addEventListener('resize', () => {
+    if (!introLayout || resizeFrame) return;
+    resizeFrame = requestAnimationFrame(() => {
+      resizeFrame = 0; if (!introLayout || state.filter !== 'private') return;
+      const carouselDisplay = introLayout.carouselDisplay;
+      restoreIntroLayout(); renderProfileIntro(currentProfile);
+      $("carouselBox").style.display = carouselDisplay;
+      $('publicPostsPanel').hidden = false; $('blogPrivatePanel').hidden = true;
+      beginIntroLayout();
+      $('publicPostsPanel').hidden = true; $('blogPrivatePanel').hidden = false;
+      if (privateBio?.enabled && allowed('private_read')) renderProfileIntro(privateBio);
+    });
+  });
+  const restoreIntro = () => { if (currentProfile) renderProfileIntro(currentProfile); };
+  async function syncIntro() {
+    if (!allowed("private_read")) { ++bioRevision; privateBio = null; bioIdentity = ""; restoreIntro(); return; }
+    const identity = `${currentUser.id}:${currentUser.role}`;
+    if (identity === bioIdentity) { if (privateBio?.enabled) renderProfileIntro(privateBio); return; }
+    bioIdentity = identity; const revision = ++bioRevision;
+    try { const data = await (await api("/api/private-bio")).json(); if (revision !== bioRevision || state.filter !== "private") return; privateBio = data.bio; if (privateBio?.enabled) renderProfileIntro(privateBio); else restoreIntro(); } catch { if (revision === bioRevision) { bioIdentity = ""; restoreIntro(); } }
+  }
   const reader = document.createElement("dialog"); reader.className = "blog-private-reader"; reader.setAttribute("aria-labelledby", "blogPrivateReaderTitle");
   reader.innerHTML = '<div class="panel-header"><h2 id="blogPrivateReaderTitle"></h2><button class="tactile-btn" type="button" id="blogPrivateReaderClose">关闭</button></div><p class="tabular" id="blogPrivateReaderMeta"></p><div class="reader-body" id="blogPrivateReaderBody"></div>';
   document.body.append(reader);
@@ -17,6 +54,8 @@
     $("blogPrivatePrev").disabled = model.page <= 1; $("blogPrivateNext").disabled = model.page >= pages;
   }
   async function show(query = "", force = false) {
+    if (force) bioIdentity = "";
+    syncIntro();
     if (model.query !== query) model.page = 1; model.query = query;
     const unlock = Boolean(allowed("private_read"));
     $("blogPrivateLocked").hidden = unlock; $("blogPrivateContent").hidden = !unlock; $("blogPrivateLogin").hidden = Boolean(currentUser);
@@ -55,5 +94,5 @@
     try { const data = await (await api("/api/auth", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({action:"redeem_invite",inviteCode:$("blogPrivateCode").value.trim()}) })).json(); currentUser = data.user; $("blogPrivateCode").value = ""; levelPermissionIdentity = ""; refreshLevelPermissions(); syncAuthUI(); $("blogPrivateStatus").textContent = "邀请码已兑换，正在同步权限…"; }
     catch(error) { $("blogPrivateStatus").textContent = error.message; } finally { if (submit) submit.disabled = false; }
   });
-  window.blogPrivateSpace = { show };
+  window.blogPrivateSpace = { show, beginLayout: beginIntroLayout, restoreIntro() { restoreIntroLayout(); ++bioRevision; bioIdentity = ""; restoreIntro(); } };
 })();

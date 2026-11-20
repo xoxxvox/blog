@@ -54,3 +54,5 @@ CREATE TABLE IF NOT EXISTS private_posts (
 );
 CREATE TABLE IF NOT EXISTS private_post_categories (name TEXT PRIMARY KEY);
 INSERT OR IGNORE INTO private_post_categories(name) VALUES ('未分类');
+
+CREATE TABLE IF NOT EXISTS private_bio (id INTEGER PRIMARY KEY CHECK(id=1), bio_json TEXT NOT NULL);

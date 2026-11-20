@@ -186,3 +186,8 @@ body:has(.blog-private-reader[open]) { overflow: hidden; }
 #blogPrivateStatus:empty { display: none; }
 
 .private-post-open { appearance: none; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; padding: 0; width: 100%; }
+
+.profile-photo-frame img[hidden] { display: none; }
+.profile-photo-frame.is-empty { aspect-ratio: 3 / 4; }
+
+.avatar-ring img[hidden] { display: none; }

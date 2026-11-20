@@ -26,3 +26,13 @@ test('private article category rename/delete preserves articles and cannot be pe
  await change({action:'delete',name:'新分类'});assert.equal(DB.sqlite.prepare('SELECT category FROM private_posts').get().category,'未分类');assert.equal(DB.sqlite.prepare('SELECT COUNT(*) AS n FROM private_posts').get().n,1);
  assert.equal((await change({action:'delete',name:'未分类'})).status,400);
 });
+
+test('private-space intro is separately stored and is not exposed through public profile data',async()=>{
+ const {env,cookies}=await setup();const bio=await import('../functions/api/private-bio.js');
+ const body={bio:{enabled:true,profileName:'PRIVATE-BIO-NAME',avatar:'/api/image?key=avatar',profilePhoto:'',profilePhotoEnabled:true,tags:['私密标签'],info:{name:'独立姓名',gender:'保密',age:'27',labels:{name:'昵称'},extraInfo:[{label:'兴趣',value:'阅读'}]}}};
+ assert.equal((await bio.onRequestPost({env,request:request('/api/private-bio',cookies.vip,'POST',body)})).status,403);
+ assert.equal((await bio.onRequestPost({env,request:request('/api/private-bio',cookies.admin,'POST',body)})).status,200);
+ for(const role of [null,'guest','user','advanced'])assert.equal((await bio.onRequestGet({env,request:request('/api/private-bio',cookies[role])})).status,403);
+ const response=await bio.onRequestGet({env,request:request('/api/private-bio',cookies.vip)});assert.equal(response.headers.get('Cache-Control'),'private, no-store');const data=await response.json();assert.equal(data.bio.profileName,'PRIVATE-BIO-NAME');assert.equal(data.bio.profilePhoto,'');assert.equal(data.bio.info.labels.name,'昵称');
+ assert(!(await (await content.onRequestGet({env,request:request('/api/content')})).text()).includes('PRIVATE-BIO-NAME'));
+});

@@ -3074,7 +3074,7 @@
     }
     .profile-photo-frame { width: 100%; margin: auto 0; padding: 10px; border-radius: 26px; background: var(--bg-raised); box-shadow: inset 0 1px 0 rgb(255 255 255 / .6), 0 2px 5px rgb(0 0 0 / .03), 0 10px 26px rgb(0 0 0 / .05); }
     .profile-photo-frame[hidden] { display: none; }
-    .profile-photo-frame img { display: block; width: 100%; aspect-ratio: 3 / 4; max-height: 560px; object-fit: contain; border-radius: 16px; background: var(--bg-subcard); }
+    .profile-photo-frame img { display: block; width: 100%; aspect-ratio: 3 / 4; height: auto; object-fit: cover; border-radius: 16px; background: var(--bg-subcard); }
     .profile-photo-frame figcaption { text-align: center; color: var(--text-muted); font-size: 12px; padding: 12px 4px 3px; text-wrap: balance; }
     .profile-photo-frame figcaption:empty { display: none; }
     .article-placeholder { align-items: center; justify-content: center; gap: 10px; color: var(--text-muted); background: var(--bg-subcard); box-shadow: none; font-size: 12px; cursor: default; }
@@ -3086,12 +3086,12 @@
       .articles-grid { flex: 1; min-height: calc(var(--home-card-rows, 4) * 146px + (var(--home-card-rows, 4) - 1) * 10px); overflow-y: auto; }
       .profile-card { flex: 0 0 auto; height: auto; gap: 24px; overflow: hidden; }
       .profile-photo-frame { margin: 0; }
-      .profile-photo-frame img { max-height: 300px; }
+      .profile-photo-frame img { height: auto; max-height: none; }
       .contact-card { margin-top: auto; }
     }
     @media (max-width: 1024px) { .profile-photo-frame { display: none; } }
   </style>
-  <link rel="stylesheet" href="./cream-theme.css?v=private-space1" />
+  <link rel="stylesheet" href="./cream-theme.css?v=photo-empty1" />
 </head>
 <body>
   <canvas id="appleMeshCanvas" aria-hidden="true"></canvas>
@@ -4528,6 +4528,40 @@
       customColorApply.addEventListener("click", () => applyCustomColor(customColorInput?.value || ""));
     }
 
+    function renderProfileIntro(profile) {
+      const photoFrame = document.getElementById("profilePhotoFrame");
+      photoFrame.hidden = profile.profilePhotoEnabled === false;
+      const photo = document.getElementById("profilePhotoImg");
+      const photoSource = String(profile.profilePhoto || "").trim();
+      photo.hidden = !photoSource;
+      photoFrame.classList.toggle("is-empty", !photoSource);
+      if (photoSource) photo.src = photoSource;
+      else photo.removeAttribute("src");
+      document.getElementById("profilePhotoCaption").textContent = profile.profilePhotoCaption || "";
+      const avatar = document.getElementById("profileAvatarImg");
+      avatar.hidden = !profile.avatar;
+      if (profile.avatar) avatar.src = profile.avatar;
+      else avatar.removeAttribute("src");
+      document.getElementById("profileNameEl").textContent = profile.profileName || "";
+      const tagsEl = document.getElementById("profileTagsEl");
+      if (tagsEl) {
+        const tags = Array.isArray(profile.tags) ? profile.tags : [];
+        tagsEl.innerHTML = tags.map((t) => `<span class="profile-tag">${escapeHtml(t)}</span>`).join("");
+      }
+      const baseRows = [
+        { label: profile.info?.labels?.name || "姓名", value: profile.info?.name || "" },
+        { label: profile.info?.labels?.gender || "性别", value: profile.info?.gender || "" },
+        { label: profile.info?.labels?.age || "年龄", value: profile.info?.age || "", tabular: true },
+      ];
+      const extraRows = Array.isArray(profile.info?.extraInfo) ? profile.info.extraInfo.filter((x) => x && x.label) : [];
+      const infoListEl = document.getElementById("profileInfoList");
+      if (infoListEl) {
+        infoListEl.innerHTML = [...baseRows, ...extraRows]
+          .map((item) => `<div class="info-row"><span class="info-key">${escapeHtml(item.label)}</span><span class="info-val${item.tabular ? " tabular" : ""}">${escapeHtml(item.value)}</span></div>`)
+          .join("");
+      }
+    }
+
     // Profile rendering
     function applyProfile(profile, isSiteDefault = false) {
       if (profile.siteLogo) {
@@ -4563,31 +4597,9 @@
       const rows = Math.min(12, Math.max(1, Math.round(Number(profile.homeCardRows) || 4)));
       PAGE_SIZE = rows * 2;
       document.documentElement.style.setProperty("--home-card-rows", rows);
-      const photoFrame = document.getElementById("profilePhotoFrame");
-      photoFrame.hidden = profile.profilePhotoEnabled === false;
-      document.getElementById("profilePhotoImg").src = profile.profilePhoto || profile.avatar || "";
-      document.getElementById("profilePhotoCaption").textContent = profile.profilePhotoCaption || "";
-      document.getElementById("profileAvatarImg").src = profile.avatar || "";
+      renderProfileIntro(profile);
       const cardAvatarEl = document.getElementById("accountCardAvatar");
       if (cardAvatarEl) cardAvatarEl.src = profile.avatar || "";
-      document.getElementById("profileNameEl").textContent = profile.profileName || "";
-      const tagsEl = document.getElementById("profileTagsEl");
-      if (tagsEl) {
-        const tags = Array.isArray(profile.tags) ? profile.tags : [];
-        tagsEl.innerHTML = tags.map((t) => `<span class="profile-tag">${escapeHtml(t)}</span>`).join("");
-      }
-      const baseRows = [
-        { label: profile.info?.labels?.name || "姓名", value: profile.info?.name || "" },
-        { label: profile.info?.labels?.gender || "性别", value: profile.info?.gender || "" },
-        { label: profile.info?.labels?.age || "年龄", value: profile.info?.age || "", tabular: true },
-      ];
-      const extraRows = Array.isArray(profile.info?.extraInfo) ? profile.info.extraInfo.filter((x) => x && x.label) : [];
-      const infoListEl = document.getElementById("profileInfoList");
-      if (infoListEl) {
-        infoListEl.innerHTML = [...baseRows, ...extraRows]
-          .map((item) => `<div class="info-row"><span class="info-key">${escapeHtml(item.label)}</span><span class="info-val${item.tabular ? " tabular" : ""}">${escapeHtml(item.value)}</span></div>`)
-          .join("");
-      }
 
       if (Array.isArray(profile.contacts)) {
         const contactIcon = (label = "") => {
@@ -4700,9 +4712,11 @@
 
     function renderArticles() {
       const privateMode = state.filter === "private";
+      if (privateMode) window.blogPrivateSpace?.beginLayout();
       document.getElementById("publicPostsPanel").hidden = privateMode;
       document.getElementById("blogPrivatePanel").hidden = !privateMode;
       if (privateMode) { window.blogPrivateSpace?.show(state.query); return; }
+      window.blogPrivateSpace?.restoreIntro();
       const q = state.query.trim().toLowerCase();
       const filtered = POSTS.filter((post) => {
         const matchCat = state.filter === "all" || post.category === state.filter;
@@ -4998,6 +5012,7 @@ document.getElementById("readerTitle").textContent = post.title;
     }
     catPills.forEach((pill) => {
       pill.addEventListener("click", () => {
+        if (pill.dataset.filter === "private" && state.filter !== "private") window.blogPrivateSpace?.beginLayout();
         catPills.forEach((p) => p.classList.remove("is-active"));
         pill.classList.add("is-active");
         moveCatIndicator(pill);
@@ -6649,6 +6664,6 @@ syncAuthUI();
       }
     })();
   </script>
-  <script src="./private-space.js?v=1"></script>
+  <script src="./private-space.js?v=intro1"></script>
 </body>
 </html>
