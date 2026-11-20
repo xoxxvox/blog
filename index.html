@@ -5072,14 +5072,17 @@ document.getElementById("readerTitle").textContent = post.title;
         const res = await fetch("/api/content");
         if (!res.ok) return;
         const data = await res.json();
-        if (Array.isArray(data.posts) && data.posts.length > 0) {
+        // Apply layout settings before calculating pagination and placeholder slots.
+        if (data.profile) applyProfile(data.profile);
+        if (Array.isArray(data.posts)) {
           const catAlias = { "网络自动化": "科学网络", "软件推荐": "小众软件", "网站推荐": "网站优选" };
           POSTS = data.posts.map((p) => ({ ...p, category: catAlias[p.category] || p.category }));
           renderCarousel();
           renderArticles();
           updateFooterStats();
+        } else if (data.profile) {
+          renderArticles();
         }
-        if (data.profile) applyProfile(data.profile);
       } catch {}
     }
 
