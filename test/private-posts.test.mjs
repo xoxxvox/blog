@@ -25,6 +25,11 @@ test('private article category rename/delete preserves articles and cannot be pe
  await change({action:'rename',name:'独立分类',nextName:'新分类'});assert.equal(DB.sqlite.prepare('SELECT category FROM private_posts').get().category,'新分类');
  await change({action:'delete',name:'新分类'});assert.equal(DB.sqlite.prepare('SELECT category FROM private_posts').get().category,'未分类');assert.equal(DB.sqlite.prepare('SELECT COUNT(*) AS n FROM private_posts').get().n,1);
  assert.equal((await change({action:'delete',name:'未分类'})).status,400);
+ assert.equal((await change({action:'create',name:'备用分类'})).status,200);
+ assert.equal((await change({action:'rename',name:'未分类',nextName:'默认归档'})).status,200);
+ assert.equal(DB.sqlite.prepare('SELECT category FROM private_posts').get().category,'默认归档');
+ assert.equal((await change({action:'delete',name:'默认归档'})).status,200);
+ assert.equal(DB.sqlite.prepare('SELECT category FROM private_posts').get().category,'备用分类');
 });
 
 test('private-space intro is separately stored and is not exposed through public profile data',async()=>{
