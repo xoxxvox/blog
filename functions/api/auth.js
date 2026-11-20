@@ -36,7 +36,7 @@ export async function onRequestGet({ request, env }) {
   }
   await ensureProfileColumn(env);
   const user = await getSessionUser(request, env);
-  if (!user) return json({ user: null });
+  if (!user) return json({ user: null }, 200, { "Cache-Control": "no-store" });
   const row = await env.DB.prepare("SELECT profile_json FROM users WHERE id = ?")
     .bind(user.id)
     .first();
@@ -48,7 +48,7 @@ export async function onRequestGet({ request, env }) {
       role: user.role,
       profile: parseUserProfile(row?.profile_json),
     },
-  });
+  }, 200, { "Cache-Control": "no-store" });
 }
 
 function generateRandomAvatar(seed) {
