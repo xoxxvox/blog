@@ -191,3 +191,11 @@ body:has(.blog-private-reader[open]) { overflow: hidden; }
 .profile-photo-frame.is-empty { aspect-ratio: 3 / 4; }
 
 .avatar-ring img[hidden] { display: none; }
+
+#blogPrivateCategoryBar { display: grid; grid-template-columns: repeat(var(--category-columns, 1), minmax(0, 1fr)); gap: 8px; width: 100%; }
+#blogPrivateCategoryBar button { min-width: 0; min-height: 40px; display: grid; place-items: center; text-align: center; white-space: normal; text-wrap: balance; overflow-wrap: anywhere; padding: 8px; }
+#blogPrivateCategoryBar button.is-active { background: var(--accent); color: var(--accent-contrast); }
+#blogPrivateCategoryPages { display: flex; justify-content: center; gap: 8px; }
+#blogPrivateCategoryPages[hidden] { display: none; }
+#blogPrivateCards { grid-template-rows: repeat(var(--home-card-rows, 4), minmax(146px, 1fr)); grid-auto-rows: minmax(146px, 1fr); align-content: stretch; }
+#blogPrivateCards > .article-card { height: auto; min-height: 146px; }

@@ -36,3 +36,9 @@ test('private-space intro is separately stored and is not exposed through public
  const response=await bio.onRequestGet({env,request:request('/api/private-bio',cookies.vip)});assert.equal(response.headers.get('Cache-Control'),'private, no-store');const data=await response.json();assert.equal(data.bio.profileName,'PRIVATE-BIO-NAME');assert.equal(data.bio.profilePhoto,'');assert.equal(data.bio.info.labels.name,'昵称');
  assert(!(await (await content.onRequestGet({env,request:request('/api/content')})).text()).includes('PRIVATE-BIO-NAME'));
 });
+
+test('private article categories stop at eight including uncategorized',async()=>{
+ const {env,cookies}=await setup();const create=name=>categories.onRequestPost({env,request:request('/api/private-post-categories',cookies.admin,'POST',{action:'create',name})});
+ for(let i=1;i<=7;i++)assert.equal((await create('独立分类'+i)).status,200);
+ assert.equal((await create('第九个分类')).status,400);const list=await (await categories.onRequestGet({env,request:request('/api/private-post-categories',cookies.admin)})).json();assert.equal(list.categories.length,8);
+});

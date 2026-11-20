@@ -3091,7 +3091,7 @@
     }
     @media (max-width: 1024px) { .profile-photo-frame { display: none; } }
   </style>
-  <link rel="stylesheet" href="./cream-theme.css?v=photo-empty1" />
+  <link rel="stylesheet" href="./cream-theme.css?v=categories8" />
 </head>
 <body>
   <canvas id="appleMeshCanvas" aria-hidden="true"></canvas>
@@ -3439,7 +3439,7 @@
           <section class="surface content-panel" id="blogPrivatePanel" hidden aria-labelledby="blogPrivateHeading">
             <div class="panel-header"><h2 class="panel-title" id="blogPrivateHeading">隐秘空间 · 私密手记</h2><button class="tactile-btn" type="button" id="blogPrivateRefresh">刷新</button></div>
             <div id="blogPrivateLocked"><h3>隐秘空间已锁定</h3><p>仅 VIP 和管理员可阅读。登录后兑换 VIP 邀请码，或在注册时填写对应邀请码。</p><form id="blogPrivateUnlock"><label for="blogPrivateCode">邀请码</label><input class="auth-input" id="blogPrivateCode" required maxlength="32" autocomplete="off" placeholder="输入 VIP 邀请码" /><button class="tactile-btn" type="button" id="blogPrivateLogin">登录 / 注册</button><button class="tactile-btn" type="submit">兑换邀请码</button></form></div>
-            <div id="blogPrivateContent" hidden><label for="blogPrivateCategory">独立分类</label><select class="auth-input" id="blogPrivateCategory"><option value="all">全部分类</option></select><div class="articles-grid" id="blogPrivateCards"></div><div class="pagination-bar"><button class="tactile-btn page-btn" type="button" id="blogPrivatePrev">上一页</button><span class="tabular" id="blogPrivatePage"></span><button class="tactile-btn page-btn" type="button" id="blogPrivateNext">下一页</button></div></div>
+            <div id="blogPrivateContent" hidden><nav id="blogPrivateCategoryBar" aria-label="独立分类"></nav><div id="blogPrivateCategoryPages" hidden><button class="tactile-btn" id="blogPrivateCategoriesPrev" type="button">上一组分类</button><button class="tactile-btn" id="blogPrivateCategoriesNext" type="button">下一组分类</button></div><div class="articles-grid" id="blogPrivateCards"></div><div class="pagination-bar"><button class="tactile-btn page-btn" type="button" id="blogPrivatePrev">上一页</button><span class="tabular" id="blogPrivatePage"></span><button class="tactile-btn page-btn" type="button" id="blogPrivateNext">下一页</button></div></div>
             <p id="blogPrivateStatus" class="muted-meta" role="status"></p>
           </section>
         </main>
@@ -6664,6 +6664,6 @@ syncAuthUI();
       }
     })();
   </script>
-  <script src="./private-space.js?v=intro1"></script>
+  <script src="./private-space.js?v=categories8"></script>
 </body>
 </html>
