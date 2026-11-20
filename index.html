@@ -1574,25 +1574,10 @@
 
     /* Auth */
     .auth-trigger-btn { height: 36px; padding: 0 14px 0 12px; border-radius: 99px; font-size: 13px; font-weight: 500; }
-    .auth-trigger-btn.is-logged-in {
-      width: 132px;
-      height: 36px;
-      padding: 0 10px 0 8px;
-      gap: 6px;
-      justify-content: flex-start;
-      color: var(--accent);
-      border-color: var(--accent-soft);
+    .auth-trigger-btn.is-logged-in { color: var(--accent); border-color: var(--accent); }
+    .auth-trigger-btn #authTriggerText {
+      min-width: 0; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .auth-trigger-btn.is-logged-in #authTriggerText {
-      min-width: 0;
-      flex: 1;
-      text-align: center;
-      text-transform: uppercase;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .auth-trigger-btn.is-logged-in .auth-btn-avatar { width: 22px; height: 22px; }
     .account-menu-wrap { position: relative; }
     .account-popover {
       position: absolute; top: calc(100% + 10px); right: 0; width: 292px; padding: 12px;
@@ -1772,7 +1757,6 @@
     .account-pop-item.is-danger .account-pop-title { color: #dc2626; }
     html[data-theme="dark"] .account-pop-item.is-danger .account-pop-icon { color: #f87171; }
     html[data-theme="dark"] .account-pop-item.is-danger .account-pop-title { color: #f87171; }
-    .auth-btn-avatar { width: 22px; height: 22px; border-radius: 99px; object-fit: cover; border: 1px solid var(--hairline-strong); display: none; flex-shrink: 0; }
     .contact-modal.is-admin-account { width: 460px; max-height: 86vh; max-width: 94vw; align-items: stretch; overflow: hidden; padding: 20px 22px; transition: width 200ms var(--ease); }
     .contact-modal.is-admin-account.is-wide-page { width: min(820px, 95vw); }
     .site-rail-layout {
@@ -2201,6 +2185,7 @@
     @media (pointer: coarse) {
       input, textarea, select { font-size: 16px; }
     }
+    @media (max-width: 600px) { .auth-trigger-btn #authTriggerText { max-width: 110px; } }
     @media (hover: none) {
       .tactile-btn:hover, .modal-btn-primary:hover, .article-card:hover { transform: none; }
     }
@@ -3232,8 +3217,7 @@
 
         <div class="account-menu-wrap" id="accountMenuWrap">
           <button class="tactile-btn auth-trigger-btn" id="authTriggerBtn" type="button" aria-expanded="false" aria-haspopup="true">
-            <img class="auth-btn-avatar" id="authTriggerAvatar" alt="用户头像" style="display: none;" />
-            <svg id="authTriggerIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg id="authTriggerIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="8" r="4"></circle><path d="M20 21a8 8 0 0 0-16 0"></path>
             </svg>
             <span id="authTriggerText">登录 / 注册</span>
@@ -4547,8 +4531,6 @@
       if (ftBadge && profile.footerBadge) ftBadge.textContent = profile.footerBadge;
       if (ftCopy && profile.footerCopyright) ftCopy.textContent = profile.footerCopyright;
       document.getElementById("profileAvatarImg").src = profile.avatar || "";
-      const triggerAvatarEl = document.getElementById("authTriggerAvatar");
-      if (triggerAvatarEl) triggerAvatarEl.src = profile.avatar || "";
       const cardAvatarEl = document.getElementById("accountCardAvatar");
       if (cardAvatarEl) cardAvatarEl.src = profile.avatar || "";
       document.getElementById("profileNameEl").textContent = profile.profileName || "";
@@ -5090,24 +5072,17 @@ document.getElementById("readerTitle").textContent = post.title;
     function syncTopAuthBar() {
       const commentGuestBar = document.getElementById("commentGuestBar");
       const commentForm = document.getElementById("commentForm");
-      const authTriggerAvatar = document.getElementById("authTriggerAvatar");
       const authTriggerIcon = document.getElementById("authTriggerIcon");
       if (currentUser) {
         const isAdmin = currentUser.role === "admin";
         const displayNick = currentUser.profile?.profileName || currentUser.username;
-        const upperNick = displayNick.toUpperCase();
-        const shortNick = Array.from(upperNick).length > 8 ? Array.from(upperNick).slice(0, 8).join("") + "..." : upperNick;
-        authTriggerText.textContent = shortNick;
+        authTriggerText.textContent = displayNick;
         authTriggerBtn.title = displayNick;
         authTriggerBtn.setAttribute("aria-label", `账号：${displayNick}`);
         authTriggerBtn.classList.add("is-logged-in");
         const rawAvatarSrc = currentUser.profile?.avatar || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
         const avatarSrc = sanitizeAvatarUrl(rawAvatarSrc, displayNick, isAdmin);
-        if (authTriggerAvatar) {
-          authTriggerAvatar.src = avatarSrc;
-          authTriggerAvatar.style.display = "block";
-        }
-        if (authTriggerIcon) authTriggerIcon.style.display = "none";
+        if (authTriggerIcon) authTriggerIcon.style.display = "block";
         if (commentGuestBar) commentGuestBar.style.display = "none";
         if (commentForm) commentForm.style.display = "flex";
 
@@ -5127,7 +5102,8 @@ if (popSettingsDesc) popSettingsDesc.textContent = "头像、个人资料、邀�
         setAccountMenuOpen(false);
 authTriggerText.textContent = "登录 / 注册";
         authTriggerBtn.classList.remove("is-logged-in");
-        if (authTriggerAvatar) authTriggerAvatar.style.display = "none";
+        authTriggerBtn.title = "登录 / 注册";
+        authTriggerBtn.setAttribute("aria-label", "登录 / 注册");
         if (authTriggerIcon) authTriggerIcon.style.display = "block";
         if (commentGuestBar) commentGuestBar.style.display = "flex";
         if (commentForm) commentForm.style.display = "none";
