@@ -3077,7 +3077,15 @@
     .profile-photo-frame img { display: block; width: 100%; aspect-ratio: 3 / 4; max-height: 560px; object-fit: cover; border-radius: 16px; background: var(--bg-subcard); }
     .profile-photo-frame figcaption { text-align: center; color: var(--text-muted); font-size: 12px; padding: 12px 4px 3px; text-wrap: balance; }
     .profile-photo-frame figcaption:empty { display: none; }
-    @media (min-width: 1025px) { .contact-card { margin-top: auto; } }
+    .article-placeholder { align-items: center; justify-content: center; gap: 10px; color: var(--text-muted); background: var(--bg-subcard); box-shadow: none; font-size: 12px; cursor: default; }
+    .article-placeholder:hover, .article-placeholder:active { transform: none; box-shadow: none; }
+    .article-placeholder svg { opacity: .5; }
+    @media (min-width: 1025px) {
+      .profile-card { flex: 0 0 auto; height: auto; gap: 24px; overflow: hidden; }
+      .profile-photo-frame { margin: 0; }
+      .profile-photo-frame img { max-height: 340px; }
+      .contact-card { margin-top: auto; }
+    }
     @media (max-width: 1024px) { .profile-photo-frame { display: none; } }
   </style>
 </head>
@@ -4671,6 +4679,14 @@
     });
 
     let isFirstRender = true;
+    function buildArticlePlaceholders(count, empty = false) {
+      return Array.from({ length: Math.max(0, count) }, (_, index) => `
+        <div class="article-card article-placeholder" role="note" aria-label="暂无文章">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
+          <span>${empty && index === 0 ? "没有找到匹配的文章" : "静待下一篇手记"}</span>
+        </div>`).join("");
+    }
+
     function renderArticles() {
       const q = state.query.trim().toLowerCase();
       const filtered = POSTS.filter((post) => {
@@ -4681,7 +4697,7 @@
       panelTitleText.textContent = state.filter === "all" ? "最新动态 · 最新发布" : state.filter;
 
       if (filtered.length === 0) {
-        articlesGrid.innerHTML = '<div class="empty-state">没有找到匹配的文章</div>';
+        articlesGrid.innerHTML = buildArticlePlaceholders(PAGE_SIZE, true);
         document.getElementById("pageIndicatorText").textContent = "0 / 0";
         document.getElementById("prevPageBtn").disabled = true;
         document.getElementById("nextPageBtn").disabled = true;
@@ -4717,9 +4733,9 @@
               <span>${escapeHtml(post.date)}</span>
             </div>
           </article>
-        `).join("");
+        `).join("") + buildArticlePlaceholders(PAGE_SIZE - pageItems.length);
 
-      articlesGrid.querySelectorAll(".article-card").forEach((card) => {
+      articlesGrid.querySelectorAll(".article-card[data-id]").forEach((card) => {
         const open = () => openReader(card.dataset.id);
         card.addEventListener("click", open);
         card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
