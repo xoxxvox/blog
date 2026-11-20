@@ -1,5 +1,15 @@
 [
   {
+    "id": "post-mwobaesl",
+    "title": "openwrt安装配置",
+    "category": "技术手记",
+    "date": "2026-11-20",
+    "readTime": "5 分钟",
+    "featured": false,
+    "excerpt": "openwrt安装配置",
+    "body": "# **openwrt**\n\n## 一、配置：\n\n#### 1.登录：浏览器输入：“192.168.1.1”，打开网页。\n\n- 用户：root\n- 密码：空\n\n#### 2.界面：系统-软件包-更新列表\n\n- 搜索zh-cn，选择简体中文\n- 刷新网页\n\n#### 3.时间：系统-通用设置\n\n- 时区：Asia/Shanghai\n\n#### 4.wan接口：网络-接口\n\n- wan接口：删除\n- wan6接口：删除\n- 保存并应用\n\n#### 5.br-lan：网络-接口-设备\n\n- 配置网桥端口：选择etho、eth1\n- 保存并应用\n\n#### 6.lan接口：网络-接口\n\n- 通用设置：\n  - ipv4地址：192.168.110.2/24\n  - ipv4网关：主路由网关地址    如：192.168.110.1\n- 高级设置：\n  - 使用自定义的 DNS 服务器：主路由网关地址    如：192.168.110.1、235.5.5.5\n- DHCP服务器：\n  - 常规设置：\n    - 忽略此接口  √\n  - ipv6设置：\n    - RA 服务：已禁用\n    - DHCPv6 服务：已禁用\n    - NDP 代理：已禁用\n- 保存并应用\n\n#### 7.DNS：网络-DNS-筛选\n\n- 过滤 IPv6 AAAA 记录\n- 保存并应用\n\n## 二、替换软件源\n\n#### 1. 备份原源配置文件\n\n```\ncp /etc/apk/repositories.d/distfeeds.list /etc/apk/repositories.d/distfeeds.list.bak\n```\n\n#### 2. 替换为国内镜像源（二选一）\n\n- **中国科学技术大学源（USTC，推荐）：**\n\n  ```\n  sed -i 's/downloads.openwrt.org/mirrors.ustc.edu.cn\\/openwrt/g' /etc/apk/repositories.d/distfeeds.list\n  ```\n\n- **清华大学开源镜像站（TUNA）：**\n\n  ```\n  sed -i 's/downloads.openwrt.org/mirrors.tuna.tsinghua.edu.cn\\/openwrt/g' /etc/apk/repositories.d/distfeeds.list\n  ```\n\n- **阿里云镜像源（Aliyun）：**\n\n  ```\n  sed -i 's/downloads.openwrt.org/mirrors.aliyun.com\\/openwrt/g' /etc/apk/repositories.d/distfeeds.list\n  ```\n\n#### 3. 更新软件包索引\n\n```\napk update\n```\n\n- **验证标准**：终端输出显示从 `mirrors.ustc.edu.cn`（或对应镜像站）拉取 `packages.adb` 索引且无报错（返回 `OK:` 状态），即说明软件源替换成功。\n\n### 方法二：通过 LuCI 网页后台修改\n\n1. 打开浏览器登录 OpenWrt 网页管理后台。\n2. 导航至 **系统 (System)** -> **软件包 (Software)**。\n3. 点击 **配置 (Configuration)** 标签页。\n4. 在软件源列表框（对应 `distfeeds.list`）中，将其中的所有 `downloads.openwrt.org` 手动替换为 `mirrors.ustc.edu.cn/openwrt`。\n5. 点击页面右下角的 **保存 (Save)**。\n6. 返回“动作”或概览标签页，点击 **更新列表 (Update lists...)** 测试是否能正常拉取。\n\n### 补充：若您的固件仍沿用传统 opkg\n\n如果使用的固件为第三方定制构建版且尚未迁移至 `apk`，仍保留了 `opkg`，请执行传统的替换指令：\n\n```\nsed -i 's/downloads.openwrt.org/mirrors.ustc.edu.cn\\/openwrt/g' /etc/opkg/distfeeds.conf\nopkg update\n```\n\n# 三、安装软件\n\n#### 1.OpenWrt 25.12 中批量安装\n\n```\n命令：\napk add --allow-untrusted /tmp/*.apk\n```\n\n#### 2.具体操作与步骤\n\n**进入目录并执行安装**\n\nBash\n\n```\ncd /tmp\napk add --allow-untrusted ./*.apk\n```\n\n- **参数作用**：手动上传的第三方或离线编译安装包通常没有官方数字签名，加上 `--allow-untrusted` 可以避免触发 `UNTRUSTED signature` 校验错误而导致安装终止。\n- **依赖说明**：如果这些软件包依赖其他基础库，`apk` 会尝试连接已配置的软件源自动下载依赖。\n\n**验证安装状态**\n\n- *验证方法*：运行以下命令查看刚刚安装的包是否已成功注册到系统中：\n\n  ```\n  apk list -I\n  ```\n\n  或者单独验证某个软件包：\n\n  ```\n  apk info -e <软件包名称>\n  ```\n\n  如果终端输出了对应的包名和版本号，即表示安装成功。\n\n**清理临时安装文件（可选）** 安装完成后，`/tmp` 目录下的安装包可以安全删除以释放内存空间：\n\n```\nrm -f /tmp/*.apk\n```\n\n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"
+  },
+  {
     "id": "minimal-sites",
     "title": "优质极简站点与轻量工具推荐",
     "category": "网站优选",
