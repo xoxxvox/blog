@@ -34,7 +34,12 @@
         "label": "1",
         "value": "1"
       }
-    ]
+    ],
+    "labels": {
+      "name": "姓名",
+      "gender": "昵称",
+      "age": "年龄"
+    }
   },
   "contacts": [
     {
@@ -82,7 +87,7 @@
   "footerDesc": "专注于软路由、网络自动化、云原生 Serverless 架构与极简数字生活记录。",
   "footerBadge": "Serverless 运行中",
   "footerCopyright": "© 2026 XXOXOVX Blog · All rights reserved",
-  "profilePhoto": "https://imghub-api.xxoxovx.cc/api/image?storage=telegram&file_id=BQACAgUAAyEGAATrNyi5AAIHZ2r9ZPG-RVZZqEYMEKFoveaJwvcXAALjHgACPUrwV0OsNBeqEeONPQQ",
+  "profilePhoto": "https://imghub-api.xxoxovx.cc/api/image?storage=telegram&file_id=BQACAgUAAyEGAATrNyi5AAIHaGr_-jYfSfLZbrA_JnAxv8qSTClmAAK4KQACeBQAAVTIvq0Yl-YzWD0E",
   "profilePhotoCaption": "",
   "profilePhotoEnabled": true,
   "homeCardRows": 4,
