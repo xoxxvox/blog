@@ -38,3 +38,10 @@ test("concurrent registrations cannot consume a single invitation twice",async()
  assert.deepEqual(responses.map(r=>r.status).sort(),[201,409]);
  assert.equal(DB.sqlite.prepare("SELECT COUNT(*) AS count FROM users WHERE username LIKE 'race-%'").get().count,1);
 });
+
+test("invite list includes the bound username and current email",async()=>{
+ const {env,cookies}=await setup();
+ await invite.onRequestPost({env,request:request('/api/invites',cookies.admin,'POST',{code:'BOUND-CODE',role:'vip',durationDays:30})});
+ const registered=await auth.onRequestPost({env,request:request('/api/auth',null,'POST',{action:'register',username:'bound-person',email:'bound@test.example',password:'test-pass-123',inviteCode:'BOUND-CODE'})});assert.equal(registered.status,201);
+ const response=await invite.onRequestGet({env,request:request('/api/invites',cookies.admin)}),data=await response.json(),row=data.invites.find(item=>item.code==='BOUND-CODE');assert.equal(row.bound_username,'bound-person');assert.equal(row.bound_email,'bound@test.example');
+});

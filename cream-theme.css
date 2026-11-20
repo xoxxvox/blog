@@ -173,3 +173,16 @@ html[data-theme="dark"] {
   --shadow-btn: 0 1px 2px rgb(0 0 0 / .10), 0 3px 8px rgb(0 0 0 / .12);
   --shadow-focus: 0 1px 4px rgb(0 0 0 / .20), 0 5px 14px rgb(0 0 0 / .18);
 }
+
+#publicPostsPanel[hidden], #blogPrivatePanel[hidden], #blogPrivateLocked[hidden], #blogPrivateContent[hidden], #blogPrivateLogin[hidden] { display: none; }
+#blogPrivateContent { display: flex; flex-direction: column; min-height: 0; flex: 1; gap: 12px; }
+#blogPrivateLocked { margin: auto; max-width: 440px; padding: 40px 16px; text-align: center; }
+#blogPrivateUnlock { display: grid; gap: 12px; margin-top: 20px; text-align: left; }
+#blogPrivateUnlock button { justify-content: center; }
+.blog-private-reader { width: min(850px, calc(100vw - 24px)); max-height: calc(100dvh - 32px); overflow: auto; border: 0; padding: 24px; border-radius: 28px; background: var(--bg-card-solid); color: var(--text-primary); box-shadow: var(--shadow-float); }
+.blog-private-reader::backdrop { background: rgb(0 0 0 / .3); backdrop-filter: blur(4px); }
+.blog-private-reader .reader-body { overflow-wrap: anywhere; }
+body:has(.blog-private-reader[open]) { overflow: hidden; }
+#blogPrivateStatus:empty { display: none; }
+
+.private-post-open { appearance: none; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; padding: 0; width: 100%; }

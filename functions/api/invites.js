@@ -19,9 +19,9 @@ export async function onRequestGet({ request, env }) {
   await cleanupExpiredAccounts(env);
   const { results } = await env.DB.prepare(
     `SELECT i.code, i.role, i.duration_days, i.expires_at, i.created_by, i.used_by, i.used_at, i.created_at,
-            u.disabled_at AS user_disabled_at
+            u.disabled_at AS user_disabled_at, COALESCE(u.username, i.used_by) AS bound_username, u.email AS bound_email
      FROM invites i
-     LEFT JOIN users u ON u.invite_code = i.code
+     LEFT JOIN users u ON u.username = i.used_by
      ORDER BY i.created_at DESC
      LIMIT 100`
   ).all();

@@ -116,6 +116,7 @@ export async function onRequestDelete({ request, env }) {
   const user = await getSessionUser(request, env);
   if (!user) return errorJson("请先登录", 401);
 
+  if (!await can(env, user, "comment_delete_own")) return errorJson("当前等级无权删除评论", 403);
   const url = new URL(request.url);
   const id = Number(url.searchParams.get("id"));
   if (!id) return errorJson("缺少评论 id", 400);
