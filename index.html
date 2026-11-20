@@ -3195,7 +3195,7 @@
             <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>
           </svg>
         </span>
-        <input type="search" class="search-input" id="searchInput" placeholder="搜索文章标题或简介" aria-label="搜索文章" />
+        <input type="search" class="search-input" id="searchInput" name="blog_search_query" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly onfocus="this.removeAttribute('readonly')" placeholder="搜索文章标题或简介" aria-label="搜索文章" />
         <span class="keycap">Ctrl K</span>
       </div>
 
@@ -3697,7 +3697,7 @@
                 <div class="setting-row">
                   <label class="setting-row-label" for="accOldPwd">修改密码</label>
                   <div class="setting-row-control" style="flex-wrap: wrap; gap: 6px;">
-                    <input class="auth-input" id="accOldPwd" type="password" placeholder="当前密码" autocomplete="current-password" style="flex: 1; min-width: 110px;" />
+                    <input class="auth-input" id="accOldPwd" type="password" placeholder="当前密码" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" style="flex: 1; min-width: 110px;" />
                     <input class="auth-input" id="accNewPwd" type="password" placeholder="新密码（至少6位）" autocomplete="new-password" style="flex: 1; min-width: 120px;" />
                     <input class="auth-input" id="accNewPwd2" type="password" placeholder="确认新密码" autocomplete="new-password" style="flex: 1; min-width: 110px;" />
                     <button class="tactile-btn modal-btn-primary" id="accChangePwdBtn" type="button" style="height: 34px; padding: 0 12px; border-radius: 9px; font-size: 12px; flex-shrink: 0;">更新密码</button>
