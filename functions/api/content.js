@@ -51,8 +51,28 @@ export async function onRequestGet({ request, env }) {
     } catch {}
     return { value: null, live: false };
   }
-  const [posts, profile] = await Promise.all([readContent(POSTS_PATH), readContent(PROFILE_PATH)]);
-  return json({ posts: posts.value, profile: profile.value, source: posts.live && profile.live ? "github" : "fallback" });
+  const [user, posts, profile] = await Promise.all([
+    getSessionUser(request, env),
+    readContent(POSTS_PATH),
+    readContent(PROFILE_PATH),
+  ]);
+  let safeProfile = profile.value;
+  if (!user && safeProfile && Array.isArray(safeProfile.contacts)) {
+    safeProfile = {
+      ...safeProfile,
+      contacts: safeProfile.contacts.map((c) => ({
+        label: c?.label || "",
+        modalTitle: c?.modalTitle || "",
+        fieldLabel: c?.fieldLabel || "",
+        requiresLogin: true,
+      })),
+    };
+  }
+  return json(
+    { posts: posts.value, profile: safeProfile, source: posts.live && profile.live ? "github" : "fallback" },
+    200,
+    { "Cache-Control": "private, no-store", Vary: "Cookie" }
+  );
 }
 
 export async function onRequestPost({ request, env }) {

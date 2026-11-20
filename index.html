@@ -4692,34 +4692,57 @@
       const cardAvatarEl = document.getElementById("accountCardAvatar");
       if (cardAvatarEl) cardAvatarEl.src = profile.avatar || "";
 
-      if (Array.isArray(profile.contacts)) {
-        const contactIcon = (label = "") => {
-          const k = label.toLowerCase();
-          if (k.includes("qq")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
-          if (k.includes("wechat") || k.includes("微信")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 17C5.9 17 3 14.5 3 11.5S5.9 6 9.5 6 16 8.5 16 11.5"/><circle cx="7.5" cy="10.5" r=".7" fill="currentColor"/><circle cx="11.5" cy="10.5" r=".7" fill="currentColor"/><path d="M21 15.5c0 2-2.2 3.5-5 3.5-.7 0-1.4-.1-2-.3L12 20l.5-1.7c-1-.7-1.5-1.7-1.5-2.8 0-2 2.2-3.5 5-3.5s5 1.5 5 3.5z"/></svg>';
-          if (k.includes("telegram") || k.includes("tg")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>';
-          if (k.includes("twitter") || k.includes("x")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.7 16h4.3L8.3 4H4z"/><path d="M4 20l6.8-6.8"/><path d="M13.2 10.8L20 4"/></svg>';
-          if (k.includes("mail") || k.includes("邮箱")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>';
-          return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>';
-        };
-        document.getElementById("contactListEl").innerHTML = profile.contacts
-          .map(
-            (c) => `
-            <div class="contact-row">
-              <span class="contact-left">
-                <span class="contact-icon-badge" aria-hidden="true">${contactIcon(c.label)}</span>
-                <span>${escapeHtml(c.label)}</span>
-              </span>
-              <button class="tactile-btn copy-btn contact-view-btn" type="button"
-                data-title="${escapeHtml(c.modalTitle || c.label + ' 联系方式')}"
-                data-label="${escapeHtml(c.fieldLabel || '账号')}"
-                data-value="${escapeHtml(c.value)}"
-                data-url="${escapeHtml(c.url)}"
-                data-qr="${escapeHtml(c.qr || '')}">查看</button>
-            </div>`
-          )
-          .join("");
+      if (Array.isArray(profile.contacts) && state.filter !== "private") {
+        renderContacts(profile.contacts, "public");
       }
+    }
+
+    function renderContacts(contacts = [], scope = "public") {
+      const headingEl = document.querySelector(".contact-card .card-heading");
+      if (headingEl) headingEl.textContent = scope === "private" ? "隐秘联系方式" : "联系方式";
+      const listEl = document.getElementById("contactListEl");
+      if (!listEl) return;
+      listEl.dataset.contactScope = scope;
+      const loggedIn = typeof currentUser !== "undefined" && Boolean(currentUser);
+      const canPrivate = loggedIn && typeof hasLevelPermission === "function" && hasLevelPermission("private_read");
+      if (scope === "private" && !canPrivate) {
+        listEl.innerHTML = '<div class="contact-row"><span class="contact-left" style="color:var(--text-muted);font-weight:400;">仅 VIP 及以上权限可查看隐秘联系方式</span></div>';
+        return;
+      }
+      const items = Array.isArray(contacts) ? contacts.filter((c) => c && (c.label || c.value)) : [];
+      if (!items.length) {
+        listEl.innerHTML = `<div class="contact-row"><span class="contact-left" style="color:var(--text-muted);font-weight:400;">${scope === "private" ? "暂未配置隐秘联系方式" : "暂未配置联系方式"}</span></div>`;
+        return;
+      }
+      const contactIcon = (label = "") => {
+        const k = label.toLowerCase();
+        if (k.includes("qq")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+        if (k.includes("wechat") || k.includes("微信")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 17C5.9 17 3 14.5 3 11.5S5.9 6 9.5 6 16 8.5 16 11.5"/><circle cx="7.5" cy="10.5" r=".7" fill="currentColor"/><circle cx="11.5" cy="10.5" r=".7" fill="currentColor"/><path d="M21 15.5c0 2-2.2 3.5-5 3.5-.7 0-1.4-.1-2-.3L12 20l.5-1.7c-1-.7-1.5-1.7-1.5-2.8 0-2 2.2-3.5 5-3.5s5 1.5 5 3.5z"/></svg>';
+        if (k.includes("telegram") || k.includes("tg")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>';
+        if (k.includes("twitter") || k.includes("x")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.7 16h4.3L8.3 4H4z"/><path d="M4 20l6.8-6.8"/><path d="M13.2 10.8L20 4"/></svg>';
+        if (k.includes("mail") || k.includes("邮箱")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>';
+        return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>';
+      };
+      const needsLogin = scope === "public" && !loggedIn;
+      listEl.innerHTML = items
+        .map(
+          (c) => `
+          <div class="contact-row">
+            <span class="contact-left">
+              <span class="contact-icon-badge" aria-hidden="true">${contactIcon(c.label)}</span>
+              <span>${escapeHtml(c.label)}</span>
+            </span>
+            <button class="tactile-btn copy-btn contact-view-btn" type="button"
+              data-scope="${scope}"
+              data-requires-login="${needsLogin || c.requiresLogin ? "1" : "0"}"
+              data-title="${escapeHtml(c.modalTitle || c.label + ' 联系方式')}"
+              data-label="${escapeHtml(c.fieldLabel || '账号')}"
+              data-value="${escapeHtml(needsLogin ? '' : (c.value || ''))}"
+              data-url="${escapeHtml(needsLogin ? '' : (c.url || ''))}"
+              data-qr="${escapeHtml(needsLogin ? '' : (c.qr || ''))}">${needsLogin ? "登录查看" : "查看"}</button>
+          </div>`
+        )
+        .join("");
     }
 
     function updateFooterStats() {
@@ -5158,11 +5181,23 @@ document.getElementById("readerTitle").textContent = post.title;
     }
 
     function openContactModal(btn) {
+      const scope = btn.dataset.scope || "public";
+      if (scope === "private") {
+        if (!currentUser || !hasLevelPermission("private_read")) {
+          showToast("隐秘空间联系方式仅限 VIP 及以上权限查看", 2600, "error");
+          if (!currentUser) openAuthModal("login");
+          return;
+        }
+      } else if (!currentUser) {
+        showToast("请先登录后查看联系方式", 2400, "error");
+        openAuthModal("login");
+        return;
+      }
       const { title, label, value, url, qr } = btn.dataset;
       activeContactValue = value || "";
       contactModalTitle.textContent = title || "联系方式";
       contactModalLabel.textContent = label || "账号";
-      contactModalValue.textContent = activeContactValue;
+      contactModalValue.textContent = activeContactValue || "-";
       contactModalJump.href = url || "#";
       contactModalQr.onerror = () => { contactModalQr.onerror = null; contactModalQr.src = FALLBACK_QR_SVG; };
 
@@ -5191,9 +5226,10 @@ document.getElementById("readerTitle").textContent = post.title;
     document.getElementById("contactModalClose").addEventListener("click", closeContactModal);
 
     // Server Sync
+    let lastContentAuthState = null;
     async function syncContentFromServer() {
       try {
-        const res = await fetch("/api/content");
+        const res = await fetch("/api/content", { credentials: "include", cache: "no-store" });
         if (!res.ok) return;
         const data = await res.json();
         // Apply layout settings before calculating pagination and placeholder slots.
@@ -5352,6 +5388,11 @@ authTriggerText.textContent = "登录 / 注册";
 
     function syncAuthUI() {
       refreshLevelPermissions();
+      const isLoggedIn = Boolean(currentUser);
+      if (lastContentAuthState !== null && lastContentAuthState !== isLoggedIn) {
+        syncContentFromServer();
+      }
+      lastContentAuthState = isLoggedIn;
       const canViewPrivate = Boolean(currentUser && hasLevelPermission("private_read"));
       const privatePill = document.querySelector('.cat-pill[data-filter="private"]');
       if (privatePill) privatePill.hidden = !canViewPrivate;
@@ -5362,6 +5403,8 @@ authTriggerText.textContent = "登录 / 注册";
         renderArticles();
       } else if (state.filter === "private") {
         window.blogPrivateSpace?.show(state.query);
+      } else if (currentProfile && Array.isArray(currentProfile.contacts)) {
+        renderContacts(currentProfile.contacts, "public");
       }
       requestAnimationFrame(() => moveCatIndicator(document.querySelector(".cat-pill.is-active")));
       const commentButton = document.getElementById("commentSubmitBtn");
@@ -6969,6 +7012,6 @@ syncAuthUI();
       } catch {}
     })();
   </script>
-  <script src="./private-space.js?v=categories13"></script>
+  <script src="./private-space.js?v=categories14"></script>
 </body>
 </html>

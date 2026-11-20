@@ -33,12 +33,18 @@
     });
   });
   const restoreIntro = () => { if (currentProfile) renderProfileIntro(currentProfile); };
+  const restorePublicContacts = () => { if (typeof renderContacts === "function" && currentProfile) renderContacts(currentProfile.contacts || [], "public"); };
+  const syncPrivateContacts = () => {
+    if (typeof renderContacts !== "function") return;
+    if (!allowed("private_read")) { renderContacts([], "private"); return; }
+    renderContacts(Array.isArray(privateBio?.contacts) ? privateBio.contacts : [], "private");
+  };
   async function syncIntro() {
-    if (!allowed("private_read")) { ++bioRevision; privateBio = null; bioIdentity = ""; restoreIntro(); return; }
+    if (!allowed("private_read")) { ++bioRevision; privateBio = null; bioIdentity = ""; restoreIntro(); if (state.filter === "private") syncPrivateContacts(); return; }
     const identity = `${currentUser.id}:${currentUser.role}`;
-    if (identity === bioIdentity) { if (privateBio?.enabled) renderProfileIntro(privateBio); return; }
+    if (identity === bioIdentity) { if (privateBio?.enabled) renderProfileIntro(privateBio); syncPrivateContacts(); return; }
     bioIdentity = identity; const revision = ++bioRevision;
-    try { const data = await (await api("/api/private-bio")).json(); if (revision !== bioRevision || state.filter !== "private") return; privateBio = data.bio; if (privateBio?.enabled) renderProfileIntro(privateBio); else restoreIntro(); } catch { if (revision === bioRevision) { bioIdentity = ""; restoreIntro(); } }
+    try { const data = await (await api("/api/private-bio")).json(); if (revision !== bioRevision || state.filter !== "private") return; privateBio = data.bio; if (privateBio?.enabled) renderProfileIntro(privateBio); else restoreIntro(); syncPrivateContacts(); } catch { if (revision === bioRevision) { bioIdentity = ""; restoreIntro(); syncPrivateContacts(); } }
   }
   const reader = document.createElement("dialog"); reader.className = "blog-private-reader"; reader.setAttribute("aria-labelledby", "blogPrivateReaderTitle");
   reader.innerHTML = '<div class="panel-header"><h2 id="blogPrivateReaderTitle"></h2><button class="tactile-btn" type="button" id="blogPrivateReaderClose">关闭</button></div><p class="tabular" id="blogPrivateReaderMeta"></p><div class="reader-body" id="blogPrivateReaderBody"></div>';
@@ -262,5 +268,5 @@
       $("blogPrivateStatus").textContent = error.message;
     } finally { if (submit) { submit.disabled = false; submit.textContent = label || "兑换邀请码"; } }
   });
-  window.blogPrivateSpace = { show, beginLayout: beginIntroLayout, restoreIntro() { restoreIntroLayout(); ++bioRevision; bioIdentity = ""; restoreIntro(); } };
+  window.blogPrivateSpace = { show, beginLayout: beginIntroLayout, restoreIntro() { restoreIntroLayout(); ++bioRevision; bioIdentity = ""; restoreIntro(); restorePublicContacts(); } };
 })();
