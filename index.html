@@ -3047,7 +3047,7 @@
     }
 
     /* Stable home sections when categories, pages and featured posts change. */
-    .main-grid { height: calc(684px + (var(--home-card-rows, 8) - 2) * 156px); }
+    .main-grid { height: calc(684px + (var(--home-card-rows, 4) - 2) * 156px); }
     .left-col, .right-col { height: 100%; min-height: 0; }
     .profile-card { min-height: 0; overflow-y: auto; }
     .contact-card, .category-bar { flex-shrink: 0; }
@@ -4003,7 +4003,7 @@
     };
 
     const state = { filter: "all", query: "", carouselIndex: 0, currentPostId: null, page: 1 };
-    let PAGE_SIZE = 16;
+    let PAGE_SIZE = 8;
     let siteProfile = null;
     const htmlEl = document.documentElement;
     const searchInput = document.getElementById("searchInput");
@@ -4549,7 +4549,7 @@
       if (ftDesc && profile.footerDesc) ftDesc.textContent = profile.footerDesc;
       if (ftBadge && profile.footerBadge) ftBadge.textContent = profile.footerBadge;
       if (ftCopy && profile.footerCopyright) ftCopy.textContent = profile.footerCopyright;
-      const rows = Math.min(12, Math.max(1, Math.round(Number(profile.homeCardRows) || 8)));
+      const rows = Math.min(12, Math.max(1, Math.round(Number(profile.homeCardRows) || 4)));
       PAGE_SIZE = rows * 2;
       document.documentElement.style.setProperty("--home-card-rows", rows);
       const photoFrame = document.getElementById("profilePhotoFrame");
