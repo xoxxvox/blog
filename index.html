@@ -2,6 +2,7 @@
 <html lang="zh-CN" data-theme="light" data-palette="blue">
 <head>
   <meta charset="UTF-8" />
+  <script>try{var m=localStorage.getItem("xxoxovx-theme")||"system",d=window.matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.setAttribute("data-theme",m==="system"?(d?"dark":"light"):m);}catch{}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="light dark" />
   <meta name="darkreader-lock" />
@@ -4528,7 +4529,12 @@
       }, 640));
       timers.push(setTimeout(finishSplash, 1020));
     })();
-    systemDarkQuery.addEventListener("change", () => { if (currentThemeMode === "system") applyThemeMode("system"); });
+    const syncSystemTheme = () => { if (currentThemeMode === "system") applyThemeMode("system"); };
+    if (systemDarkQuery.addEventListener) systemDarkQuery.addEventListener("change", syncSystemTheme);
+    else if (systemDarkQuery.addListener) systemDarkQuery.addListener(syncSystemTheme);
+    window.addEventListener("focus", syncSystemTheme);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) syncSystemTheme(); });
+    window.addEventListener("storage", (e) => { if (e.key === "xxoxovx-theme") applyThemeMode(e.newValue || "system"); });
     appearanceBtn.addEventListener("click", (e) => { e.stopPropagation(); setAppearanceOpen(!appearancePopover.classList.contains("is-open")); });
     document.addEventListener("click", (e) => {
       if (!appearanceWrap.contains(e.target)) setAppearanceOpen(false);
