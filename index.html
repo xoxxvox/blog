@@ -5206,7 +5206,7 @@ document.getElementById("readerTitle").textContent = post.title;
     // Auth
     let currentUser = null;
 
-    const ACCOUNT_LEVEL_NAMES = { guest: "游客", user: "普通", advanced: "高级", vip: "VIP", admin: "管理员" };
+    const ACCOUNT_LEVEL_NAMES = { guest: "游客", user: "普通", advanced: "高级", vip: "VIP", admin: "管理员", superadmin: "最高管理员" };
     const accountLevelName = role => ACCOUNT_LEVEL_NAMES[role] || "普通";
     let levelPermissions = null;
     let levelPermissionIdentity = "";
@@ -5214,7 +5214,12 @@ document.getElementById("readerTitle").textContent = post.title;
     function hasLevelPermission(key) {
       if (currentUser?.role === "admin" || currentUser?.role === "superadmin") return true;
       if (["private_read", "private_export"].includes(key) && currentUser?.role !== "vip") return false;
-      return (levelPermissions || (currentUser ? ["comments_read", "comment", "profile_edit", "upload"] : ["comments_read"])).includes(key);
+      const fallback = currentUser
+        ? (currentUser.role === "vip"
+            ? ["comments_read", "comment", "comment_delete_own", "profile_edit", "upload", "private_read", "private_export"]
+            : ["comments_read", "comment", "comment_delete_own", "profile_edit", "upload"])
+        : ["comments_read"];
+      return (levelPermissions || fallback).includes(key);
     }
     function refreshLevelPermissions() {
       const identity = currentUser ? `${currentUser.id}:${currentUser.role}` : "guest";
@@ -5230,7 +5235,7 @@ document.getElementById("readerTitle").textContent = post.title;
         levelPermissions = data.permissions;
         syncAuthUI();
         if (state.filter === "private") window.blogPrivateSpace?.show(state.query);
-      }).catch(() => { if (revision === levelPermissionRevision) { levelPermissions = []; syncAuthUI(); } });
+      }).catch(() => { if (revision === levelPermissionRevision) { levelPermissions = null; syncAuthUI(); } });
     }
 
     const authTriggerBtn = document.getElementById("authTriggerBtn");
@@ -5599,16 +5604,22 @@ async function fetchCurrentUser() {
           body: JSON.stringify({ action: "send_register_code", email }),
         });
         const data = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(data.error || "发送失败");
+        if (!res.ok) {
+          if (res.status === 429 && data.retryAfter) {
+            startCodeCountdown(authSendRegCodeBtn, Math.min(Number(data.retryAfter) || 60, 120));
+          } else {
+            authSendRegCodeBtn.disabled = false;
+          }
+          throw new Error(data.error || "发送失败");
+        }
         showToast(data.message || "验证码已发送至邮箱");
-        setRobotState("is-happy", "验证码已发出，请查收邮箱！");
-        startCodeCountdown(authSendRegCodeBtn, 60);
+        setRobotState("is-happy", "验证码已发出，15 分钟内有效（注意查收垃圾箱）");
+        startCodeCountdown(authSendRegCodeBtn, Number(data.retryAfter) || 60);
         authEmailCode?.focus();
       } catch (err) {
         const errMsg = err.message || "发送失败";
         authError.textContent = errMsg;
         setRobotState("is-alert", errMsg);
-        authSendRegCodeBtn.disabled = false;
       }
     });
 
@@ -5901,14 +5912,20 @@ syncAuthUI();
           body: JSON.stringify({ action: "request_password_reset", username, email }),
         });
         const data = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(data.error || "发送失败");
+        if (!res.ok) {
+          if (res.status === 429 && data.retryAfter) {
+            startCodeCountdown(btn, Math.min(Number(data.retryAfter) || 60, 120));
+          } else {
+            btn.disabled = false;
+          }
+          throw new Error(data.error || "发送失败");
+        }
         if (forgotStatus) forgotStatus.textContent = data.message || "验证码已处理";
         showToast(data.delivered ? "验证码已发送至邮箱" : "请填写验证码或原注册邀请码");
-        if (data.delivered) startCodeCountdown(btn, 60);
+        if (data.delivered) startCodeCountdown(btn, Number(data.retryAfter) || 60);
         else btn.disabled = false;
       } catch (err) {
         if (forgotStatus) forgotStatus.textContent = err.message || "发送失败";
-        btn.disabled = false;
       }
     });
     document.getElementById("forgotForm")?.addEventListener("submit", async (e) => {

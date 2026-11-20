@@ -39,28 +39,150 @@ async function ensureEmailVerificationsTable(env) {
   ).run();
 }
 
+async function ensureRateLimitTable(env) {
+  await env.DB.prepare(
+    "CREATE TABLE IF NOT EXISTS verification_rate_limits (id INTEGER PRIMARY KEY AUTOINCREMENT, ip TEXT NOT NULL, email TEXT NOT NULL, purpose TEXT NOT NULL, created_at INTEGER NOT NULL)"
+  ).run();
+}
+
+function getClientIp(request) {
+  return (
+    request?.headers?.get("CF-Connecting-IP") ||
+    request?.headers?.get("X-Forwarded-For")?.split(",")[0]?.trim() ||
+    "unknown"
+  );
+}
+
+async function checkAndRecordSendLimit(env, request, email, purpose) {
+  await ensureRateLimitTable(env);
+  const nowSec = Math.floor(Date.now() / 1000);
+  const ip = getClientIp(request);
+
+  try {
+    await env.DB.prepare("DELETE FROM verification_rate_limits WHERE created_at < ?")
+      .bind(nowSec - 86400)
+      .run();
+  } catch {}
+
+  const lastEmail = await env.DB.prepare(
+    "SELECT created_at FROM verification_rate_limits WHERE LOWER(email) = LOWER(?) AND purpose = ? AND created_at > ? ORDER BY id DESC LIMIT 1"
+  )
+    .bind(email, purpose, nowSec - 60)
+    .first();
+  if (lastEmail) {
+    const wait = Math.max(1, 60 - (nowSec - Number(lastEmail.created_at)));
+    return json({ error: `发送过于频繁，请 ${wait} 秒后再试`, retryAfter: wait }, 429);
+  }
+
+  const emailDayRow = await env.DB.prepare(
+    "SELECT COUNT(*) AS cnt FROM verification_rate_limits WHERE LOWER(email) = LOWER(?) AND purpose = ? AND created_at > ?"
+  )
+    .bind(email, purpose, nowSec - 86400)
+    .first();
+  if (Number(emailDayRow?.cnt || 0) >= 10) {
+    return json({ error: "该邮箱今日验证码发送次数已达上限，请明天再试", retryAfter: 3600 }, 429);
+  }
+
+  if (ip !== "unknown") {
+    const ipBurstRow = await env.DB.prepare(
+      "SELECT COUNT(*) AS cnt FROM verification_rate_limits WHERE ip = ? AND created_at > ?"
+    )
+      .bind(ip, nowSec - 600)
+      .first();
+    if (Number(ipBurstRow?.cnt || 0) >= 5) {
+      return json({ error: "当前网络请求过于频繁，请 10 分钟后再试", retryAfter: 600 }, 429);
+    }
+
+    const ipDayRow = await env.DB.prepare(
+      "SELECT COUNT(*) AS cnt FROM verification_rate_limits WHERE ip = ? AND created_at > ?"
+    )
+      .bind(ip, nowSec - 86400)
+      .first();
+    if (Number(ipDayRow?.cnt || 0) >= 20) {
+      return json({ error: "当前网络今日验证码请求已达上限，请明天再试", retryAfter: 3600 }, 429);
+    }
+  }
+
+  await env.DB.prepare(
+    "INSERT INTO verification_rate_limits (ip, email, purpose, created_at) VALUES (?, ?, ?, ?)"
+  )
+    .bind(ip, email, purpose, nowSec)
+    .run();
+  return null;
+}
+
 function generate6DigitCode() {
   const bytes = crypto.getRandomValues(new Uint8Array(3));
   return String(((bytes[0] << 16) | (bytes[1] << 8) | bytes[2]) % 900000 + 100000);
 }
 
-async function sendResendEmail(env, to, subject, text) {
+function escapeEmailHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function buildVerificationEmailHtml({ badge, title, greeting, description, code, expiresMinutes = 15, footerNote }) {
+  const safeBadge = escapeEmailHtml(badge);
+  const safeTitle = escapeEmailHtml(title);
+  const safeGreeting = escapeEmailHtml(greeting);
+  const safeDesc = escapeEmailHtml(description);
+  const safeCode = escapeEmailHtml(code);
+  const safeFooter = escapeEmailHtml(footerNote || "如果这不是你本人发起的操作，请直接忽略本邮件，你的账号安全不会受到影响。");
+  return `<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>${safeTitle}</title></head>
+<body style="margin:0;padding:0;background-color:#f6f3ec;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;color:#1f1c18;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f6f3ec;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:520px;background-color:#ffffff;border:1px solid #e7e0d4;border-radius:18px;overflow:hidden;box-shadow:0 8px 28px rgba(31,28,24,0.06);">
+          <tr>
+            <td style="padding:24px 28px 18px;border-bottom:1px solid #f0ebe1;background:linear-gradient(135deg,#fffaf0 0%,#ffffff 100%);">
+              <div style="display:inline-block;padding:4px 10px;border-radius:999px;background-color:#fef3c7;color:#b45309;font-size:12px;font-weight:700;letter-spacing:0.4px;">${safeBadge}</div>
+              <h1 style="margin:12px 0 0;font-size:20px;line-height:1.35;font-weight:700;color:#1f1c18;">XXOXOVX Blog · ${safeTitle}</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:24px 28px;">
+              <p style="margin:0 0 10px;font-size:15px;line-height:1.6;color:#2b2620;font-weight:600;">${safeGreeting}</p>
+              <p style="margin:0 0 20px;font-size:14px;line-height:1.7;color:#575046;">${safeDesc}</p>
+              <div style="margin:0 0 20px;padding:18px 20px;border-radius:14px;background-color:#faf7f1;border:1px dashed #d9c8ae;text-align:center;">
+                <div style="font-size:32px;font-weight:800;letter-spacing:8px;color:#b45309;font-family:'SF Mono',ui-monospace,Menlo,Consolas,monospace;line-height:1.2;">${safeCode}</div>
+                <div style="margin-top:8px;font-size:12px;color:#786f62;">验证码 ${expiresMinutes} 分钟内有效，请勿泄露给他人</div>
+              </div>
+              <p style="margin:0;font-size:12px;line-height:1.65;color:#8a8072;">${safeFooter}</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:14px 28px;background-color:#faf8f4;border-top:1px solid #f0ebe1;font-size:12px;color:#9b9183;">
+              XXOXOVX Blog · 系统自动发送，请勿直接回复
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+async function sendResendEmail(env, to, subject, text, html) {
   if (!env.RESEND_API_KEY || !env.RESEND_FROM) {
     return { configured: false, ok: false };
   }
   try {
+    const payload = { from: env.RESEND_FROM, to: [to], subject, text };
+    if (html) payload.html = html;
     const mailRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${env.RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        from: env.RESEND_FROM,
-        to: [to],
-        subject,
-        text,
-      }),
+      body: JSON.stringify(payload),
     });
     return { configured: true, ok: mailRes.ok };
   } catch {
@@ -212,17 +334,10 @@ export async function onRequestPost({ request, env }) {
     if (!env.RESEND_API_KEY || !env.RESEND_FROM) {
       return errorJson("尚未配置邮件发送服务（RESEND_API_KEY / RESEND_FROM），暂无法发送注册验证码", 503);
     }
-    const nowSec = Math.floor(Date.now() / 1000);
-    const recent = await env.DB.prepare(
-      "SELECT created_at FROM email_verifications WHERE LOWER(email) = LOWER(?) AND purpose = 'register' AND created_at > ? ORDER BY id DESC LIMIT 1"
-    )
-      .bind(email, nowSec - 60)
-      .first();
-    if (recent) {
-      const wait = Math.max(1, 60 - (nowSec - Number(recent.created_at)));
-      return errorJson(`发送过于频繁，请 ${wait} 秒后再试`, 429);
-    }
+    const limitErr = await checkAndRecordSendLimit(env, request, email, "register");
+    if (limitErr) return limitErr;
 
+    const nowSec = Math.floor(Date.now() / 1000);
     const code = generate6DigitCode();
     const expiresAt = nowSec + 900;
     await env.DB.prepare("DELETE FROM email_verifications WHERE LOWER(email) = LOWER(?) AND purpose = 'register'")
@@ -234,11 +349,20 @@ export async function onRequestPost({ request, env }) {
       .bind(email, code, nowSec, expiresAt)
       .run();
 
+    const html = buildVerificationEmailHtml({
+      badge: "新用户注册",
+      title: "注册邮箱验证码",
+      greeting: "欢迎来到 XXOXOVX Blog",
+      description: "你正在注册新账号，请在注册页面输入下方 6 位验证码以完成邮箱验证：",
+      code,
+      expiresMinutes: 15,
+    });
     const mail = await sendResendEmail(
       env,
       email,
-      "XXOXOVX Blog 注册邮箱验证码",
-      `你的注册验证码为：${code}（15 分钟内有效）。如非本人操作请忽略。`
+      "XXOXOVX Blog · 注册邮箱验证码",
+      `你的注册验证码为：${code}（15 分钟内有效）。如非本人操作请忽略。`,
+      html
     );
     if (!mail.ok) {
       await env.DB.prepare("DELETE FROM email_verifications WHERE LOWER(email) = LOWER(?) AND purpose = 'register' AND code = ?")
@@ -246,7 +370,7 @@ export async function onRequestPost({ request, env }) {
         .run();
       return errorJson("验证码发送失败，请检查邮箱地址或稍后重试", 502);
     }
-    return json({ ok: true, message: "验证码已发送至邮箱，15 分钟内有效" });
+    return json({ ok: true, retryAfter: 60, message: "验证码已发送至邮箱（15 分钟内有效，如未收到请检查垃圾邮件箱）" });
   }
 
   if (action === "register") {
@@ -544,17 +668,10 @@ export async function onRequestPost({ request, env }) {
     if (found.error) return found.error;
     const user = found.user;
 
-    const nowSec = Math.floor(Date.now() / 1000);
-    const recent = await env.DB.prepare(
-      "SELECT expires_at FROM password_resets WHERE user_id = ? AND expires_at > ? ORDER BY id DESC LIMIT 1"
-    )
-      .bind(user.id, nowSec + 840)
-      .first();
-    if (recent) {
-      const wait = Math.max(1, Number(recent.expires_at) - (nowSec + 840));
-      return errorJson(`发送过于频繁，请 ${wait} 秒后再试`, 429);
-    }
+    const limitErr = await checkAndRecordSendLimit(env, request, user.email, "reset_password");
+    if (limitErr) return limitErr;
 
+    const nowSec = Math.floor(Date.now() / 1000);
     const code = generate6DigitCode();
     const expiresAt = nowSec + 900;
     await env.DB.prepare("DELETE FROM password_resets WHERE user_id = ?").bind(user.id).run();
@@ -563,11 +680,20 @@ export async function onRequestPost({ request, env }) {
       .run();
 
     let delivered = false;
+    const html = buildVerificationEmailHtml({
+      badge: "密码找回",
+      title: "找回密码验证码",
+      greeting: `你好，${user.username}`,
+      description: "我们收到了你的密码重置请求，请使用下方 6 位验证码完成身份验证并设置新密码：",
+      code,
+      expiresMinutes: 15,
+    });
     const mail = await sendResendEmail(
       env,
       user.email,
-      "XXOXOVX Blog 找回密码验证码",
-      `账号 ${user.username} 的找回密码验证码为：${code}（15 分钟内有效）。如非本人操作请忽略。`
+      "XXOXOVX Blog · 找回密码验证码",
+      `账号 ${user.username} 的找回密码验证码为：${code}（15 分钟内有效）。如非本人操作请忽略。`,
+      html
     );
     if (mail.configured) {
       delivered = mail.ok;
@@ -588,10 +714,11 @@ export async function onRequestPost({ request, env }) {
     return json({
       ok: true,
       delivered,
+      retryAfter: delivered ? 60 : 0,
       username: user.username,
       hasInviteCode: Boolean(user.invite_code),
       message: delivered
-        ? "验证码已发送到您的绑定邮箱，15 分钟内有效"
+        ? "验证码已发送到您的绑定邮箱（15 分钟内有效，如未收到请检查垃圾邮件箱）"
         : "未配置邮件发送服务；若账号绑定了邀请码，可直接填写原邀请码重置密码，或联系站长",
     });
   }
