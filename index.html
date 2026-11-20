@@ -3047,7 +3047,7 @@
     }
 
     /* Stable home sections when categories, pages and featured posts change. */
-    .main-grid { height: 684px; }
+    .main-grid { height: calc(684px + (var(--home-card-rows, 8) - 2) * 156px); }
     .left-col, .right-col { height: 100%; min-height: 0; }
     .profile-card { min-height: 0; overflow-y: auto; }
     .contact-card, .category-bar { flex-shrink: 0; }
@@ -3072,6 +3072,13 @@
       .carousel-box { height: 186px; min-height: 186px; }
       .articles-grid { grid-auto-rows: 146px; overflow-y: auto; }
     }
+    .profile-photo-frame { width: 100%; margin: auto 0; padding: 10px; border-radius: 26px; background: var(--bg-raised); box-shadow: inset 0 1px 0 rgb(255 255 255 / .6), 0 2px 5px rgb(0 0 0 / .03), 0 10px 26px rgb(0 0 0 / .05); }
+    .profile-photo-frame[hidden] { display: none; }
+    .profile-photo-frame img { display: block; width: 100%; aspect-ratio: 3 / 4; max-height: 560px; object-fit: cover; border-radius: 16px; background: var(--bg-subcard); }
+    .profile-photo-frame figcaption { text-align: center; color: var(--text-muted); font-size: 12px; padding: 12px 4px 3px; text-wrap: balance; }
+    .profile-photo-frame figcaption:empty { display: none; }
+    @media (min-width: 1025px) { .contact-card { margin-top: auto; } }
+    @media (max-width: 1024px) { .profile-photo-frame { display: none; } }
   </style>
 </head>
 <body>
@@ -3339,6 +3346,10 @@
               </div>
               <div class="profile-name" id="profileNameEl">XXOXOVX</div>
             </div>
+            <figure class="profile-photo-frame" id="profilePhotoFrame">
+              <img id="profilePhotoImg" alt="个人照片" loading="lazy" />
+              <figcaption id="profilePhotoCaption"></figcaption>
+            </figure>
             <div class="info-list" id="profileInfoList">
               <div class="info-row"><span class="info-key">姓名</span><span class="info-val" id="infoNameVal">SoxMoox</span></div>
               <div class="info-row"><span class="info-key">性别</span><span class="info-val" id="infoGenderVal">男</span></div>
@@ -3984,7 +3995,7 @@
     };
 
     const state = { filter: "all", query: "", carouselIndex: 0, currentPostId: null, page: 1 };
-    const PAGE_SIZE = 4;
+    let PAGE_SIZE = 16;
     let siteProfile = null;
     const htmlEl = document.documentElement;
     const searchInput = document.getElementById("searchInput");
@@ -4530,6 +4541,13 @@
       if (ftDesc && profile.footerDesc) ftDesc.textContent = profile.footerDesc;
       if (ftBadge && profile.footerBadge) ftBadge.textContent = profile.footerBadge;
       if (ftCopy && profile.footerCopyright) ftCopy.textContent = profile.footerCopyright;
+      const rows = Math.min(12, Math.max(1, Math.round(Number(profile.homeCardRows) || 8)));
+      PAGE_SIZE = rows * 2;
+      document.documentElement.style.setProperty("--home-card-rows", rows);
+      const photoFrame = document.getElementById("profilePhotoFrame");
+      photoFrame.hidden = profile.profilePhotoEnabled === false;
+      document.getElementById("profilePhotoImg").src = profile.profilePhoto || profile.avatar || "";
+      document.getElementById("profilePhotoCaption").textContent = profile.profilePhotoCaption || "";
       document.getElementById("profileAvatarImg").src = profile.avatar || "";
       const cardAvatarEl = document.getElementById("accountCardAvatar");
       if (cardAvatarEl) cardAvatarEl.src = profile.avatar || "";
