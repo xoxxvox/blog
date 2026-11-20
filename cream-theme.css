@@ -14,16 +14,16 @@ html:root, html[data-theme="light"] {
   --text-primary: #29291f;
   --text-secondary: #514d39;
   --text-muted: #756e51;
-  --ink-border: #37372b;
-  --hairline: rgb(74 65 36 / .20);
-  --hairline-strong: rgb(74 65 36 / .40);
+  --ink-border: rgb(74 65 36 / .07);
+  --hairline: rgb(74 65 36 / .07);
+  --hairline-strong: rgb(74 65 36 / .12);
   --glass-highlight: rgb(255 255 239 / .8);
-  --paper-edge: #37372b;
+  --paper-edge: transparent;
   --paper-shadow: #444135;
-  --shadow-card: 0 0 0 1px var(--paper-edge), 4px 4px 0 var(--paper-shadow);
-  --shadow-float: 0 0 0 1px var(--paper-edge), 6px 6px 0 var(--paper-shadow);
-  --shadow-btn: 0 0 0 1px var(--paper-edge), 2px 2px 0 var(--paper-shadow);
-  --shadow-focus: 0 0 0 2px var(--accent-soft), 3px 3px 0 var(--accent);
+  --shadow-card: 0 1px 3px rgb(48 39 16 / .035), 0 6px 20px rgb(48 39 16 / .045);
+  --shadow-float: 0 2px 6px rgb(48 39 16 / .04), 0 12px 36px rgb(48 39 16 / .08);
+  --shadow-btn: 0 1px 2px rgb(48 39 16 / .035), 0 3px 8px rgb(48 39 16 / .04);
+  --shadow-focus: 0 1px 4px rgb(48 39 16 / .09), 0 5px 14px rgb(48 39 16 / .07);
   --mist-frame: var(--bg-page);
   --mist-surface: var(--bg-card);
   --mist-border: var(--paper-edge);
@@ -50,11 +50,11 @@ html[data-theme="dark"] {
   --text-primary: #fbf5d6;
   --text-secondary: #ded6b5;
   --text-muted: #b8af8e;
-  --ink-border: #a99f7c;
-  --hairline: rgb(241 226 175 / .18);
-  --hairline-strong: rgb(241 226 175 / .35);
+  --ink-border: rgb(241 226 175 / .08);
+  --hairline: rgb(241 226 175 / .07);
+  --hairline-strong: rgb(241 226 175 / .13);
   --glass-highlight: rgb(255 246 196 / .06);
-  --paper-edge: #a99f7c;
+  --paper-edge: transparent;
   --paper-shadow: #171813;
 }
 html[data-theme="dark"]:not([data-palette]), html[data-theme="dark"][data-palette="blue"] {
@@ -124,4 +124,52 @@ html[data-theme="dark"] :where(.robot-buddy, .robot-paws, .bot-avatar-box, .edge
   --hairline: rgb(255 255 255 / .08);
   --hairline-strong: rgb(255 255 255 / .14);
   --ink-border: rgb(255 255 255 / .08);
+}
+
+/* Quiet typography and depth; no component positions, padding or dimensions change. */
+body { font-variant-numeric: tabular-nums lining-nums; }
+:where(h1, h2, h3, h4, .hero-title, .article-card-title, .carousel-title, .panel-title, .section-title) { text-wrap: balance; }
+:where(p, .hero-sub, .article-card-desc, .carousel-desc, .reader-lead, .muted-meta) { text-wrap: pretty; }
+:where(.tabular, time, .clock-time, .weather-temp, .kpi-value, .stat-value, #imageBatchCount, #batchCountText) { font-variant-numeric: tabular-nums lining-nums; }
+html[data-theme] :is(.surface, .fixed-sidebar, .login-card, .modal-dialog, .contact-modal, .auth-modal, .profile-modal, .action-modal, .image-detail-modal, .image-settings-modal) { border-color: transparent; }
+html[data-theme] :is(.card-block, .kpi-card, .quick-card, .comment-card, .invite-card, .settings-card, .img-card, .article-card, .carousel-box, .history-row, .image-batch-bar, .batch-bar, .profile-photo-frame) {
+  border-color: transparent;
+  box-shadow: 0 1px 2px rgb(48 39 16 / .025), 0 3px 10px rgb(48 39 16 / .035);
+}
+html[data-theme] :is(.input, .textarea, .select, .auth-input, .float-input, .comment-textarea, .url-input, .search-input) {
+  border-color: transparent;
+  box-shadow: inset 0 1px 2px rgb(48 39 16 / .035), 0 1px 3px rgb(48 39 16 / .025);
+}
+html[data-theme] :is(.input, .textarea, .select, .auth-input, .float-input, .comment-textarea, .url-input, .search-input):focus { border-color: transparent; box-shadow: var(--shadow-focus); }
+html[data-theme] :is(.btn, .tactile-btn, .mini-act-btn, .mini-btn, .copy-btn, .modal-btn, .primary-btn, .auth-submit) { border-color: transparent; box-shadow: var(--shadow-btn); }
+html[data-theme] .article-placeholder { box-shadow: none; }
+html[data-theme] .img-card.is-selected { box-shadow: 0 0 0 2px var(--accent-soft), var(--shadow-card); }
+html[data-theme="dark"] :is(.card-block, .kpi-card, .quick-card, .comment-card, .invite-card, .settings-card, .img-card, .article-card, .carousel-box, .history-row, .image-batch-bar, .batch-bar, .profile-photo-frame) { box-shadow: 0 1px 3px rgb(0 0 0 / .10), 0 4px 12px rgb(0 0 0 / .10); }
+@keyframes paperContentFade { from { opacity: 0; } to { opacity: 1; } }
+/* Reuse existing entry hooks, leaving selection, focus and robot animations alone. */
+html[data-theme] :is(.top-bar, .hero-card, .profile-card, .category-bar, .contact-card, .content-panel, .footer-card) { animation-name: paperContentFade; }
+html[data-theme] :is(.article-card.is-entering, .img-card.is-entering) { animation-name: paperContentFade; animation-duration: 220ms; }
+html[data-theme] .view-panel.is-first-visit > :not(.kpi-grid), html[data-theme] .view-panel.is-first-visit > .kpi-grid > * { animation-name: paperContentFade; }
+html[data-theme] .view-panel.is-first-visit > :nth-child(2), html[data-theme] .view-panel.is-first-visit > .kpi-grid > :nth-child(2) { animation-delay: 100ms; }
+html[data-theme] .view-panel.is-first-visit > :nth-child(3), html[data-theme] .view-panel.is-first-visit > .kpi-grid > :nth-child(3) { animation-delay: 200ms; }
+html[data-theme] .view-panel.is-first-visit > :nth-child(n+4), html[data-theme] .view-panel.is-first-visit > .kpi-grid > :nth-child(n+4) { animation-delay: 300ms; }
+html[data-theme] :is(.articles-grid, .masonry-col) > :is(.article-card, .img-card):nth-child(1) { animation-delay: 0ms !important; }
+html[data-theme] :is(.articles-grid, .masonry-col) > :is(.article-card, .img-card):nth-child(2) { animation-delay: 100ms !important; }
+html[data-theme] :is(.articles-grid, .masonry-col) > :is(.article-card, .img-card):nth-child(3) { animation-delay: 200ms !important; }
+html[data-theme] :is(.articles-grid, .masonry-col) > :is(.article-card, .img-card):nth-child(n+4) { animation-delay: 300ms !important; }
+html.keyboard-input *, html.keyboard-input *::before, html.keyboard-input *::after { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+html[data-theme] .content-panel { border-radius: calc(12px + 20px); }
+html[data-theme] .content-panel :is(.article-card, .carousel-box) { border-radius: 12px; }
+html[data-theme] .profile-photo-frame { border-radius: calc(16px + 10px); }
+@media (max-width: 600px) { html[data-theme] .content-panel { border-radius: calc(12px + 14px); } }
+
+html[data-theme="dark"] {
+  --shadow-card: 0 1px 3px rgb(0 0 0 / .12), 0 6px 20px rgb(0 0 0 / .14);
+  --shadow-float: 0 2px 6px rgb(0 0 0 / .14), 0 12px 36px rgb(0 0 0 / .20);
+  --shadow-btn: 0 1px 2px rgb(0 0 0 / .10), 0 3px 8px rgb(0 0 0 / .12);
+  --shadow-focus: 0 1px 4px rgb(0 0 0 / .20), 0 5px 14px rgb(0 0 0 / .18);
 }
