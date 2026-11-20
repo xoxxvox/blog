@@ -1,5 +1,5 @@
 import { json, errorJson, getSessionUser } from "./_lib.js";
-import { can } from "./_permissions.js";
+import { can, isSuperAdmin } from "./_permissions.js";
 import { ensurePrivatePosts, postCategories, validCategory } from "./_private-posts.js";
 export async function onRequestGet({ request, env }) {
   if (!env.DB) return errorJson("未绑定 D1 数据库", 500);
@@ -8,7 +8,7 @@ export async function onRequestGet({ request, env }) {
 }
 export async function onRequestPost({ request, env }) {
   if (!env.DB) return errorJson("未绑定 D1 数据库", 500);
-  const user=await getSessionUser(request,env);if(user?.role!=="admin")return errorJson("仅管理员可管理隐秘文章分类",403);
+  const user=await getSessionUser(request,env);if(!isSuperAdmin(user))return errorJson("仅后台最高权限管理员可管理隐秘文章分类",403);
   await ensurePrivatePosts(env);let body;try{body=await request.json()}catch{return errorJson("请求格式无效",400)}
   const name=String(body.name||"").trim(),next=String(body.nextName||"").trim(),list=await postCategories(env);
   if(!validCategory(name))return errorJson("分类名称需为 1 至 30 字",400);

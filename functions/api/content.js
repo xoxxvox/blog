@@ -1,3 +1,4 @@
+import { isSuperAdmin } from "./_permissions.js";
 import { json, errorJson, getSessionUser, githubGetFile, githubPutFile, githubDeleteFile } from "./_lib.js";
 
 const POSTS_PATH = "data/posts.json";
@@ -57,7 +58,7 @@ export async function onRequestGet({ request, env }) {
 export async function onRequestPost({ request, env }) {
   const user = await getSessionUser(request, env);
   if (!user) return errorJson("请先登录", 401);
-  if (user.role !== "admin") return errorJson("仅管理员可执行此操作", 403);
+  if (!isSuperAdmin(user)) return errorJson("仅后台最高权限管理员可执行此操作", 403);
 
   let body;
   try {

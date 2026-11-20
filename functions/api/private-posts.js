@@ -1,5 +1,5 @@
 import { json, errorJson, getSessionUser } from "./_lib.js";
-import { can } from "./_permissions.js";
+import { can, isSuperAdmin } from "./_permissions.js";
 import { ensurePrivatePosts, postCategories } from "./_private-posts.js";
 const noCache = { "Cache-Control": "private, no-store", Vary: "Cookie" };
 export async function onRequestGet({ request, env }) {
@@ -22,7 +22,7 @@ export async function onRequestGet({ request, env }) {
 export async function onRequestPost({ request, env }) {
   if (!env.DB) return errorJson("未绑定 D1 数据库", 500);
   const user = await getSessionUser(request, env);
-  if (user?.role !== "admin") return errorJson("仅管理员可管理隐秘文章", 403);
+  if (!isSuperAdmin(user)) return errorJson("仅后台最高权限管理员可管理隐秘文章", 403);
   await ensurePrivatePosts(env);
   let body; try { body = await request.json(); } catch { return errorJson("请求格式无效", 400); }
   const id = String(body.id || crypto.randomUUID()).trim(), title = String(body.title || "").trim(), excerpt = String(body.excerpt || "").trim(), content = String(body.body || ""), category = String(body.category || "未分类").trim(), date = String(body.date || "");
@@ -34,7 +34,7 @@ export async function onRequestPost({ request, env }) {
 export async function onRequestDelete({ request, env }) {
   if (!env.DB) return errorJson("未绑定 D1 数据库", 500);
   const user = await getSessionUser(request, env);
-  if (user?.role !== "admin") return errorJson("仅管理员可删除隐秘文章", 403);
+  if (!isSuperAdmin(user)) return errorJson("仅后台最高权限管理员可删除隐秘文章", 403);
   await ensurePrivatePosts(env); const id = new URL(request.url).searchParams.get("id");
   if (!id) return errorJson("缺少文章 ID", 400);
   await env.DB.prepare("DELETE FROM private_posts WHERE id = ?").bind(id).run();

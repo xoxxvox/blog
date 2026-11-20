@@ -5159,7 +5159,7 @@ document.getElementById("readerTitle").textContent = post.title;
     let levelPermissionIdentity = "";
     let levelPermissionRevision = 0;
     function hasLevelPermission(key) {
-      if (currentUser?.role === "admin") return true;
+      if (currentUser?.role === "admin" || currentUser?.role === "superadmin") return true;
       if (["private_read", "private_export"].includes(key) && currentUser?.role !== "vip") return false;
       return (levelPermissions || (currentUser ? ["comments_read", "comment", "profile_edit", "upload"] : ["comments_read"])).includes(key);
     }
@@ -5206,7 +5206,7 @@ document.getElementById("readerTitle").textContent = post.title;
       const commentForm = document.getElementById("commentForm");
       const authTriggerIcon = document.getElementById("authTriggerIcon");
       if (currentUser) {
-        const isAdmin = currentUser.role === "admin";
+        const isAdmin = currentUser.role === "admin" || currentUser.role === "superadmin";
         const displayNick = currentUser.profile?.profileName || currentUser.username;
         authTriggerText.textContent = displayNick;
         authTriggerBtn.title = displayNick;
@@ -5297,7 +5297,7 @@ authTriggerText.textContent = "登录 / 注册";
       syncTopAuthBar();
       const authModalCard = document.getElementById("authModalCard");
       if (currentUser) {
-        const isAdmin = currentUser.role === "admin";
+        const isAdmin = currentUser.role === "admin" || currentUser.role === "superadmin";
         const displayNick = currentUser.profile?.profileName || (isAdmin && currentProfile?.profileName) || currentUser.username || "User";
         const rawAvatarSrc = currentUser.profile?.avatar || currentProfile?.avatar || document.getElementById("profileAvatarImg")?.src || "";
         const avatarSrc = sanitizeAvatarUrl(rawAvatarSrc, displayNick, isAdmin);
@@ -5562,7 +5562,7 @@ syncAuthUI();
     function recordAccountHistory(user) {
       if (!user || !user.username) return;
       const list = getAccountHistory().filter((item) => item.username !== user.username);
-      const isAdmin = user.role === "admin";
+      const isAdmin = user.role === "admin" || user.role === "superadmin";
       const avatar = user.profile?.avatar || currentProfile?.avatar || makeDefaultAvatar(user.username);
       list.unshift({
         username: user.username,
@@ -5582,7 +5582,7 @@ syncAuthUI();
       const curBox = document.getElementById("switchCurrentAccountBox");
       if (currentUser) {
         recordAccountHistory(currentUser);
-        const isAdmin = currentUser.role === "admin";
+        const isAdmin = currentUser.role === "admin" || currentUser.role === "superadmin";
         const avatar = currentUser.profile?.avatar || currentProfile?.avatar || makeDefaultAvatar(currentUser.username);
         const nick = currentUser.profile?.profileName || currentUser.username;
         curBox.innerHTML = `
@@ -5853,7 +5853,7 @@ syncAuthUI();
     const userDetailModalBackdrop = document.getElementById("userDetailModalBackdrop");
 
     function resolveCommentProfile(c) {
-      const isAdmin = c.author_role === "admin";
+      const isAdmin = c.author_role === "admin" || c.author_role === "superadmin";
       let prof = c.author_profile;
       if (!prof && currentUser && c.user_id === currentUser.id && currentUser.profile) {
         prof = currentUser.profile;
@@ -5979,7 +5979,7 @@ syncAuthUI();
           return;
         }
         commentListEl.innerHTML = list.map((c) => {
-          const canDel = currentUser && hasLevelPermission("comment_delete_own") && (currentUser.role === "admin" || currentUser.id === c.user_id);
+          const canDel = currentUser && hasLevelPermission("comment_delete_own") && (currentUser.role === "admin" || currentUser.role === "superadmin" || currentUser.id === c.user_id);
           return `
             <div class="comment-item" data-comment-item="${c.id}">
               <div class="comment-meta">

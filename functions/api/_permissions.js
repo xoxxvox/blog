@@ -4,8 +4,11 @@ const DEFAULTS = {"guest": ["comments_read"], "user": ["comments_read", "comment
 // Five account levels. Existing `user` records remain ordinary accounts.
 export const LEVELS = { guest: "游客", user: "普通", advanced: "高级", vip: "VIP", admin: "管理员" };
 export const KEYS = CATALOG.map(([key]) => key);
+export function isSuperAdmin(user) { return user?.role === "superadmin"; }
+export function isAdminOrAbove(user) { return user?.role === "superadmin" || user?.role === "admin"; }
 export function normalizeRole(role) { return Object.hasOwn(LEVELS, role) ? role : "guest"; }
 export function upgradedRole(current, invited) {
+  if (current === "superadmin") return "superadmin";
   const order = Object.keys(LEVELS);
   return order[Math.max(order.indexOf(normalizeRole(current)), order.indexOf(normalizeRole(invited)))];
 }
@@ -43,7 +46,7 @@ export async function savePolicies(env, input) {
   return policies;
 }
 export async function permissionsFor(env, user) {
-  if (user?.role === "admin") return [...KEYS];
+  if (isAdminOrAbove(user)) return [...KEYS];
   const role = normalizeRole(user?.role), granted = (await loadPolicies(env))[role] || [];
   return ["vip", "admin"].includes(role) ? granted : granted.filter(key => !["private_read", "private_export"].includes(key));
 }

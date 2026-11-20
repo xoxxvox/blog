@@ -9,6 +9,8 @@ import {
   buildSessionCookie,
   clearSessionCookie,
   cleanupExpiredAccounts,
+  isAdminRequest,
+  sessionCookieName,
 } from "./_lib.js";
 
 async function ensureProfileColumn(env) {
@@ -101,7 +103,7 @@ export async function onRequestPost({ request, env }) {
         .bind(user.sessionToken)
         .run();
     }
-    return json({ ok: true }, 200, { "Set-Cookie": clearSessionCookie() });
+    return json({ ok: true }, 200, { "Set-Cookie": clearSessionCookie(sessionCookieName(request)) });
   }
 
   if (action === "login") {
@@ -122,8 +124,11 @@ export async function onRequestPost({ request, env }) {
     if (!user || !(await verifyPassword(password, user.password_hash))) {
       return errorJson("用户名或密码错误", 401);
     }
-    if (user.role !== "admin" && user.disabled_at) {
+    if (!["admin", "superadmin"].includes(user.role) && user.disabled_at) {
       return errorJson("该账号关联的邀请码已过期或被删除，账号已失效（失效7天后自动注销）", 403);
+    }
+    if (isAdminRequest(request) && user.role !== "superadmin") {
+      return errorJson("仅最高等级管理员账号允许登录独立后台", 403);
     }
 
     const token = await createSession(env, user.id);
@@ -138,7 +143,7 @@ export async function onRequestPost({ request, env }) {
         },
       },
       200,
-      { "Set-Cookie": buildSessionCookie(token) }
+      { "Set-Cookie": buildSessionCookie(token, undefined, sessionCookieName(request)) }
     );
   }
 
@@ -176,7 +181,7 @@ export async function onRequestPost({ request, env }) {
 
     if (inviteCode) {
       if (isFirstUser && bootstrapCode && inviteCode === bootstrapCode) {
-        assignedRole = "admin";
+        assignedRole = "superadmin";
       } else {
         matchedInvite = await env.DB.prepare(
           "SELECT code, role, expires_at, used_by FROM invites WHERE code = ?"
@@ -304,6 +309,7 @@ export async function onRequestPost({ request, env }) {
   if (action === "redeem_invite") {
     const sessionUser = await getSessionUser(request, env);
     if (!sessionUser) return errorJson("请先登录", 401);
+    if (sessionUser.role === "superadmin") return errorJson("最高等级账号无需兑换邀请码", 400);
     const inviteCode = String(body.inviteCode || "").trim().toUpperCase();
     if (!inviteCode) return errorJson("请输入邀请码", 400);
 

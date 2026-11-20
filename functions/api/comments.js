@@ -1,4 +1,4 @@
-import { can } from "./_permissions.js";
+import { can, isAdminOrAbove } from "./_permissions.js";
 import { json, errorJson, getSessionUser } from "./_lib.js";
 
 export async function onRequestGet({ request, env }) {
@@ -128,7 +128,7 @@ export async function onRequestDelete({ request, env }) {
     .first();
 
   if (!comment) return errorJson("评论不存在", 404);
-  if (user.role !== "admin" && comment.user_id !== user.id) {
+  if (!isAdminOrAbove(user) && comment.user_id !== user.id) {
     return errorJson("无权删除该评论", 403);
   }
 

@@ -1,5 +1,14 @@
 const SESSION_COOKIE = "blog_session";
+const ADMIN_SESSION_COOKIE = "blog_admin_session";
 const SESSION_TTL_SEC = 60 * 60 * 24 * 7; // 7 days
+
+export function isAdminRequest(request) {
+  return request?.headers?.get("X-Admin-Session") === "1";
+}
+
+export function sessionCookieName(request) {
+  return isAdminRequest(request) ? ADMIN_SESSION_COOKIE : SESSION_COOKIE;
+}
 
 export function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -80,12 +89,12 @@ export function parseCookies(request) {
   return map;
 }
 
-export function buildSessionCookie(token, maxAge = SESSION_TTL_SEC) {
-  return `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=None; Secure; Max-Age=${maxAge}`;
+export function buildSessionCookie(token, maxAge = SESSION_TTL_SEC, cookieName = SESSION_COOKIE) {
+  return `${cookieName}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=None; Secure; Max-Age=${maxAge}`;
 }
 
-export function clearSessionCookie() {
-  return `${SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=None; Secure; Max-Age=0`;
+export function clearSessionCookie(cookieName = SESSION_COOKIE) {
+  return `${cookieName}=; Path=/; HttpOnly; SameSite=None; Secure; Max-Age=0`;
 }
 
 export async function createSession(env, userId) {
@@ -107,12 +116,24 @@ export async function ensureLifecycleSchema(env) {
     "ALTER TABLE invites ADD COLUMN expires_at TEXT",
     "ALTER TABLE users ADD COLUMN invite_code TEXT",
     "ALTER TABLE users ADD COLUMN disabled_at TEXT",
+    "CREATE TABLE IF NOT EXISTS schema_migrations (key TEXT PRIMARY KEY)",
   ];
   for (const sql of alterStmts) {
     try {
       await env.DB.prepare(sql).run();
     } catch {}
   }
+  try {
+    const migrated = await env.DB.prepare(
+      "SELECT 1 FROM schema_migrations WHERE key = 'promote_existing_admin_to_superadmin'"
+    ).first();
+    if (!migrated) {
+      await env.DB.prepare("UPDATE users SET role = 'superadmin' WHERE role = 'admin'").run();
+      await env.DB.prepare(
+        "INSERT OR IGNORE INTO schema_migrations (key) VALUES ('promote_existing_admin_to_superadmin')"
+      ).run();
+    }
+  } catch {}
 }
 
 export async function cleanupExpiredAccounts(env) {
@@ -124,7 +145,7 @@ export async function cleanupExpiredAccounts(env) {
   await env.DB.prepare(
     `UPDATE users
      SET disabled_at = COALESCE(disabled_at, ?)
-     WHERE role != 'admin'
+     WHERE role NOT IN ('admin', 'superadmin')
        AND invite_code IS NOT NULL
        AND invite_code != ''
        AND (
@@ -136,11 +157,11 @@ export async function cleanupExpiredAccounts(env) {
     .run();
 
   await env.DB.prepare(
-    "DELETE FROM sessions WHERE user_id IN (SELECT id FROM users WHERE role != 'admin' AND disabled_at IS NOT NULL)"
+    "DELETE FROM sessions WHERE user_id IN (SELECT id FROM users WHERE role NOT IN ('admin', 'superadmin') AND disabled_at IS NOT NULL)"
   ).run();
 
   await env.DB.prepare(
-    "DELETE FROM users WHERE role != 'admin' AND disabled_at IS NOT NULL AND disabled_at <= ?"
+    "DELETE FROM users WHERE role NOT IN ('admin', 'superadmin') AND disabled_at IS NOT NULL AND disabled_at <= ?"
   )
     .bind(deleteCutoffIso)
     .run();
@@ -150,18 +171,20 @@ export async function getSessionUser(request, env) {
   if (!env.DB) return null;
   await cleanupExpiredAccounts(env);
   const cookies = parseCookies(request);
-  const token = cookies[SESSION_COOKIE];
+  const token = cookies[sessionCookieName(request)];
   if (!token) return null;
   const now = Math.floor(Date.now() / 1000);
   const row = await env.DB.prepare(
     `SELECT u.id, u.username, u.email, u.role
      FROM sessions s
      JOIN users u ON u.id = s.user_id
-     WHERE s.token = ? AND s.expires_at > ? AND (u.role = 'admin' OR u.disabled_at IS NULL)`
+     WHERE s.token = ? AND s.expires_at > ? AND (u.role IN ('admin', 'superadmin') OR u.disabled_at IS NULL)`
   )
     .bind(token, now)
     .first();
-  return row ? { ...row, sessionToken: token } : null;
+  if (!row) return null;
+  if (isAdminRequest(request) && row.role !== "superadmin") return null;
+  return { ...row, sessionToken: token };
 }
 
 export function bytesToBase64(bytes) {

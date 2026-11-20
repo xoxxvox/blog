@@ -1,5 +1,5 @@
 import { json, errorJson, getSessionUser } from "./_lib.js";
-import { can } from "./_permissions.js";
+import { can, isSuperAdmin } from "./_permissions.js";
 async function ensure(env) { await env.DB.prepare("CREATE TABLE IF NOT EXISTS private_bio (id INTEGER PRIMARY KEY CHECK(id=1), bio_json TEXT NOT NULL)").run(); }
 export async function onRequestGet({ request, env }) {
   if (!env.DB) return errorJson("未绑定 D1 数据库", 500);
@@ -10,7 +10,7 @@ export async function onRequestGet({ request, env }) {
 }
 export async function onRequestPost({ request, env }) {
   if (!env.DB) return errorJson("未绑定 D1 数据库", 500);
-  const user = await getSessionUser(request, env); if (user?.role !== "admin") return errorJson("仅管理员可设置独立个人简介", 403);
+  const user = await getSessionUser(request, env); if (!isSuperAdmin(user)) return errorJson("仅后台最高权限管理员可设置独立个人简介", 403);
   let body; try { body = (await request.json()).bio; } catch { return errorJson("请求格式无效", 400); }
   if (!body || typeof body !== "object" || Array.isArray(body)) return errorJson("简介格式无效", 400);
   const text=(value,max=200)=>String(value||"").trim().slice(0,max);
