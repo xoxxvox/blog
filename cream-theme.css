@@ -163,7 +163,7 @@ html.keyboard-input *, html.keyboard-input *::before, html.keyboard-input *::aft
 }
 
 html[data-theme] .content-panel { border-radius: calc(12px + 20px); }
-html[data-theme] .content-panel :is(.article-card, .carousel-box, #blogPrivateCategoryBar button, #blogPrivateRefresh, #blogPrivateCategoryPages button) { border-radius: 12px; }
+html[data-theme] .content-panel :is(.article-card, .carousel-box, #blogPrivateRefresh, #blogPrivateCategoryPages button) { border-radius: 12px; }
 html[data-theme] .profile-photo-frame { border-radius: calc(16px + 10px); }
 @media (max-width: 600px) { html[data-theme] .content-panel { border-radius: calc(12px + 14px); } }
 
@@ -209,9 +209,12 @@ body:has(.blog-private-reader[open]) { overflow: hidden; }
 
 .avatar-ring img[hidden] { display: none; }
 
-#blogPrivateCategoryBar { display: grid; grid-template-columns: repeat(var(--category-columns, 1), minmax(0, 1fr)); gap: 8px; width: 100%; }
-#blogPrivateCategoryBar button { min-width: 0; min-height: 40px; display: grid; place-items: center; text-align: center; white-space: normal; text-wrap: balance; overflow-wrap: anywhere; padding: 8px; }
-#blogPrivateCategoryBar button.is-active { background: var(--accent); color: var(--accent-contrast); }
+#blogPrivateCategoryBar { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 50px; padding: 9px 12px; border-radius: 99px; background-color: var(--bg-subcard); box-shadow: var(--shadow-card); overflow-x: auto; scrollbar-width: none; }
+#blogPrivateCategoryBar::-webkit-scrollbar { display: none; }
+#blogPrivateCategoryBar .cat-pill { flex-shrink: 0; height: 32px; padding: 0 15px; border-radius: 99px; border: 1px solid transparent; background: transparent; box-shadow: none; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; white-space: nowrap; transition: color 140ms ease, background-color 140ms ease, transform 90ms ease; }
+#blogPrivateCategoryBar .cat-pill:hover { color: var(--text-primary); }
+#blogPrivateCategoryBar .cat-pill:active { transform: scale(0.96); }
+#blogPrivateCategoryBar .cat-pill.is-active { background: var(--accent); color: var(--accent-contrast); }
 #blogPrivateCategoryPages { display: flex; justify-content: center; gap: 8px; }
 #blogPrivateCategoryPages[hidden] { display: none; }
 #blogPrivateCards { grid-template-rows: repeat(var(--home-card-rows, 4), minmax(146px, 1fr)); grid-auto-rows: minmax(146px, 1fr); align-content: stretch; }

@@ -50,8 +50,7 @@
     model.categoryPage = Math.min(model.categoryPage, pages - 1);
     const visible = model.categories.slice(model.categoryPage * 8, model.categoryPage * 8 + 8);
     const bar = $("blogPrivateCategoryBar");
-    bar.style.setProperty("--category-columns", Math.max(1, visible.length));
-    bar.innerHTML = visible.map(name => `<button class="tactile-btn ${model.category === name ? "is-active" : ""}" type="button" data-private-category="${escapeHtml(name)}" aria-pressed="${model.category === name}" title="再次点击可查看全部文章">${escapeHtml(name)}</button>`).join("");
+    bar.innerHTML = visible.map(name => `<button class="cat-pill ${model.category === name ? "is-active" : ""}" type="button" data-private-category="${escapeHtml(name)}" aria-pressed="${model.category === name}" title="再次点击可查看全部文章">${escapeHtml(name)}</button>`).join("");
     $("blogPrivateCategoryPages").hidden = pages <= 1;
     $("blogPrivateCategoriesPrev").disabled = model.categoryPage === 0;
     $("blogPrivateCategoriesNext").disabled = model.categoryPage >= pages - 1;
