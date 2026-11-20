@@ -1,3 +1,4 @@
+import { can } from "./_permissions.js";
 import { json, errorJson, getSessionUser, githubPutFile, base64ToBytes } from "./_lib.js";
 
 const MIME_MAP = {
@@ -15,6 +16,7 @@ const MAX_GH_BYTES = 4 * 1024 * 1024;  // 4 MB fallback for GitHub
 export async function onRequestPost({ request, env }) {
   const user = await getSessionUser(request, env);
   if (!user) return errorJson("请先登录", 401);
+  if (!await can(env, user, "upload")) return errorJson("当前等级无权上传附件", 403);
 
   let body;
   try {

@@ -1,3 +1,4 @@
+import { normalizeRole, upgradedRole, can } from "./_permissions.js";
 import {
   json,
   errorJson,
@@ -192,7 +193,7 @@ export async function onRequestPost({ request, env }) {
         if (matchedInvite.expires_at && Date.parse(matchedInvite.expires_at) <= Date.now()) {
           return errorJson("该邀请码已过期", 403);
         }
-        assignedRole = matchedInvite.role === "admin" ? "admin" : "user";
+        assignedRole = normalizeRole(matchedInvite.role);
       }
     }
 
@@ -216,18 +217,20 @@ export async function onRequestPost({ request, env }) {
       contacts: [],
     };
 
-    const insertRes = await env.DB.prepare(
+    if (matchedInvite) {
+      const claim = await env.DB.prepare("UPDATE invites SET used_by = ?, used_at = ? WHERE code = ? AND used_by IS NULL AND (expires_at IS NULL OR expires_at > ?)").bind(username, nowIso, matchedInvite.code, nowIso).run();
+      if (!claim.meta?.changes) return errorJson("邀请码已被使用或已到期", 409);
+    }
+    let insertRes;
+    try {
+      insertRes = await env.DB.prepare(
       "INSERT INTO users (username, email, password_hash, role, invite_code, profile_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
     )
       .bind(username, email, passwordHash, assignedRole, matchedInvite ? matchedInvite.code : null, JSON.stringify(initialProfile), nowIso)
       .run();
-
-    if (matchedInvite) {
-      await env.DB.prepare(
-        "UPDATE invites SET used_by = ?, used_at = ? WHERE code = ?"
-      )
-        .bind(username, nowIso, matchedInvite.code)
-        .run();
+    } catch (error) {
+      if (matchedInvite) await env.DB.prepare("UPDATE invites SET used_by = NULL, used_at = NULL WHERE code = ? AND used_by = ? AND used_at = ?").bind(matchedInvite.code, username, nowIso).run();
+      throw error;
     }
 
     const newUserId = insertRes.meta?.last_row_id;
@@ -252,6 +255,7 @@ export async function onRequestPost({ request, env }) {
     await ensureProfileColumn(env);
     const sessionUser = await getSessionUser(request, env);
     if (!sessionUser) return errorJson("请先登录", 401);
+    if (!await can(env, sessionUser, "profile_edit")) return errorJson("当前等级无权修改个人资料", 403);
     if (!body.profile || typeof body.profile !== "object") {
       return errorJson("个人资料格式无效", 400);
     }
@@ -318,12 +322,10 @@ export async function onRequestPost({ request, env }) {
     }
 
     const nowIso = new Date().toISOString();
-    const nextRole = matchedInvite.role === "admin" ? "admin" : sessionUser.role;
-    if (!matchedInvite.used_by) {
-      await env.DB.prepare("UPDATE invites SET used_by = ?, used_at = ? WHERE code = ?")
-        .bind(sessionUser.username, nowIso, matchedInvite.code)
-        .run();
-    }
+    const nextRole = upgradedRole(sessionUser.role, matchedInvite.role);
+    if (normalizeRole(matchedInvite.role) !== nextRole) return errorJson("不能使用低于当前账号等级的邀请码续期或降级", 400);
+    const claim = await env.DB.prepare("UPDATE invites SET used_by = ?, used_at = ? WHERE code = ? AND (used_by IS NULL OR used_by = ?) AND (expires_at IS NULL OR expires_at > ?)").bind(sessionUser.username, nowIso, matchedInvite.code, sessionUser.username, nowIso).run();
+    if (!claim.meta?.changes) return errorJson("邀请码已被使用或已到期", 409);
     await env.DB.prepare("UPDATE users SET role = ?, invite_code = ?, disabled_at = NULL WHERE id = ?")
       .bind(nextRole, matchedInvite.code, sessionUser.id)
       .run();

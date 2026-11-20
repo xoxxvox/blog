@@ -3566,7 +3566,7 @@
               </div>
               <div class="apple-bot-actions">
                 <button class="apple-bot-btn" type="button" data-bot-action="top">↑ 回到文章顶部</button>
-                <button class="apple-bot-btn" type="button" data-bot-action="comments">💬 跳至评论交流</button>
+                <button class="apple-bot-btn" type="button" data-bot-action="comments"> 跳至评论交流</button>
                 <button class="apple-bot-btn" type="button" data-bot-action="share">↗ 分享本文链接</button>
               </div>
             </div>
@@ -3725,7 +3725,7 @@
     <div class="contact-modal">
       <div class="modal-head">
         <h3 class="modal-title" id="contactModalTitle">联系方式</h3>
-        <button class="tactile-btn modal-close" id="contactModalClose" type="button" aria-label="关闭弹窗">✕</button>
+        <button class="tactile-btn modal-close" id="contactModalClose" type="button" aria-label="关闭弹窗"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
       </div>
       <div class="qr-frame"><img id="contactModalQr" src="" alt="联系方式二维码" /></div>
       <div class="modal-account-box">
@@ -3769,7 +3769,7 @@
       </div>
       <div class="modal-head">
         <h3 class="modal-title" id="authModalTitle">账号登录</h3>
-        <button class="tactile-btn modal-close" id="authModalClose" type="button" aria-label="关闭弹窗">✕</button>
+        <button class="tactile-btn modal-close" id="authModalClose" type="button" aria-label="关闭弹窗"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
       </div>
       <div id="authGuestView" style="width: 100%; display: flex; flex-direction: column; gap: 14px;">
         <div class="auth-tabs" role="tablist">
@@ -3871,7 +3871,7 @@
       </div>
       <div class="modal-head">
         <h3 class="modal-title" id="switchModalTitle">切换账号</h3>
-        <button class="tactile-btn modal-close" id="switchModalClose" type="button" aria-label="关闭弹窗">✕</button>
+        <button class="tactile-btn modal-close" id="switchModalClose" type="button" aria-label="关闭弹窗"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
       </div>
       <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
         <div class="settings-card" style="gap: 8px;">
@@ -3903,7 +3903,7 @@
     <div class="contact-modal" style="max-width: 440px; align-items: stretch;">
       <div class="modal-head">
         <h3 class="modal-title" id="userDetailModalTitle">用户资料</h3>
-        <button class="tactile-btn modal-close" id="userDetailModalClose" type="button" aria-label="关闭资料弹窗">✕</button>
+        <button class="tactile-btn modal-close" id="userDetailModalClose" type="button" aria-label="关闭资料弹窗"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
       </div>
       <div class="account-hero-card">
         <img class="account-hero-avatar" id="udAvatar" alt="用户头像" />
@@ -4466,7 +4466,7 @@
       if (buddy && bubble) {
         buddy.addEventListener("click", (e) => {
           e.stopPropagation();
-          bubble.textContent = "手稿索引就绪，马上展开 ✨";
+          bubble.textContent = "手稿索引就绪，马上展开 ";
           buddy.classList.remove("is-tapped");
           void buddy.offsetWidth;
           buddy.classList.add("is-tapped");
@@ -4482,7 +4482,7 @@
       }, 340));
       timers.push(setTimeout(() => {
         chips[2]?.classList.add("is-lit");
-        if (bubble) bubble.textContent = "文章与技术手稿已就绪 ✨";
+        if (bubble) bubble.textContent = "文章与技术手稿已就绪 ";
         if (subEl) subEl.textContent = "NOTES & TECH // 手稿归档完成，欢迎阅读";
       }, 640));
       timers.push(setTimeout(finishSplash, 1020));
@@ -5089,6 +5089,32 @@ document.getElementById("readerTitle").textContent = post.title;
 
     // Auth
     let currentUser = null;
+
+    const ACCOUNT_LEVEL_NAMES = { guest: "游客", user: "普通", advanced: "高级", vip: "VIP", admin: "管理员" };
+    const accountLevelName = role => ACCOUNT_LEVEL_NAMES[role] || "普通";
+    let levelPermissions = null;
+    let levelPermissionIdentity = "";
+    let levelPermissionRevision = 0;
+    function hasLevelPermission(key) {
+      if (currentUser?.role === "admin") return true;
+      return (levelPermissions || (currentUser ? ["comments_read", "comment", "profile_edit", "upload"] : ["comments_read"])).includes(key);
+    }
+    function refreshLevelPermissions() {
+      const identity = currentUser ? `${currentUser.id}:${currentUser.role}` : "guest";
+      if (identity === levelPermissionIdentity) return;
+      levelPermissionIdentity = identity;
+      levelPermissions = null;
+      const revision = ++levelPermissionRevision;
+      fetch("/api/permissions", { credentials: "include", cache: "no-store" }).then(async res => {
+        if (!res.ok) throw new Error("权限暂不可用");
+        const data = await res.json();
+        if (!Array.isArray(data.permissions)) throw new Error("权限格式无效");
+        if (revision !== levelPermissionRevision) return;
+        levelPermissions = data.permissions;
+        syncAuthUI();
+      }).catch(() => { if (revision === levelPermissionRevision) { levelPermissions = []; syncAuthUI(); } });
+    }
+
     const authTriggerBtn = document.getElementById("authTriggerBtn");
     const authTriggerText = document.getElementById("authTriggerText");
     const authModalBackdrop = document.getElementById("authModalBackdrop");
@@ -5131,7 +5157,7 @@ document.getElementById("readerTitle").textContent = post.title;
         const popName = document.getElementById("accountPopName");
         const popBadge = document.getElementById("accountPopBadge");
 const popSettingsDesc = document.getElementById("popSettingsDesc");
-        const roleLabel = currentUser.role === "admin" ? "管理员" : currentUser.role === "vip" ? "高级用户" : "普通用户";
+        const roleLabel = accountLevelName(currentUser.role);
         if (popAvatar) popAvatar.src = avatarSrc;
         if (popName) popName.textContent = displayNick;
         if (popBadge) {
@@ -5195,6 +5221,13 @@ authTriggerText.textContent = "登录 / 注册";
     })();
 
     function syncAuthUI() {
+      refreshLevelPermissions();
+      const commentButton = document.getElementById("commentSubmitBtn");
+      if (commentButton) commentButton.disabled = !currentUser || !hasLevelPermission("comment");
+      const profileButton = document.getElementById("savePersonalProfileBtn");
+      if (profileButton) profileButton.disabled = !currentUser || !hasLevelPermission("profile_edit");
+      const avatarButton = document.getElementById("profAvatarUploadBtn");
+      if (avatarButton) avatarButton.disabled = !currentUser || !hasLevelPermission("upload") || !hasLevelPermission("profile_edit");
       syncTopAuthBar();
       const authModalCard = document.getElementById("authModalCard");
       if (currentUser) {
@@ -5215,9 +5248,9 @@ authTriggerText.textContent = "登录 / 注册";
         const cardEmail = document.getElementById("accountCardEmail");
         if (cardEmail) cardEmail.textContent = currentUser.email || "未绑定邮箱";
         const cardBadge = document.getElementById("accountCardBadge");
-        if (cardBadge) cardBadge.textContent = isAdmin ? "管理员" : "普通用户";
+        if (cardBadge) cardBadge.textContent = accountLevelName(currentUser.role);
         document.getElementById("authUserName").textContent = currentUser.username;
-        document.getElementById("authUserRole").textContent = isAdmin ? "管理员" : "普通用户";
+        document.getElementById("authUserRole").textContent = accountLevelName(currentUser.role);
         document.getElementById("authUserEmail").textContent = currentUser.email || "未绑定";
         const syncModeEl = document.getElementById("authSyncMode");
         if (syncModeEl) syncModeEl.textContent = isLocalPreview ? "本地预览模式" : (isAdmin ? "D1 + GitHub 同步" : "Cloudflare D1");
@@ -5491,7 +5524,7 @@ syncAuthUI();
             <img class="account-hero-avatar" src="${escapeHtml(avatar)}" alt="${escapeHtml(nick)}" style="width: 38px; height: 38px;" />
             <div class="account-hero-meta">
               <div class="account-hero-name" style="font-size: 14px;">${escapeHtml(nick)}</div>
-              <div class="account-hero-sub">@${escapeHtml(currentUser.username)} · ${currentUser.role === "admin" ? "管理员" : currentUser.role === "vip" ? "高级用户" : "普通用户"}</div>
+              <div class="account-hero-sub">@${escapeHtml(currentUser.username)} · ${accountLevelName(currentUser.role)}</div>
             </div>
             <span class="account-role-badge">当前使用</span>
           </div>`;
@@ -5509,7 +5542,7 @@ syncAuthUI();
             <img class="account-hero-avatar" src="${escapeHtml(it.avatar || makeDefaultAvatar(it.username))}" alt="${escapeHtml(it.profileName || it.username)}" style="width: 34px; height: 34px;" />
             <span class="account-pop-text">
               <span class="account-pop-title">${escapeHtml(it.profileName || it.username)}</span>
-              <span class="account-pop-desc">@${escapeHtml(it.username)} · ${it.role === "admin" ? "管理员" : it.role === "vip" ? "高级用户" : "普通用户"}</span>
+              <span class="account-pop-desc">@${escapeHtml(it.username)} · ${accountLevelName(it.role)}</span>
             </span>
             <button class="tactile-btn copy-btn" type="button" data-forget-user="${escapeHtml(it.username)}" title="从历史移除" style="height: 26px; padding: 0 8px; font-size: 11px;">移除</button>
           </div>`).join("");
@@ -6484,12 +6517,12 @@ syncAuthUI();
         {
           el: document.getElementById("introRobotBuddy"),
           bubble: document.getElementById("introRobotBubble"),
-          lines: ["正在唤醒液态档案库 ✨", "BOT·01 正在高速编译中~", "马上就好，请稍候！"]
+          lines: ["正在唤醒液态档案库 ", "BOT·01 正在高速编译中~", "马上就好，请稍候！"]
         },
         {
           el: document.getElementById("robotBuddy"),
           bubble: document.getElementById("robotBubble"),
-          lines: ["输入密码时我会乖乖捂住眼睛哦", "欢迎来到 XXOXOVX · BLOG ✨", "点我一下是在充电嘛 ⚡"]
+          lines: ["输入密码时我会乖乖捂住眼睛哦", "欢迎来到 XXOXOVX · BLOG ", "点我一下是在充电嘛 "]
         }
       ];
       bots.forEach((b) => {

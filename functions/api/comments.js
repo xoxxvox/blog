@@ -1,7 +1,9 @@
+import { can } from "./_permissions.js";
 import { json, errorJson, getSessionUser } from "./_lib.js";
 
 export async function onRequestGet({ request, env }) {
   if (!env.DB) return errorJson("未绑定 D1 数据库", 500);
+  if (!await can(env, await getSessionUser(request, env), "comments_read")) return errorJson("当前等级无权查看评论", 403);
   const url = new URL(request.url);
   const postId = String(url.searchParams.get("postId") || "").trim();
   if (!postId) return errorJson("缺少 postId", 400);
@@ -63,6 +65,7 @@ export async function onRequestPost({ request, env }) {
   if (!env.DB) return errorJson("未绑定 D1 数据库", 500);
   const user = await getSessionUser(request, env);
   if (!user) return errorJson("请先登录后再发表评论", 401);
+  if (!await can(env, user, "comment")) return errorJson("当前等级无权发表评论", 403);
 
   let body;
   try {

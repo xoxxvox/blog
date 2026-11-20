@@ -39,3 +39,9 @@ CREATE TABLE IF NOT EXISTS comments (
 
 CREATE INDEX IF NOT EXISTS idx_comments_post_id ON comments(post_id, id DESC);
 CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
+
+-- Five-level permissions are stored separately for blog and imghub.
+CREATE TABLE IF NOT EXISTS access_policies (
+  scope TEXT PRIMARY KEY,
+  policies_json TEXT NOT NULL
+);
