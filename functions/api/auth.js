@@ -33,6 +33,62 @@ function parseUserProfile(raw) {
   }
 }
 
+async function ensureEmailVerificationsTable(env) {
+  await env.DB.prepare(
+    "CREATE TABLE IF NOT EXISTS email_verifications (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, code TEXT NOT NULL, purpose TEXT NOT NULL, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL)"
+  ).run();
+}
+
+function generate6DigitCode() {
+  const bytes = crypto.getRandomValues(new Uint8Array(3));
+  return String(((bytes[0] << 16) | (bytes[1] << 8) | bytes[2]) % 900000 + 100000);
+}
+
+async function sendResendEmail(env, to, subject, text) {
+  if (!env.RESEND_API_KEY || !env.RESEND_FROM) {
+    return { configured: false, ok: false };
+  }
+  try {
+    const mailRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: env.RESEND_FROM,
+        to: [to],
+        subject,
+        text,
+      }),
+    });
+    return { configured: true, ok: mailRes.ok };
+  } catch {
+    return { configured: true, ok: false };
+  }
+}
+
+async function findResetUser(env, username, email) {
+  if (username) {
+    const user = await env.DB.prepare(
+      "SELECT id, username, email, role, invite_code FROM users WHERE LOWER(username) = LOWER(?) AND LOWER(email) = LOWER(?)"
+    )
+      .bind(username, email)
+      .first();
+    if (!user) return { error: errorJson("用户名与注册邮箱不匹配", 404) };
+    return { user };
+  }
+  const { results } = await env.DB.prepare(
+    "SELECT id, username, email, role, invite_code FROM users WHERE LOWER(email) = LOWER(?)"
+  )
+    .bind(email)
+    .all();
+  const rows = results || [];
+  if (rows.length === 0) return { error: errorJson("未找到该邮箱对应的账号", 404) };
+  if (rows.length > 1) return { error: errorJson("该邮箱绑定了多个账号，请同时填写用户名", 409) };
+  return { user: rows[0] };
+}
+
 export async function onRequestGet({ request, env }) {
   if (!env.DB) {
     return errorJson("尚未绑定 D1 数据库（变量名需为 DB）", 500);
@@ -147,9 +203,57 @@ export async function onRequestPost({ request, env }) {
     );
   }
 
+  if (action === "send_register_code") {
+    await ensureEmailVerificationsTable(env);
+    const email = String(body.email || "").trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return errorJson("请输入有效的邮箱地址", 400);
+    }
+    if (!env.RESEND_API_KEY || !env.RESEND_FROM) {
+      return errorJson("尚未配置邮件发送服务（RESEND_API_KEY / RESEND_FROM），暂无法发送注册验证码", 503);
+    }
+    const nowSec = Math.floor(Date.now() / 1000);
+    const recent = await env.DB.prepare(
+      "SELECT created_at FROM email_verifications WHERE LOWER(email) = LOWER(?) AND purpose = 'register' AND created_at > ? ORDER BY id DESC LIMIT 1"
+    )
+      .bind(email, nowSec - 60)
+      .first();
+    if (recent) {
+      const wait = Math.max(1, 60 - (nowSec - Number(recent.created_at)));
+      return errorJson(`发送过于频繁，请 ${wait} 秒后再试`, 429);
+    }
+
+    const code = generate6DigitCode();
+    const expiresAt = nowSec + 900;
+    await env.DB.prepare("DELETE FROM email_verifications WHERE LOWER(email) = LOWER(?) AND purpose = 'register'")
+      .bind(email)
+      .run();
+    await env.DB.prepare(
+      "INSERT INTO email_verifications (email, code, purpose, created_at, expires_at) VALUES (?, ?, 'register', ?, ?)"
+    )
+      .bind(email, code, nowSec, expiresAt)
+      .run();
+
+    const mail = await sendResendEmail(
+      env,
+      email,
+      "XXOXOVX Blog 注册邮箱验证码",
+      `你的注册验证码为：${code}（15 分钟内有效）。如非本人操作请忽略。`
+    );
+    if (!mail.ok) {
+      await env.DB.prepare("DELETE FROM email_verifications WHERE LOWER(email) = LOWER(?) AND purpose = 'register' AND code = ?")
+        .bind(email, code)
+        .run();
+      return errorJson("验证码发送失败，请检查邮箱地址或稍后重试", 502);
+    }
+    return json({ ok: true, message: "验证码已发送至邮箱，15 分钟内有效" });
+  }
+
   if (action === "register") {
+    await ensureEmailVerificationsTable(env);
     const username = String(body.username || "").trim();
     const email = String(body.email || "").trim();
+    const emailCode = String(body.emailCode || "").trim();
     const password = String(body.password || "");
     const inviteCode = String(body.inviteCode || "").trim();
 
@@ -158,6 +262,9 @@ export async function onRequestPost({ request, env }) {
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return errorJson("请输入有效的邮箱地址", 400);
+    }
+    if (!/^\d{6}$/.test(emailCode)) {
+      return errorJson("请输入 6 位邮箱验证码", 400);
     }
     if (password.length < 6) {
       return errorJson("密码长度至少 6 位", 400);
@@ -170,6 +277,16 @@ export async function onRequestPost({ request, env }) {
       .first();
     if (dup) {
       return errorJson("该用户名已被注册", 409);
+    }
+
+    const nowSec = Math.floor(Date.now() / 1000);
+    const verifiedRow = await env.DB.prepare(
+      "SELECT id FROM email_verifications WHERE LOWER(email) = LOWER(?) AND code = ? AND purpose = 'register' AND expires_at > ?"
+    )
+      .bind(email, emailCode, nowSec)
+      .first();
+    if (!verifiedRow) {
+      return errorJson("邮箱验证码无效或已过期", 403);
     }
 
     const countRow = await env.DB.prepare("SELECT COUNT(*) AS cnt FROM users").first();
@@ -239,6 +356,9 @@ export async function onRequestPost({ request, env }) {
     }
 
     const newUserId = insertRes.meta?.last_row_id;
+    await env.DB.prepare("DELETE FROM email_verifications WHERE LOWER(email) = LOWER(?) AND purpose = 'register'")
+      .bind(email)
+      .run();
     const token = await createSession(env, newUserId);
 
     return json(
@@ -385,6 +505,130 @@ export async function onRequestPost({ request, env }) {
       .bind(sessionUser.sessionToken)
       .run();
     return json({ ok: true, removed: Number(res.meta?.changes || 0) });
+  }
+
+  if (action === "change_password") {
+    const sessionUser = await getSessionUser(request, env);
+    if (!sessionUser) return errorJson("请先登录", 401);
+    const currentPassword = String(body.currentPassword || "");
+    const newPassword = String(body.newPassword || "");
+    if (!currentPassword || newPassword.length < 6) {
+      return errorJson("请输入当前密码，且新密码至少 6 位", 400);
+    }
+    const row = await env.DB.prepare("SELECT password_hash FROM users WHERE id = ?")
+      .bind(sessionUser.id)
+      .first();
+    if (!row || !(await verifyPassword(currentPassword, row.password_hash))) {
+      return errorJson("当前密码不正确", 403);
+    }
+    const nextHash = await hashPassword(newPassword);
+    await env.DB.prepare("UPDATE users SET password_hash = ? WHERE id = ?")
+      .bind(nextHash, sessionUser.id)
+      .run();
+    await env.DB.prepare("DELETE FROM sessions WHERE user_id = ? AND token != ?")
+      .bind(sessionUser.id, sessionUser.sessionToken)
+      .run();
+    return json({ ok: true });
+  }
+
+  if (action === "request_password_reset") {
+    await env.DB.prepare(
+      "CREATE TABLE IF NOT EXISTS password_resets (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, code TEXT NOT NULL, expires_at INTEGER NOT NULL)"
+    ).run();
+    const username = String(body.username || "").trim();
+    const email = String(body.email || "").trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return errorJson("请输入有效的注册邮箱", 400);
+    }
+    const found = await findResetUser(env, username, email);
+    if (found.error) return found.error;
+    const user = found.user;
+
+    const nowSec = Math.floor(Date.now() / 1000);
+    const recent = await env.DB.prepare(
+      "SELECT expires_at FROM password_resets WHERE user_id = ? AND expires_at > ? ORDER BY id DESC LIMIT 1"
+    )
+      .bind(user.id, nowSec + 840)
+      .first();
+    if (recent) {
+      const wait = Math.max(1, Number(recent.expires_at) - (nowSec + 840));
+      return errorJson(`发送过于频繁，请 ${wait} 秒后再试`, 429);
+    }
+
+    const code = generate6DigitCode();
+    const expiresAt = nowSec + 900;
+    await env.DB.prepare("DELETE FROM password_resets WHERE user_id = ?").bind(user.id).run();
+    await env.DB.prepare("INSERT INTO password_resets (user_id, code, expires_at) VALUES (?, ?, ?)")
+      .bind(user.id, code, expiresAt)
+      .run();
+
+    let delivered = false;
+    const mail = await sendResendEmail(
+      env,
+      user.email,
+      "XXOXOVX Blog 找回密码验证码",
+      `账号 ${user.username} 的找回密码验证码为：${code}（15 分钟内有效）。如非本人操作请忽略。`
+    );
+    if (mail.configured) {
+      delivered = mail.ok;
+    } else if (["admin", "superadmin"].includes(user.role) && env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
+      try {
+        const tgRes = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: env.TELEGRAM_CHAT_ID,
+            text: `【找回密码】账号 ${user.username} 验证码：${code}（15 分钟内有效）`,
+          }),
+        });
+        delivered = tgRes.ok;
+      } catch {}
+    }
+
+    return json({
+      ok: true,
+      delivered,
+      username: user.username,
+      hasInviteCode: Boolean(user.invite_code),
+      message: delivered
+        ? "验证码已发送到您的绑定邮箱，15 分钟内有效"
+        : "未配置邮件发送服务；若账号绑定了邀请码，可直接填写原邀请码重置密码，或联系站长",
+    });
+  }
+
+  if (action === "reset_password") {
+    await env.DB.prepare(
+      "CREATE TABLE IF NOT EXISTS password_resets (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, code TEXT NOT NULL, expires_at INTEGER NOT NULL)"
+    ).run();
+    const username = String(body.username || "").trim();
+    const email = String(body.email || "").trim().toLowerCase();
+    const code = String(body.code || "").trim().toUpperCase();
+    const newPassword = String(body.newPassword || "");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !code || newPassword.length < 6) {
+      return errorJson("请完整填写注册邮箱、验证码/邀请码与至少 6 位新密码", 400);
+    }
+    const found = await findResetUser(env, username, email);
+    if (found.error) return found.error;
+    const user = found.user;
+
+    const nowSec = Math.floor(Date.now() / 1000);
+    const resetRow = await env.DB.prepare(
+      "SELECT id FROM password_resets WHERE user_id = ? AND code = ? AND expires_at > ?"
+    )
+      .bind(user.id, code, nowSec)
+      .first();
+    const inviteMatched = Boolean(user.invite_code && user.invite_code.toUpperCase() === code);
+    if (!resetRow && !inviteMatched) {
+      return errorJson("验证码已过期或邀请码不匹配", 403);
+    }
+
+    const nextHash = await hashPassword(newPassword);
+    await env.DB.prepare("UPDATE users SET password_hash = ? WHERE id = ?")
+      .bind(nextHash, user.id)
+      .run();
+    await env.DB.prepare("DELETE FROM password_resets WHERE user_id = ?").bind(user.id).run();
+    await env.DB.prepare("DELETE FROM sessions WHERE user_id = ?").bind(user.id).run();
+    return json({ ok: true, username: user.username });
   }
 
   return errorJson("不支持的操作类型", 400);
