@@ -3047,7 +3047,7 @@
     }
 
     /* Stable home sections when categories, pages and featured posts change. */
-    .main-grid { height: calc(684px + (var(--home-card-rows, 4) - 2) * 156px); }
+    .main-grid { height: auto; align-items: stretch; }
     .left-col, .right-col { height: 100%; min-height: 0; }
     .profile-card { min-height: 0; overflow-y: auto; }
     .contact-card, .category-bar { flex-shrink: 0; }
@@ -3081,6 +3081,9 @@
     .article-placeholder:hover, .article-placeholder:active { transform: none; box-shadow: none; }
     .article-placeholder svg { opacity: .5; }
     @media (min-width: 1025px) {
+      .left-col, .right-col { height: auto; }
+      .content-panel { flex: none; }
+      .articles-grid { flex: none; height: calc(var(--home-card-rows, 4) * 146px + (var(--home-card-rows, 4) - 1) * 10px); overflow-y: auto; }
       .profile-card { flex: 0 0 auto; height: auto; gap: 24px; overflow: hidden; }
       .profile-photo-frame { margin: 0; }
       .profile-photo-frame img { max-height: 340px; }
