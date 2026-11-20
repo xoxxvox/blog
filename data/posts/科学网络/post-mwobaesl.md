@@ -4,7 +4,7 @@ title: "openwrt安装配置"
 category: "科学网络"
 date: "2026-11-20"
 readTime: "5 分钟"
-featured: false
+featured: true
 excerpt: "openwrt安装配置"
 ---
 
