@@ -106,11 +106,74 @@
   $("blogPrivatePrev").addEventListener("click", () => { --model.page; render(); }); $("blogPrivateNext").addEventListener("click", () => { ++model.page; render(); });
   $("blogPrivateRefresh").addEventListener("click", () => show(model.query, true));
   $("blogPrivateLogin").addEventListener("click", () => authTriggerBtn.click());
+  const privateBot = $("privateRobotBuddy"), privateBubble = $("privateRobotBubble"), privateEyes = $("privateRobotEyesTrack");
+  const botLines = ["哔哔，输入 VIP 邀请码即可解锁", "点我干嘛？快去兑换邀请码啦", "管理员和 VIP 都能直接阅读哦", "还没登录？可以先点击左侧登录 / 注册"];
+  let botLineIndex = 0, botTapTimer = 0, botAlertTimer = 0, botEyeFrame = 0;
+  const setBotBubble = (text, mode = "") => {
+    if (!privateBot || !privateBubble) return;
+    privateBubble.textContent = text;
+    privateBot.classList.remove("is-alert", "is-happy");
+    if (mode) privateBot.classList.add(mode);
+    clearTimeout(botAlertTimer);
+    if (mode === "is-alert") botAlertTimer = setTimeout(() => privateBot.classList.remove("is-alert"), 2200);
+  };
+  if (privateBot) {
+    privateBot.addEventListener("click", () => {
+      botLineIndex = (botLineIndex + 1) % botLines.length;
+      setBotBubble(botLines[botLineIndex]);
+      privateBot.classList.remove("is-tapped");
+      void privateBot.offsetWidth;
+      privateBot.classList.add("is-tapped");
+      clearTimeout(botTapTimer);
+      botTapTimer = setTimeout(() => privateBot.classList.remove("is-tapped"), 440);
+    });
+    document.addEventListener("pointermove", event => {
+      if (event.pointerType !== "mouse" || !privateEyes || $("blogPrivateLocked").hidden || $("blogPrivatePanel").hidden) return;
+      if (botEyeFrame) cancelAnimationFrame(botEyeFrame);
+      const { clientX, clientY } = event;
+      botEyeFrame = requestAnimationFrame(() => {
+        botEyeFrame = 0;
+        const rect = privateBot.getBoundingClientRect();
+        if (!rect.width) return;
+        const dx = Math.tanh((clientX - (rect.left + rect.width / 2)) / 180) * 3;
+        const dy = Math.tanh((clientY - (rect.top + rect.height / 2)) / 180) * 2;
+        privateEyes.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
+      });
+    }, { passive: true });
+  }
+  const codeInput = $("blogPrivateCode");
+  if (codeInput && privateBot) {
+    codeInput.addEventListener("focus", () => {
+      privateBot.classList.add("is-scanning");
+      setBotBubble(codeInput.value.trim() ? "核对好邀请码就可以兑换啦" : "正在等待输入 VIP 邀请码…");
+    });
+    codeInput.addEventListener("input", () => {
+      const len = codeInput.value.trim().length;
+      setBotBubble(len ? `已输入 ${len} 位，点击兑换试试` : "正在等待输入 VIP 邀请码…");
+    });
+    codeInput.addEventListener("blur", () => privateBot.classList.remove("is-scanning"));
+  }
   $("blogPrivateUnlock").addEventListener("submit", async event => {
-    event.preventDefault(); if (!currentUser) { $("blogPrivateStatus").textContent = "请先登录，或在注册时填写邀请码"; $("blogPrivateLogin").click(); return; }
-    const submit = event.submitter; if (submit) submit.disabled = true;
-    try { const data = await (await api("/api/auth", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({action:"redeem_invite",inviteCode:$("blogPrivateCode").value.trim()}) })).json(); currentUser = data.user; $("blogPrivateCode").value = ""; levelPermissionIdentity = ""; refreshLevelPermissions(); syncAuthUI(); $("blogPrivateStatus").textContent = "邀请码已兑换，正在同步权限…"; }
-    catch(error) { $("blogPrivateStatus").textContent = error.message; } finally { if (submit) submit.disabled = false; }
+    event.preventDefault();
+    if (!currentUser) {
+      $("blogPrivateStatus").textContent = "请先登录，或在注册时填写邀请码";
+      setBotBubble("请先登录账号，再兑换邀请码", "is-alert");
+      $("blogPrivateLogin").click();
+      return;
+    }
+    const submit = event.submitter || $("blogPrivateSubmit"), label = submit ? submit.textContent : "";
+    if (submit) { submit.disabled = true; submit.textContent = "兑换中…"; }
+    setBotBubble("正在核验邀请码…");
+    try {
+      const data = await (await api("/api/auth", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({action:"redeem_invite",inviteCode:$("blogPrivateCode").value.trim()}) })).json();
+      currentUser = data.user; $("blogPrivateCode").value = ""; levelPermissionIdentity = ""; refreshLevelPermissions(); syncAuthUI();
+      setBotBubble("解锁成功！欢迎进入隐秘空间", "is-happy");
+      $("blogPrivateStatus").textContent = "邀请码已兑换，正在同步权限…";
+    }
+    catch(error) {
+      setBotBubble(error.message || "邀请码无效或已过期", "is-alert");
+      $("blogPrivateStatus").textContent = error.message;
+    } finally { if (submit) { submit.disabled = false; submit.textContent = label || "兑换邀请码"; } }
   });
   window.blogPrivateSpace = { show, beginLayout: beginIntroLayout, restoreIntro() { restoreIntroLayout(); ++bioRevision; bioIdentity = ""; restoreIntro(); } };
 })();

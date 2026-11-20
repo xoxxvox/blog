@@ -3091,7 +3091,7 @@
     }
     @media (max-width: 1024px) { .profile-photo-frame { display: none; } }
   </style>
-  <link rel="stylesheet" href="./cream-theme.css?v=categories9" />
+  <link rel="stylesheet" href="./cream-theme.css?v=categories10" />
 </head>
 <body>
   <canvas id="appleMeshCanvas" aria-hidden="true"></canvas>
@@ -3438,7 +3438,41 @@
           </section>
           <section class="surface content-panel" id="blogPrivatePanel" hidden aria-labelledby="blogPrivateHeading">
             <div class="panel-header"><h2 class="panel-title" id="blogPrivateHeading">隐秘空间 · 私密手记</h2><button class="tactile-btn" type="button" id="blogPrivateRefresh">刷新</button></div>
-            <div id="blogPrivateLocked"><h3>隐秘空间已锁定</h3><p>仅 VIP 和管理员可阅读。登录后兑换 VIP 邀请码，或在注册时填写对应邀请码。</p><form id="blogPrivateUnlock"><label for="blogPrivateCode">邀请码</label><input class="auth-input" id="blogPrivateCode" required maxlength="32" autocomplete="off" placeholder="输入 VIP 邀请码" /><button class="tactile-btn" type="button" id="blogPrivateLogin">登录 / 注册</button><button class="tactile-btn" type="submit">兑换邀请码</button></form></div>
+            <div id="blogPrivateLocked">
+              <div class="private-lock-box">
+                <button class="robot-buddy private-robot-buddy" id="privateRobotBuddy" type="button" aria-label="和隐秘空间守卫小机器人互动">
+                  <div class="robot-bubble" id="privateRobotBubble">哔哔，输入 VIP 邀请码即可解锁</div>
+                  <svg class="robot-head-svg" viewBox="0 0 108 68" fill="none">
+                    <line x1="54" y1="6" x2="54" y2="16" stroke="var(--robot-ink)" stroke-width="3" stroke-linecap="round" />
+                    <circle cx="54" cy="5" r="4.5" fill="var(--accent)" stroke="var(--robot-ink)" stroke-width="2.5" />
+                    <rect x="7" y="29" width="9" height="22" rx="4.5" fill="var(--robot-accent)" stroke="var(--robot-ink)" stroke-width="2.5" />
+                    <rect x="92" y="29" width="9" height="22" rx="4.5" fill="var(--robot-accent)" stroke="var(--robot-ink)" stroke-width="2.5" />
+                    <rect x="16" y="16" width="76" height="52" rx="14" fill="var(--robot-body)" stroke="var(--robot-ink)" stroke-width="3" />
+                    <rect x="26" y="25" width="56" height="33" rx="8" fill="var(--robot-screen)" stroke="var(--robot-ink)" stroke-width="2" />
+                    <path d="M30 29 H40" stroke="rgba(255,255,255,0.22)" stroke-width="2" stroke-linecap="round" />
+                    <g class="robot-eyes-track" id="privateRobotEyesTrack">
+                      <circle class="robot-eye" cx="43" cy="39" r="5" fill="var(--robot-eye)" />
+                      <circle class="robot-eye" cx="65" cy="39" r="5" fill="var(--robot-eye)" />
+                    </g>
+                    <circle cx="54" cy="49" r="2.2" fill="var(--robot-eye)" />
+                  </svg>
+                </button>
+                <div class="robot-paws private-robot-paws" aria-hidden="true">
+                  <div class="robot-paw"><span></span><span></span><span></span></div>
+                  <div class="robot-paw"><span></span><span></span><span></span></div>
+                </div>
+                <h3>隐秘空间已锁定</h3>
+                <p>仅 VIP 和管理员可阅读。登录后兑换 VIP 邀请码，或在注册时填写对应邀请码。</p>
+                <form id="blogPrivateUnlock">
+                  <label for="blogPrivateCode">邀请码</label>
+                  <input class="auth-input" id="blogPrivateCode" required maxlength="32" autocomplete="off" placeholder="输入 VIP 邀请码" />
+                  <div class="private-unlock-actions">
+                    <button class="tactile-btn private-unlock-login" type="button" id="blogPrivateLogin">登录 / 注册</button>
+                    <button class="auth-submit private-unlock-submit" type="submit" id="blogPrivateSubmit">兑换邀请码</button>
+                  </div>
+                </form>
+              </div>
+            </div>
             <div id="blogPrivateContent" hidden><nav id="blogPrivateCategoryBar" aria-label="独立分类"></nav><div id="blogPrivateCategoryPages" hidden><button class="tactile-btn" id="blogPrivateCategoriesPrev" type="button">上一组分类</button><button class="tactile-btn" id="blogPrivateCategoriesNext" type="button">下一组分类</button></div><div class="articles-grid" id="blogPrivateCards"></div><div class="pagination-bar"><button class="tactile-btn page-btn" type="button" id="blogPrivatePrev">上一页</button><span class="tabular" id="blogPrivatePage"></span><button class="tactile-btn page-btn" type="button" id="blogPrivateNext">下一页</button></div></div>
             <p id="blogPrivateStatus" class="muted-meta" role="status"></p>
           </section>
@@ -6667,6 +6701,6 @@ syncAuthUI();
       }
     })();
   </script>
-  <script src="./private-space.js?v=categories8"></script>
+  <script src="./private-space.js?v=categories10"></script>
 </body>
 </html>
