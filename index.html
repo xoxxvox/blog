@@ -3060,6 +3060,33 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
     }
+
+    /* Stable home sections when categories, pages and featured posts change. */
+    .main-grid { height: 684px; }
+    .left-col, .right-col { height: 100%; min-height: 0; }
+    .profile-card { min-height: 0; overflow-y: auto; }
+    .contact-card, .category-bar { flex-shrink: 0; }
+    .content-panel { flex: 1; min-height: 0; overflow: hidden; }
+    .carousel-box { height: 186px; min-height: 186px; flex-shrink: 0; }
+    .carousel-title, .article-card-title {
+      display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+    }
+    .articles-grid { flex: 1; min-height: 0; grid-auto-rows: 146px; overflow-y: auto; }
+    .article-card { height: 146px; min-height: 0; }
+    .article-card-footer, .pagination-bar { flex-shrink: 0; }
+    @media (max-width: 1024px) {
+      .main-grid { height: auto; }
+      .left-col { height: 360px; }
+      .right-col { height: 684px; }
+    }
+    @media (max-width: 768px) {
+      .left-col { height: auto; }
+      .profile-card { height: 360px; flex: none; }
+      .contact-card { height: 300px; overflow-y: auto; }
+      .right-col { height: 740px; }
+      .carousel-box { height: 186px; min-height: 186px; }
+      .articles-grid { grid-auto-rows: 146px; overflow-y: auto; }
+    }
   </style>
 </head>
 <body>
