@@ -157,4 +157,3 @@ apk add --allow-untrusted ./*.apk
 rm -f /tmp/*.apk
 ```
 
-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
