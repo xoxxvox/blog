@@ -1,0 +1,127 @@
+/* Cream paper theme: visual overrides only; geometry and behavior stay in the owning styles. */
+html:root, html[data-theme="light"] {
+  --bg-page: #faf3c9;
+  --bg-dot: rgb(81 71 36 / .12);
+  --bg-grid: rgb(81 71 36 / .035);
+  --bg-card: #fffde4;
+  --bg-card-solid: #fffde4;
+  --bg-popover: #fffde9;
+  --bg-sidebar: #fffde4;
+  --bg-raised: #f6edc1;
+  --bg-subcard: #fbf5d3;
+  --bg-hover: #f1e5b3;
+  --bg-active: #f4dfae;
+  --text-primary: #29291f;
+  --text-secondary: #514d39;
+  --text-muted: #756e51;
+  --ink-border: #37372b;
+  --hairline: rgb(74 65 36 / .20);
+  --hairline-strong: rgb(74 65 36 / .40);
+  --glass-highlight: rgb(255 255 239 / .8);
+  --paper-edge: #37372b;
+  --paper-shadow: #444135;
+  --shadow-card: 0 0 0 1px var(--paper-edge), 4px 4px 0 var(--paper-shadow);
+  --shadow-float: 0 0 0 1px var(--paper-edge), 6px 6px 0 var(--paper-shadow);
+  --shadow-btn: 0 0 0 1px var(--paper-edge), 2px 2px 0 var(--paper-shadow);
+  --shadow-focus: 0 0 0 2px var(--accent-soft), 3px 3px 0 var(--accent);
+  --mist-frame: var(--bg-page);
+  --mist-surface: var(--bg-card);
+  --mist-border: var(--paper-edge);
+  --mist-shadow: var(--shadow-card);
+}
+html:not([data-palette]), html[data-palette="blue"] {
+  --accent: #bd421d;
+  --accent-blue: var(--accent);
+  --accent-soft: #f9dfbc;
+  --accent-contrast: #fffdf0;
+}
+html[data-theme="dark"] {
+  --bg-page: #23231d;
+  --bg-dot: rgb(248 235 179 / .10);
+  --bg-grid: rgb(248 235 179 / .025);
+  --bg-card: #303027;
+  --bg-card-solid: #303027;
+  --bg-popover: #36362b;
+  --bg-sidebar: #303027;
+  --bg-raised: #3b3a2e;
+  --bg-subcard: #343429;
+  --bg-hover: #444232;
+  --bg-active: #51442f;
+  --text-primary: #fbf5d6;
+  --text-secondary: #ded6b5;
+  --text-muted: #b8af8e;
+  --ink-border: #a99f7c;
+  --hairline: rgb(241 226 175 / .18);
+  --hairline-strong: rgb(241 226 175 / .35);
+  --glass-highlight: rgb(255 246 196 / .06);
+  --paper-edge: #a99f7c;
+  --paper-shadow: #171813;
+}
+html[data-theme="dark"]:not([data-palette]), html[data-theme="dark"][data-palette="blue"] {
+  --accent: #ffac7d;
+  --accent-soft: #51402d;
+  --accent-contrast: #29251d;
+}
+body {
+  background-color: var(--bg-page);
+  background-image: radial-gradient(circle, var(--bg-dot) .8px, transparent .9px);
+  background-size: 20px 20px;
+}
+/* Inset outlines avoid changing component sizes and responsive layout. */
+html[data-theme] :is(.surface, .fixed-sidebar, .login-card, .modal-dialog, .contact-modal, .auth-modal, .profile-modal, .action-modal, .image-detail-modal, .image-settings-modal) {
+  background-color: var(--bg-card-solid);
+  border-color: var(--paper-edge);
+  box-shadow: var(--shadow-card);
+}
+html[data-theme] :is(.card-block, .kpi-card, .quick-card, .comment-card, .invite-card, .settings-card, .img-card, .article-card, .carousel-box, .history-row, .image-batch-bar, .batch-bar, .profile-photo-frame) {
+  background-color: var(--bg-subcard);
+  border-color: var(--hairline-strong);
+  box-shadow: inset 0 0 0 1px var(--hairline), 2px 2px 0 rgb(67 58 32 / .12);
+}
+html[data-theme] :is(.input, .textarea, .select, .auth-input, .float-input, .comment-textarea, .url-input, .search-input) {
+  background-color: var(--bg-subcard);
+  border-color: var(--hairline-strong);
+  color: var(--text-primary);
+  box-shadow: inset 0 0 0 1px var(--hairline-strong);
+}
+html[data-theme] :is(.input, .textarea, .select, .auth-input, .float-input, .comment-textarea, .url-input, .search-input):focus {
+  box-shadow: var(--shadow-focus);
+}
+html[data-theme] :is(.btn, .tactile-btn, .mini-act-btn, .mini-btn, .copy-btn, .modal-btn, .primary-btn, .auth-submit) {
+  border-color: var(--paper-edge);
+  box-shadow: inset 0 0 0 1px var(--hairline-strong), 2px 2px 0 var(--paper-shadow);
+}
+html[data-theme] :is(.btn-primary, .primary-btn, .modal-btn-primary, .auth-submit) {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+html[data-theme] :is(.menu-item.is-active, .menu-subitem.is-active) { background: var(--accent-soft); color: var(--accent); }
+html[data-theme] .article-placeholder { box-shadow: inset 0 0 0 1px var(--hairline); }
+html[data-theme] .img-card.is-selected { box-shadow: 0 0 0 2px var(--accent), 3px 3px 0 var(--paper-shadow); }
+
+:where(.robot-buddy, .robot-paws, .bot-avatar-box, .edge-block, .modal-robot-buddy, .modal-robot-paws, .account-bot-pill, .bot-pill, .sidebar-bot, .img-loading-overlay, .toast-badge, .toast-bot-head, .mini-bot-svg, .robot-head-svg) {
+  --accent: #0071e3;
+  --accent-soft: rgb(0 113 227 / .10);
+  --shadow-btn: 0 2px 8px rgb(0 0 0 / .04);
+  --shadow-card: 0 4px 24px rgb(0 0 0 / .045);
+  --bg-card: #ffffff;
+  --bg-card-solid: #ffffff;
+  --bg-raised: rgb(0 0 0 / .03);
+  --text-primary: #1d1d1f;
+  --text-secondary: #424245;
+  --hairline: rgb(0 0 0 / .06);
+  --hairline-strong: rgb(0 0 0 / .10);
+  --ink-border: rgb(0 0 0 / .06);
+}
+html[data-theme="dark"] :where(.robot-buddy, .robot-paws, .bot-avatar-box, .edge-block, .modal-robot-buddy, .modal-robot-paws, .account-bot-pill, .bot-pill, .sidebar-bot, .img-loading-overlay, .toast-badge, .toast-bot-head, .mini-bot-svg, .robot-head-svg) {
+  --shadow-btn: 0 2px 10px rgb(0 0 0 / .25);
+  --shadow-card: 0 8px 30px rgb(0 0 0 / .45);
+  --bg-card: #18181a;
+  --bg-card-solid: rgb(28 28 30 / .96);
+  --bg-raised: rgb(255 255 255 / .04);
+  --text-primary: #f5f5f7;
+  --text-secondary: #d2d2d7;
+  --hairline: rgb(255 255 255 / .08);
+  --hairline-strong: rgb(255 255 255 / .14);
+  --ink-border: rgb(255 255 255 / .08);
+}
