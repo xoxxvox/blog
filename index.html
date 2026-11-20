@@ -5358,13 +5358,12 @@ authTriggerText.textContent = "登录 / 注册";
       if (!canViewPrivate && state.filter === "private") {
         state.filter = "all";
         catPills.forEach((p) => p.classList.toggle("is-active", p.dataset.filter === "all"));
-        const allPill = document.querySelector('.cat-pill[data-filter="all"]');
-        if (allPill) requestAnimationFrame(() => moveCatIndicator(allPill));
         renderCarousel();
         renderArticles();
       } else if (state.filter === "private") {
         window.blogPrivateSpace?.show(state.query);
       }
+      requestAnimationFrame(() => moveCatIndicator(document.querySelector(".cat-pill.is-active")));
       const commentButton = document.getElementById("commentSubmitBtn");
       if (commentButton) commentButton.disabled = !currentUser || !hasLevelPermission("comment");
       const profileButton = document.getElementById("savePersonalProfileBtn");
