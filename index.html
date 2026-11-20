@@ -6699,6 +6699,12 @@ syncAuthUI();
         syncReaderOpen();
         new MutationObserver(syncReaderOpen).observe(readerEl, { attributes: true, attributeFilter: ["class"] });
       }
+      try {
+        if (!sessionStorage.getItem("xxoxovx_blog_visited")) {
+          sessionStorage.setItem("xxoxovx_blog_visited", "1");
+          fetch("/api/stats", { method: "POST" }).catch(() => {});
+        }
+      } catch {}
     })();
   </script>
   <script src="./private-space.js?v=categories10"></script>

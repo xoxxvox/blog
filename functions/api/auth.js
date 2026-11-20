@@ -350,5 +350,42 @@ export async function onRequestPost({ request, env }) {
     });
   }
 
+  if (action === "list_sessions") {
+    const sessionUser = await getSessionUser(request, env);
+    if (!sessionUser || sessionUser.role !== "superadmin") {
+      return errorJson("仅后台最高权限管理员可查看活跃会话", 403);
+    }
+    const nowSec = Math.floor(Date.now() / 1000);
+    const { results } = await env.DB.prepare(
+      `SELECT s.token, s.expires_at, u.username, u.role
+       FROM sessions s
+       JOIN users u ON u.id = s.user_id
+       WHERE s.expires_at > ?
+       ORDER BY s.expires_at DESC
+       LIMIT 100`
+    )
+      .bind(nowSec)
+      .all();
+    const sessions = (results || []).map((row) => ({
+      id: `${String(row.token).slice(0, 8)}…`,
+      username: row.username,
+      role: row.role,
+      isCurrent: row.token === sessionUser.sessionToken,
+      expiresAt: new Date(Number(row.expires_at) * 1000).toISOString(),
+    }));
+    return json({ sessions });
+  }
+
+  if (action === "revoke_other_sessions") {
+    const sessionUser = await getSessionUser(request, env);
+    if (!sessionUser || sessionUser.role !== "superadmin") {
+      return errorJson("仅后台最高权限管理员可注销会话", 403);
+    }
+    const res = await env.DB.prepare("DELETE FROM sessions WHERE token != ?")
+      .bind(sessionUser.sessionToken)
+      .run();
+    return json({ ok: true, removed: Number(res.meta?.changes || 0) });
+  }
+
   return errorJson("不支持的操作类型", 400);
 }
