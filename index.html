@@ -12,8 +12,8 @@
   <meta property="og:type" content="website" />
   <meta property="og:title" content="XXOXOVX · BLOG" />
   <meta property="og:description" content="记录软路由折腾、科学网络、小众软件、网站优选与云原生 Serverless 实践。" />
-  <link id="siteFavicon" rel="icon" type="image/jpeg" sizes="any" href="https://imghub-8t7.pages.dev/api/image?storage=r2&key=images%2F2026-11%2F1794894628657-Gemini_Generated_Image_9p6wa39p6wa39.jpg" />
-  <link rel="apple-touch-icon" href="https://imghub-8t7.pages.dev/api/image?storage=r2&key=images%2F2026-11%2F1794894628657-Gemini_Generated_Image_9p6wa39p6wa39.jpg" />
+  <link id="siteFavicon" rel="icon" type="image/png" sizes="64x64" href="./assets/favicon.png?v=brand1" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png?v=brand1" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" />
@@ -4147,11 +4147,16 @@
       return mode === "system" ? (systemDarkQuery.matches ? "dark" : "light") : mode;
     }
 
-    let SITE_FAVICON_URL = "https://imghub-8t7.pages.dev/api/image?storage=r2&key=images%2F2026-11%2F1794894628657-Gemini_Generated_Image_9p6wa39p6wa39.jpg";
+    let SITE_FAVICON_URL = "./assets/site-logo.png";
     let cachedFaviconImg = null;
     function updateFaviconForTheme() {
       const link = document.getElementById("siteFavicon");
       if (!link) return;
+      if (SITE_FAVICON_URL === "./assets/site-logo.png" || SITE_FAVICON_URL.includes("1794894628657-Gemini_Generated_Image_9p6wa39p6wa39.jpg")) {
+        link.type = "image/png";
+        link.href = "./assets/favicon.png?v=brand1";
+        return;
+      }
       const drawFavicon = (img) => {
         try {
           const size = 64;
