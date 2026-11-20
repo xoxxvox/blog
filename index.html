@@ -3082,11 +3082,11 @@
     .article-placeholder svg { opacity: .5; }
     @media (min-width: 1025px) {
       .left-col, .right-col { height: auto; }
-      .content-panel { flex: none; }
-      .articles-grid { flex: none; height: calc(var(--home-card-rows, 4) * 146px + (var(--home-card-rows, 4) - 1) * 10px); overflow-y: auto; }
+      .content-panel { flex: 1; }
+      .articles-grid { flex: 1; min-height: calc(var(--home-card-rows, 4) * 146px + (var(--home-card-rows, 4) - 1) * 10px); overflow-y: auto; }
       .profile-card { flex: 0 0 auto; height: auto; gap: 24px; overflow: hidden; }
       .profile-photo-frame { margin: 0; }
-      .profile-photo-frame img { max-height: 340px; }
+      .profile-photo-frame img { max-height: 300px; }
       .contact-card { margin-top: auto; }
     }
     @media (max-width: 1024px) { .profile-photo-frame { display: none; } }
