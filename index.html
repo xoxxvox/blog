@@ -3645,7 +3645,7 @@
           <div class="site-rail-layout">
             <aside class="site-rail-nav" id="consoleUnifiedRail" role="tablist">
               <div class="account-hero-card">
-                <img class="account-hero-avatar" id="accountCardAvatar" alt="账号头像" />
+                <img class="account-hero-avatar" id="accountCardAvatar" alt="账号头像" onerror="this.onerror=null;this.src=makeDefaultAvatar(currentUser?.username||'U');" />
                 <div class="account-hero-meta">
                   <div class="account-hero-name" id="accountCardName">-</div>
                   <div class="account-hero-sub" id="accountCardEmail">-</div>
@@ -3716,7 +3716,7 @@
                   <div class="setting-row">
                     <label class="setting-row-label" for="profAvatar">头像</label>
                     <div class="setting-row-control">
-                      <img class="app-avatar-preview" id="profAvatarPreview" alt="头像预览" title="点击更换头像" style="width: 34px; height: 34px;" />
+                      <img class="app-avatar-preview" id="profAvatarPreview" alt="头像预览" title="点击更换头像" style="width: 34px; height: 34px;" onerror="this.onerror=null;this.src=makeDefaultAvatar(currentUser?.username||'U');" />
                       <input class="auth-input" id="profAvatar" type="text" placeholder="留空自动生成随机头像，或上传" style="flex: 1;" />
                       <input type="file" id="profAvatarFileInput" accept="image/*" style="display: none;" />
                       <button class="tactile-btn copy-btn" id="profAvatarUploadBtn" type="button" style="height: 34px; flex-shrink: 0;">更换</button>
