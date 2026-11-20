@@ -1,6 +1,7 @@
 (() => {
   const $ = id => document.getElementById(id);
-  const model = { posts: [], categories: [], categoryPage: 0, category: "all", query: "", page: 1, identity: "", loaded: false, loading: false, revision: 0 };
+  const PRIVATE_PAGE_SIZE = 6;
+  const model = { posts: [], categories: [], categoryPage: 0, category: "all", query: "", page: 1, carouselIndex: 0, identity: "", loaded: false, loading: false, revision: 0 };
   const allowed = key => currentUser && hasLevelPermission(key);
   let privateBio = null, bioIdentity = "", bioRevision = 0;
   let introLayout = null, resizeFrame = 0;
@@ -55,11 +56,58 @@
     $("blogPrivateCategoriesPrev").disabled = model.categoryPage === 0;
     $("blogPrivateCategoriesNext").disabled = model.categoryPage >= pages - 1;
   }
+  let carouselPaused = false;
+  function getCarouselPosts() {
+    const scoped = model.category === "all" ? model.posts : model.posts.filter(post => post.category === model.category);
+    if (!scoped.length) return [];
+    const featured = scoped.filter(post => post.featured);
+    return featured.length > 0 ? featured : scoped;
+  }
+  function renderCarousel(dir = 0) {
+    const box = $("blogPrivateCarouselBox");
+    if (!box) return;
+    const list = getCarouselPosts();
+    if (!list.length) {
+      box.classList.add("is-empty");
+      $("blogPrivateCarouselBadge").textContent = "私密手记 · 0 / 0";
+      $("blogPrivateCarouselTitle").textContent = "暂无私密手记";
+      $("blogPrivateCarouselDesc").textContent = "当前分类下还没有文章，发布后将在此轮播展示。";
+      $("blogPrivateCarouselDate").textContent = "—";
+      $("blogPrivateCarouselPrev").disabled = true;
+      $("blogPrivateCarouselNext").disabled = true;
+      return;
+    }
+    box.classList.remove("is-empty");
+    if (model.carouselIndex >= list.length) model.carouselIndex = 0;
+    const post = list[model.carouselIndex];
+    if (dir !== 0) {
+      box.style.setProperty("--slide-dir", dir > 0 ? "12px" : "-12px");
+      box.classList.add("is-switch-prep");
+      void box.offsetWidth;
+      requestAnimationFrame(() => box.classList.remove("is-switch-prep"));
+    }
+    $("blogPrivateCarouselBadge").textContent = `私密手记 · ${model.carouselIndex + 1} / ${list.length}`;
+    $("blogPrivateCarouselTitle").textContent = post.title;
+    $("blogPrivateCarouselDesc").textContent = post.excerpt || "点击阅读完整私密手记";
+    $("blogPrivateCarouselDate").textContent = post.date;
+    $("blogPrivateCarouselPrev").disabled = list.length <= 1;
+    $("blogPrivateCarouselNext").disabled = list.length <= 1;
+  }
+  async function openPrivatePost(id) {
+    try {
+      const data = await (await api(`/api/private-posts?id=${encodeURIComponent(id)}`)).json();
+      $("blogPrivateReaderTitle").textContent = data.post.title;
+      $("blogPrivateReaderMeta").textContent = `${data.post.category} · ${data.post.date}`;
+      $("blogPrivateReaderBody").innerHTML = renderMarkdown(data.post.body);
+      reader.showModal();
+    } catch (error) { $("blogPrivateStatus").textContent = error.message; }
+  }
   function render() {
+    renderCarousel(0);
     const list = model.posts.filter(post => (model.category === "all" || post.category === model.category) && `${post.title} ${post.excerpt}`.toLowerCase().includes(model.query.toLowerCase()));
-    const pages = Math.max(1, Math.ceil(list.length / PAGE_SIZE)); model.page = Math.min(model.page, pages);
-    const visible = list.slice((model.page - 1) * PAGE_SIZE, model.page * PAGE_SIZE);
-    $("blogPrivateCards").innerHTML = visible.map(post => `<article class="article-card"><button class="private-post-open" type="button" data-private-post="${escapeHtml(post.id)}"><h3 class="article-card-title">${escapeHtml(post.title)}</h3><p class="article-card-desc">${escapeHtml(post.excerpt)}</p></button><div class="article-card-footer tabular"><span>${escapeHtml(post.category)}</span><span>${escapeHtml(post.date)}</span>${allowed("private_export") ? `<button class="tactile-btn" type="button" data-private-export="${escapeHtml(post.id)}">下载</button>` : ""}</div></article>`).join("") + buildArticlePlaceholders(PAGE_SIZE - visible.length, !list.length);
+    const pages = Math.max(1, Math.ceil(list.length / PRIVATE_PAGE_SIZE)); model.page = Math.min(model.page, pages);
+    const visible = list.slice((model.page - 1) * PRIVATE_PAGE_SIZE, model.page * PRIVATE_PAGE_SIZE);
+    $("blogPrivateCards").innerHTML = visible.map(post => `<article class="article-card"><button class="private-post-open" type="button" data-private-post="${escapeHtml(post.id)}"><h3 class="article-card-title">${escapeHtml(post.title)}</h3><p class="article-card-desc">${escapeHtml(post.excerpt)}</p></button><div class="article-card-footer tabular"><span>${escapeHtml(post.category)}</span><span>${escapeHtml(post.date)}</span>${allowed("private_export") ? `<button class="tactile-btn" type="button" data-private-export="${escapeHtml(post.id)}">下载</button>` : ""}</div></article>`).join("") + buildArticlePlaceholders(PRIVATE_PAGE_SIZE - visible.length, !list.length);
     $("blogPrivatePage").textContent = `${list.length ? model.page : 0} / ${list.length ? pages : 0}`;
     $("blogPrivatePrev").disabled = model.page <= 1; $("blogPrivateNext").disabled = model.page >= pages;
   }
@@ -69,7 +117,7 @@
     if (model.query !== query) model.page = 1; model.query = query;
     const unlock = Boolean(allowed("private_read"));
     $("blogPrivateLocked").hidden = unlock; $("blogPrivateContent").hidden = !unlock; $("blogPrivateLogin").hidden = Boolean(currentUser);
-    if (!unlock) { if (reader.open) reader.close(); $("blogPrivateReaderBody").replaceChildren(); ++model.revision; model.posts = []; model.loaded = false; model.loading = false; $("blogPrivateCards").replaceChildren(); return; }
+    if (!unlock) { if (reader.open) reader.close(); $("blogPrivateReaderBody").replaceChildren(); ++model.revision; model.posts = []; model.carouselIndex = 0; model.loaded = false; model.loading = false; renderCarousel(0); $("blogPrivateCards").replaceChildren(); return; }
     const identity = `${currentUser.id}:${currentUser.role}`;
     if (model.loading && model.identity === identity) return;
     if (model.loaded && model.identity === identity && !force) { render(); return; }
@@ -91,14 +139,50 @@
     const id = (open || download).dataset[open ? "privatePost" : "privateExport"];
     try {
       if (download) { const res = await api(`/api/private-posts?id=${encodeURIComponent(id)}&download=1`), post = model.posts.find(item => item.id === id), url = URL.createObjectURL(await res.blob()), a = document.createElement("a"); a.href = url; a.download = `${post?.title || "private-note"}.md`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); return; }
-      const data = await (await api(`/api/private-posts?id=${encodeURIComponent(id)}`)).json();
-      $("blogPrivateReaderTitle").textContent = data.post.title; $("blogPrivateReaderMeta").textContent = `${data.post.category} · ${data.post.date}`; $("blogPrivateReaderBody").innerHTML = renderMarkdown(data.post.body); reader.showModal();
+      await openPrivatePost(id);
     } catch (error) { $("blogPrivateStatus").textContent = error.message; }
   });
+  const privateCarouselBox = $("blogPrivateCarouselBox");
+  if (privateCarouselBox) {
+    privateCarouselBox.addEventListener("mouseenter", () => { carouselPaused = true; });
+    privateCarouselBox.addEventListener("mouseleave", () => { carouselPaused = false; });
+    $("blogPrivateCarouselPrev")?.addEventListener("click", event => {
+      event.stopPropagation();
+      const list = getCarouselPosts();
+      if (list.length <= 1) return;
+      model.carouselIndex = (model.carouselIndex - 1 + list.length) % list.length;
+      renderCarousel(-1);
+    });
+    $("blogPrivateCarouselNext")?.addEventListener("click", event => {
+      event.stopPropagation();
+      const list = getCarouselPosts();
+      if (list.length <= 1) return;
+      model.carouselIndex = (model.carouselIndex + 1) % list.length;
+      renderCarousel(1);
+    });
+    privateCarouselBox.addEventListener("click", () => {
+      const list = getCarouselPosts();
+      if (list[model.carouselIndex]) openPrivatePost(list[model.carouselIndex].id);
+    });
+    privateCarouselBox.addEventListener("keydown", event => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const list = getCarouselPosts();
+      if (!list[model.carouselIndex]) return;
+      event.preventDefault();
+      openPrivatePost(list[model.carouselIndex].id);
+    });
+    setInterval(() => {
+      if (carouselPaused || reader.open || state.filter !== "private") return;
+      const list = getCarouselPosts();
+      if (list.length <= 1) return;
+      model.carouselIndex = (model.carouselIndex + 1) % list.length;
+      renderCarousel(1);
+    }, 5000);
+  }
   $("blogPrivateCategoryBar").addEventListener("click", event => {
     const button = event.target.closest("[data-private-category]"); if (!button) return;
     model.category = model.category === button.dataset.privateCategory ? "all" : button.dataset.privateCategory;
-    model.page = 1; renderCategories(); render();
+    model.page = 1; model.carouselIndex = 0; renderCategories(); render();
   });
   $("blogPrivateCategoriesPrev").addEventListener("click", () => { --model.categoryPage; renderCategories(); });
   $("blogPrivateCategoriesNext").addEventListener("click", () => { ++model.categoryPage; renderCategories(); });
