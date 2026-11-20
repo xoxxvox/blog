@@ -4570,9 +4570,9 @@
         tagsEl.innerHTML = tags.map((t) => `<span class="profile-tag">${escapeHtml(t)}</span>`).join("");
       }
       const baseRows = [
-        { label: "姓名", value: profile.info?.name || "" },
-        { label: "性别", value: profile.info?.gender || "" },
-        { label: "年龄", value: profile.info?.age || "", tabular: true },
+        { label: profile.info?.labels?.name || "姓名", value: profile.info?.name || "" },
+        { label: profile.info?.labels?.gender || "性别", value: profile.info?.gender || "" },
+        { label: profile.info?.labels?.age || "年龄", value: profile.info?.age || "", tabular: true },
       ];
       const extraRows = Array.isArray(profile.info?.extraInfo) ? profile.info.extraInfo.filter((x) => x && x.label) : [];
       const infoListEl = document.getElementById("profileInfoList");
