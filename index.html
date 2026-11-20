@@ -693,6 +693,7 @@
       z-index: 1;
       transition: transform 240ms var(--ease), width 240ms var(--ease), background-color var(--t-fast) var(--ease);
     }
+    .cat-pill[hidden] { display: none; }
     .cat-pill {
       position: relative;
       z-index: 2;
@@ -3384,7 +3385,7 @@
             <button class="cat-pill" type="button" data-filter="小众软件">小众软件</button>
             <button class="cat-pill" type="button" data-filter="网站优选">网站优选</button>
             <button class="cat-pill" type="button" data-filter="技术手记">技术手记</button>
-            <button class="cat-pill" type="button" data-filter="private">隐秘空间</button>
+            <button class="cat-pill" type="button" data-filter="private" hidden>隐秘空间</button>
           </nav>
 
           <section class="surface content-panel" id="publicPostsPanel">
@@ -5102,7 +5103,13 @@ document.getElementById("readerTitle").textContent = post.title;
     }
     catPills.forEach((pill) => {
       pill.addEventListener("click", () => {
-        if (pill.dataset.filter === "private" && state.filter !== "private") window.blogPrivateSpace?.beginLayout();
+        if (pill.dataset.filter === "private") {
+          if (!currentUser || !hasLevelPermission("private_read")) {
+            showToast("隐秘空间仅限 VIP 及以上等级访问", true);
+            return;
+          }
+          if (state.filter !== "private") window.blogPrivateSpace?.beginLayout();
+        }
         catPills.forEach((p) => p.classList.remove("is-active"));
         pill.classList.add("is-active");
         moveCatIndicator(pill);
@@ -5345,7 +5352,19 @@ authTriggerText.textContent = "登录 / 注册";
 
     function syncAuthUI() {
       refreshLevelPermissions();
-      if (state.filter === "private") window.blogPrivateSpace?.show(state.query);
+      const canViewPrivate = Boolean(currentUser && hasLevelPermission("private_read"));
+      const privatePill = document.querySelector('.cat-pill[data-filter="private"]');
+      if (privatePill) privatePill.hidden = !canViewPrivate;
+      if (!canViewPrivate && state.filter === "private") {
+        state.filter = "all";
+        catPills.forEach((p) => p.classList.toggle("is-active", p.dataset.filter === "all"));
+        const allPill = document.querySelector('.cat-pill[data-filter="all"]');
+        if (allPill) requestAnimationFrame(() => moveCatIndicator(allPill));
+        renderCarousel();
+        renderArticles();
+      } else if (state.filter === "private") {
+        window.blogPrivateSpace?.show(state.query);
+      }
       const commentButton = document.getElementById("commentSubmitBtn");
       if (commentButton) commentButton.disabled = !currentUser || !hasLevelPermission("comment");
       const profileButton = document.getElementById("savePersonalProfileBtn");

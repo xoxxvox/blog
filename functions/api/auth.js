@@ -421,13 +421,14 @@ export async function onRequestPost({ request, env }) {
     let matchedInvite = null;
 
     if (inviteCode) {
+      const normalizedInvite = inviteCode.trim().toUpperCase();
       if (isFirstUser && bootstrapCode && inviteCode === bootstrapCode) {
         assignedRole = "superadmin";
       } else {
         matchedInvite = await env.DB.prepare(
-          "SELECT code, role, expires_at, used_by FROM invites WHERE code = ?"
+          "SELECT code, role, expires_at, used_by FROM invites WHERE UPPER(TRIM(code)) = ?"
         )
-          .bind(inviteCode.toUpperCase())
+          .bind(normalizedInvite)
           .first();
 
         if (!matchedInvite) {
@@ -436,7 +437,8 @@ export async function onRequestPost({ request, env }) {
         if (matchedInvite.used_by) {
           return errorJson("该邀请码已被使用", 403);
         }
-        if (matchedInvite.expires_at && Date.parse(matchedInvite.expires_at) <= Date.now()) {
+        const expMs = matchedInvite.expires_at ? Date.parse(matchedInvite.expires_at) : NaN;
+        if (matchedInvite.expires_at && !Number.isNaN(expMs) && expMs <= Date.now()) {
           return errorJson("该邀请码已过期", 403);
         }
         assignedRole = normalizeRole(matchedInvite.role);
@@ -464,7 +466,9 @@ export async function onRequestPost({ request, env }) {
     };
 
     if (matchedInvite) {
-      const claim = await env.DB.prepare("UPDATE invites SET used_by = ?, used_at = ? WHERE code = ? AND used_by IS NULL AND (expires_at IS NULL OR expires_at > ?)").bind(username, nowIso, matchedInvite.code, nowIso).run();
+      const claim = await env.DB.prepare(
+        "UPDATE invites SET used_by = ?, used_at = ? WHERE code = ? AND (used_by IS NULL OR used_by = '') AND (expires_at IS NULL OR expires_at = '' OR expires_at > ?)"
+      ).bind(username, nowIso, matchedInvite.code, nowIso).run();
       if (!claim.meta?.changes) return errorJson("邀请码已被使用或已到期", 409);
     }
     let insertRes;
@@ -558,7 +562,7 @@ export async function onRequestPost({ request, env }) {
     if (!inviteCode) return errorJson("请输入邀请码", 400);
 
     const matchedInvite = await env.DB.prepare(
-      "SELECT code, role, expires_at, used_by FROM invites WHERE code = ?"
+      "SELECT code, role, expires_at, used_by FROM invites WHERE UPPER(TRIM(code)) = ?"
     )
       .bind(inviteCode)
       .first();
@@ -567,14 +571,17 @@ export async function onRequestPost({ request, env }) {
     if (matchedInvite.used_by && matchedInvite.used_by !== sessionUser.username) {
       return errorJson("该邀请码已被其他用户使用", 403);
     }
-    if (matchedInvite.expires_at && Date.parse(matchedInvite.expires_at) <= Date.now()) {
+    const expMs = matchedInvite.expires_at ? Date.parse(matchedInvite.expires_at) : NaN;
+    if (matchedInvite.expires_at && !Number.isNaN(expMs) && expMs <= Date.now()) {
       return errorJson("该邀请码已过期", 403);
     }
 
     const nowIso = new Date().toISOString();
     const nextRole = upgradedRole(sessionUser.role, matchedInvite.role);
     if (normalizeRole(matchedInvite.role) !== nextRole) return errorJson("不能使用低于当前账号等级的邀请码续期或降级", 400);
-    const claim = await env.DB.prepare("UPDATE invites SET used_by = ?, used_at = ? WHERE code = ? AND (used_by IS NULL OR used_by = ?) AND (expires_at IS NULL OR expires_at > ?)").bind(sessionUser.username, nowIso, matchedInvite.code, sessionUser.username, nowIso).run();
+    const claim = await env.DB.prepare(
+      "UPDATE invites SET used_by = ?, used_at = ? WHERE code = ? AND (used_by IS NULL OR used_by = '' OR used_by = ?) AND (expires_at IS NULL OR expires_at = '' OR expires_at > ?)"
+    ).bind(sessionUser.username, nowIso, matchedInvite.code, sessionUser.username, nowIso).run();
     if (!claim.meta?.changes) return errorJson("邀请码已被使用或已到期", 409);
     await env.DB.prepare("UPDATE users SET role = ?, invite_code = ?, disabled_at = NULL WHERE id = ?")
       .bind(nextRole, matchedInvite.code, sessionUser.id)

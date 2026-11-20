@@ -33,6 +33,7 @@ export async function onRequestPost({ request, env }) {
   if (!env.DB) return errorJson("未绑定 D1 数据库", 500);
   const user = await getSessionUser(request, env);
   if (!isSuperAdmin(user)) return errorJson("仅后台最高权限管理员可操作邀请码", 403);
+  await cleanupExpiredAccounts(env);
 
   let body = {};
   try {
