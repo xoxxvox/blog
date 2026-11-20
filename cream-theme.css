@@ -163,7 +163,7 @@ html.keyboard-input *, html.keyboard-input *::before, html.keyboard-input *::aft
 }
 
 html[data-theme] .content-panel { border-radius: calc(12px + 20px); }
-html[data-theme] .content-panel :is(.article-card, .carousel-box, #blogPrivateRefresh, #blogPrivateCategoryPages button) { border-radius: 12px; }
+html[data-theme] .content-panel :is(.article-card, .carousel-box, #blogPrivateCategoryPages button) { border-radius: 12px; }
 html[data-theme] .profile-photo-frame { border-radius: calc(16px + 10px); }
 @media (max-width: 600px) { html[data-theme] .content-panel { border-radius: calc(12px + 14px); } }
 

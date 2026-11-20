@@ -19,7 +19,7 @@ export async function onRequestPost({ request, env }) {
     return json({ok:true,categories:await postCategories(env)});
   }
   const name=String(body.name||"").trim(),next=String(body.nextName||"").trim();
-  if(!validCategory(name))return errorJson("分类名称需为 1 至 30 字",400);
+  if(!validCategory(name))return errorJson("板块名称需为 1 至 30 字，且不能使用「最新动态」等保留名",400);
   let operations=[];
   if(body.action==="create") {if(list.includes(name))return errorJson("分类已存在",409);if(list.length>=8)return errorJson("最多 8 个独立分类",400);operations.push(env.DB.prepare("INSERT INTO private_post_categories(name, sort_order) SELECT ?, COALESCE((SELECT MAX(sort_order) FROM private_post_categories), -1) + 1 WHERE (SELECT COUNT(*) FROM private_post_categories) < 8").bind(name));}
   else if(body.action==="rename"||body.action==="delete") {

@@ -47,11 +47,13 @@
   reader.addEventListener("click", async event => { const button = event.target.closest(".code-copy"); if (!button) return; try { await navigator.clipboard.writeText(button.closest(".code-wrap").querySelector("code").textContent); showToast("代码已复制"); } catch { showToast("无法复制，请检查剪贴板权限"); } });
   async function api(path, options = {}) { const res = await fetch(path, { credentials: "include", cache: "no-store", ...options }); if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || "加载失败"); } return res; }
   function renderCategories() {
-    const pages = Math.max(1, Math.ceil(model.categories.length / 8));
+    const spaces = model.categories.filter(name => name && name !== "最新动态");
+    const pages = Math.max(1, Math.ceil(spaces.length / 8));
     model.categoryPage = Math.min(model.categoryPage, pages - 1);
-    const visible = model.categories.slice(model.categoryPage * 8, model.categoryPage * 8 + 8);
+    const visible = spaces.slice(model.categoryPage * 8, model.categoryPage * 8 + 8);
     const bar = $("blogPrivateCategoryBar");
-    bar.innerHTML = visible.map(name => `<button class="cat-pill ${model.category === name ? "is-active" : ""}" type="button" data-private-category="${escapeHtml(name)}" aria-pressed="${model.category === name}" title="再次点击可查看全部文章">${escapeHtml(name)}</button>`).join("");
+    const latestPill = `<button class="cat-pill ${model.category === "all" ? "is-active" : ""}" type="button" data-private-category="all" aria-pressed="${model.category === "all"}">最新动态</button>`;
+    bar.innerHTML = latestPill + visible.map(name => `<button class="cat-pill ${model.category === name ? "is-active" : ""}" type="button" data-private-category="${escapeHtml(name)}" aria-pressed="${model.category === name}">${escapeHtml(name)}</button>`).join("");
     $("blogPrivateCategoryPages").hidden = pages <= 1;
     $("blogPrivateCategoriesPrev").disabled = model.categoryPage === 0;
     $("blogPrivateCategoriesNext").disabled = model.categoryPage >= pages - 1;
@@ -67,11 +69,12 @@
     const box = $("blogPrivateCarouselBox");
     if (!box) return;
     const list = getCarouselPosts();
+    const scopeLabel = model.category === "all" ? "最新动态" : model.category;
     if (!list.length) {
       box.classList.add("is-empty");
-      $("blogPrivateCarouselBadge").textContent = "私密手记 · 0 / 0";
+      $("blogPrivateCarouselBadge").textContent = `${scopeLabel} · 0 / 0`;
       $("blogPrivateCarouselTitle").textContent = "暂无私密手记";
-      $("blogPrivateCarouselDesc").textContent = "当前分类下还没有文章，发布后将在此轮播展示。";
+      $("blogPrivateCarouselDesc").textContent = model.category === "all" ? "还没有发布私密手记，发布后将在此轮播展示。" : `「${model.category}」板块下还没有文章，发布后将在此轮播展示。`;
       $("blogPrivateCarouselDate").textContent = "—";
       $("blogPrivateCarouselPrev").disabled = true;
       $("blogPrivateCarouselNext").disabled = true;
@@ -86,7 +89,7 @@
       void box.offsetWidth;
       requestAnimationFrame(() => box.classList.remove("is-switch-prep"));
     }
-    $("blogPrivateCarouselBadge").textContent = `私密手记 · ${model.carouselIndex + 1} / ${list.length}`;
+    $("blogPrivateCarouselBadge").textContent = `${scopeLabel} · ${model.carouselIndex + 1} / ${list.length}`;
     $("blogPrivateCarouselTitle").textContent = post.title;
     $("blogPrivateCarouselDesc").textContent = post.excerpt || "点击阅读完整私密手记";
     $("blogPrivateCarouselDate").textContent = post.date;
@@ -126,8 +129,8 @@
     try {
       const data = await (await api("/api/private-posts")).json(); if (revision !== model.revision) return;
       model.posts = data.posts || []; model.loaded = true;
-      model.categories = [...new Set(data.categories || [])];
-      if (!model.categories.includes(model.category)) model.category = "all";
+      model.categories = [...new Set((data.categories || []).filter(name => name && name !== "最新动态"))];
+      if (model.category !== "all" && !model.categories.includes(model.category)) model.category = "all";
       renderCategories();
       render(); $("blogPrivateStatus").textContent = "";
     } catch (error) { if (revision === model.revision) $("blogPrivateStatus").textContent = error.message; }
@@ -181,13 +184,14 @@
   }
   $("blogPrivateCategoryBar").addEventListener("click", event => {
     const button = event.target.closest("[data-private-category]"); if (!button) return;
-    model.category = model.category === button.dataset.privateCategory ? "all" : button.dataset.privateCategory;
+    const next = button.dataset.privateCategory;
+    if (next === model.category) return;
+    model.category = next;
     model.page = 1; model.carouselIndex = 0; renderCategories(); render();
   });
   $("blogPrivateCategoriesPrev").addEventListener("click", () => { --model.categoryPage; renderCategories(); });
   $("blogPrivateCategoriesNext").addEventListener("click", () => { ++model.categoryPage; renderCategories(); });
   $("blogPrivatePrev").addEventListener("click", () => { --model.page; render(); }); $("blogPrivateNext").addEventListener("click", () => { ++model.page; render(); });
-  $("blogPrivateRefresh").addEventListener("click", () => show(model.query, true));
   $("blogPrivateLogin").addEventListener("click", () => authTriggerBtn.click());
   const privateBot = $("privateRobotBuddy"), privateBubble = $("privateRobotBubble"), privateEyes = $("privateRobotEyesTrack");
   const botLines = ["哔哔，输入 VIP 邀请码即可解锁", "点我干嘛？快去兑换邀请码啦", "管理员和 VIP 都能直接阅读哦", "还没登录？可以先点击左侧登录 / 注册"];
