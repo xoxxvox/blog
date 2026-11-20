@@ -73,5 +73,20 @@
   "footerTitle": "XXOXOVX Blog · 数字生活档案",
   "footerDesc": "专注于软路由、网络自动化、云原生 Serverless 架构与极简数字生活记录。",
   "footerBadge": "Serverless 运行中",
-  "footerCopyright": "© 2026 XXOXOVX Blog · All rights reserved"
+  "footerCopyright": "© 2026 XXOXOVX Blog · All rights reserved",
+  "profilePhoto": "https://imghub-api.xxoxovx.cc/api/image?storage=telegram&file_id=BQACAgUAAyEGAATrNyi5AAIHZ2r9ZPG-RVZZqEYMEKFoveaJwvcXAALjHgACPUrwV0OsNBeqEeONPQQ",
+  "profilePhotoCaption": "",
+  "profilePhotoEnabled": true,
+  "homeCardRows": 8,
+  "seoKeywords": "",
+  "seoDescription": "",
+  "ogImage": "",
+  "commentModeration": "auto",
+  "commentBlockWords": "",
+  "notifyCommentTg": false,
+  "announcementEnabled": false,
+  "allowIndexing": true,
+  "announcementText": "",
+  "announcementLink": "",
+  "customHeadHtml": ""
 }
