@@ -5177,7 +5177,7 @@ document.getElementById("readerTitle").textContent = post.title;
     const FALLBACK_QR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none"><rect width="120" height="120" fill="#ffffff"/><rect x="12" y="12" width="32" height="32" rx="4" stroke="#1d1d1f" stroke-width="6"/><rect x="22" y="22" width="12" height="12" rx="2" fill="#1d1d1f"/><rect x="76" y="12" width="32" height="32" rx="4" stroke="#1d1d1f" stroke-width="6"/><rect x="86" y="22" width="12" height="12" rx="2" fill="#1d1d1f"/><rect x="12" y="76" width="32" height="32" rx="4" stroke="#1d1d1f" stroke-width="6"/><rect x="22" y="86" width="12" height="12" rx="2" fill="#1d1d1f"/></svg>`);
 
     function isImageSource(str) {
-      return /^(\/api\/image\?|data:image\/)/i.test(str) || /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(str);
+      return /^(?:https?:\/\/[^/\s]+)?\/api\/(?:private-)?image\?/i.test(str) || /^data:image\//i.test(str) || /\.(png|jpe?g|webp|gif|svg|avif)(\?.*)?$/i.test(str);
     }
 
     function openContactModal(btn) {
