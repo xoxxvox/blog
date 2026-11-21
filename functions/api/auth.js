@@ -9,6 +9,7 @@ import {
   buildSessionCookie,
   clearSessionCookie,
   cleanupExpiredAccounts,
+  ensureLifecycleSchema,
   isAdminRequest,
   sessionCookieName,
 } from "./_lib.js";
@@ -191,6 +192,7 @@ async function sendResendEmail(env, to, subject, text, html) {
 }
 
 async function findResetUser(env, username, email) {
+  await ensureLifecycleSchema(env);
   if (username) {
     const user = await env.DB.prepare(
       "SELECT id, username, email, role, invite_code FROM users WHERE LOWER(username) = LOWER(?) AND LOWER(email) = LOWER(?)"
@@ -374,6 +376,8 @@ export async function onRequestPost({ request, env }) {
   }
 
   if (action === "register") {
+    await ensureLifecycleSchema(env);
+    await ensureProfileColumn(env);
     await ensureEmailVerificationsTable(env);
     const username = String(body.username || "").trim();
     const email = String(body.email || "").trim();

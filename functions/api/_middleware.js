@@ -74,7 +74,11 @@ export async function onRequest(context) {
   const headers = new Headers(response.headers);
   const corsHeaders = buildCorsHeaders(allowedOrigin);
   corsHeaders.forEach((value, key) => {
-    headers.set(key, value);
+    if (key.toLowerCase() === 'vary') {
+      const tokens = new Set((headers.get('Vary') || '').split(',').map(token => token.trim()).filter(Boolean));
+      if (![...tokens].some(token => token.toLowerCase() === 'origin')) tokens.add('Origin');
+      headers.set('Vary', [...tokens].join(', '));
+    } else headers.set(key, value);
   });
 
   return new Response(response.body, {
