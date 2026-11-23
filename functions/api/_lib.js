@@ -1,3 +1,4 @@
+import { normalizeRole } from './_permissions.js';
 const SESSION_COOKIE = "blog_session";
 const ADMIN_SESSION_COOKIE = "blog_admin_session";
 const SESSION_TTL_SEC = 60 * 60 * 24 * 7; // 7 days
@@ -183,8 +184,8 @@ export async function getSessionUser(request, env) {
     .bind(token, now)
     .first();
   if (!row) return null;
-  if (isAdminRequest(request) && row.role !== "superadmin") return null;
-  return { ...row, sessionToken: token };
+  if (isAdminRequest(request) && !["admin","superadmin"].includes(row.role)) return null;
+  return { ...row, role: normalizeRole(row.role), sessionToken: token };
 }
 
 export function bytesToBase64(bytes) {

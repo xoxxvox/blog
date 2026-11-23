@@ -1,4 +1,4 @@
-import { LEVELS, isSuperAdmin } from "./_permissions.js";
+import { normalizeRole, LEVELS, isSuperAdmin } from "./_permissions.js";
 import { json, errorJson, getSessionUser, cleanupExpiredAccounts } from "./_lib.js";
 
 function randomCode() {
@@ -26,7 +26,7 @@ export async function onRequestGet({ request, env }) {
      LIMIT 100`
   ).all();
 
-  return json({ invites: results || [] });
+  return json({ invites: (results || []).map(invite => ({ ...invite, role: normalizeRole(invite.role) })) });
 }
 
 export async function onRequestPost({ request, env }) {
@@ -67,7 +67,7 @@ export async function onRequestPost({ request, env }) {
   const custom = String(body.code || "").trim().toUpperCase();
   const code = custom || randomCode();
   const role = body.role || "user";
-  if (!Object.hasOwn(LEVELS, role)) return errorJson("无效的账号等级", 400);
+  if (!["user","admin"].includes(role)) return errorJson("无效的账号等级", 400);
   const durationDays = Math.max(0, parseInt(body.durationDays ?? 30, 10) || 0);
 
   if (code.length < 4 || code.length > 32) {

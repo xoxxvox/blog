@@ -228,7 +228,7 @@ export async function onRequestGet({ request, env }) {
       id: user.id,
       username: user.username,
       email: user.email,
-      role: user.role,
+      role: normalizeRole(user.role),
       profile: parseUserProfile(row?.profile_json),
     },
   }, 200, { "Cache-Control": "no-store" });
@@ -307,7 +307,7 @@ export async function onRequestPost({ request, env }) {
     if (!["admin", "superadmin"].includes(user.role) && user.disabled_at) {
       return errorJson("该账号关联的邀请码已过期或被删除，账号已失效（失效7天后自动注销）", 403);
     }
-    if (isAdminRequest(request) && user.role !== "superadmin") {
+    if (isAdminRequest(request) && !["admin","superadmin"].includes(user.role)) {
       return errorJson("仅最高等级管理员账号允许登录独立后台", 403);
     }
 
@@ -318,7 +318,7 @@ export async function onRequestPost({ request, env }) {
           id: user.id,
           username: user.username,
           email: user.email,
-          role: user.role,
+          role: normalizeRole(user.role),
           profile: parseUserProfile(user.profile_json),
         },
       },
@@ -499,7 +499,7 @@ export async function onRequestPost({ request, env }) {
           id: newUserId,
           username,
           email,
-          role: assignedRole,
+          role: normalizeRole(assignedRole),
           profile: initialProfile,
         },
       },
@@ -552,7 +552,7 @@ export async function onRequestPost({ request, env }) {
         id: sessionUser.id,
         username: sessionUser.username,
         email: sessionUser.email,
-        role: sessionUser.role,
+        role: normalizeRole(sessionUser.role),
         profile: cleanProfile,
       },
     });
@@ -561,7 +561,7 @@ export async function onRequestPost({ request, env }) {
   if (action === "redeem_invite") {
     const sessionUser = await getSessionUser(request, env);
     if (!sessionUser) return errorJson("请先登录", 401);
-    if (sessionUser.role === "superadmin") return errorJson("最高等级账号无需兑换邀请码", 400);
+    if (["admin","superadmin"].includes(sessionUser.role)) return errorJson("最高等级账号无需兑换邀请码", 400);
     const inviteCode = String(body.inviteCode || "").trim().toUpperCase();
     if (!inviteCode) return errorJson("请输入邀请码", 400);
 
@@ -607,7 +607,7 @@ export async function onRequestPost({ request, env }) {
 
   if (action === "list_sessions") {
     const sessionUser = await getSessionUser(request, env);
-    if (!sessionUser || sessionUser.role !== "superadmin") {
+    if (!sessionUser || !["admin","superadmin"].includes(sessionUser.role)) {
       return errorJson("仅后台最高权限管理员可查看活跃会话", 403);
     }
     const nowSec = Math.floor(Date.now() / 1000);
@@ -624,7 +624,7 @@ export async function onRequestPost({ request, env }) {
     const sessions = (results || []).map((row) => ({
       id: `${String(row.token).slice(0, 8)}…`,
       username: row.username,
-      role: row.role,
+      role: normalizeRole(row.role),
       isCurrent: row.token === sessionUser.sessionToken,
       expiresAt: new Date(Number(row.expires_at) * 1000).toISOString(),
     }));
@@ -633,7 +633,7 @@ export async function onRequestPost({ request, env }) {
 
   if (action === "revoke_other_sessions") {
     const sessionUser = await getSessionUser(request, env);
-    if (!sessionUser || sessionUser.role !== "superadmin") {
+    if (!sessionUser || !["admin","superadmin"].includes(sessionUser.role)) {
       return errorJson("仅后台最高权限管理员可注销会话", 403);
     }
     const res = await env.DB.prepare("DELETE FROM sessions WHERE token != ?")

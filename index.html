@@ -3250,7 +3250,7 @@
               <div class="account-pop-identity">
                 <div class="account-pop-name-row">
                   <span class="account-pop-name" id="accountPopName">-</span>
-                  <span class="account-pop-badge" id="accountPopBadge">普通用户</span>
+                  <span class="account-pop-badge" id="accountPopBadge">登录用户</span>
                 </div>
                 <div class="account-bot-pill" id="accountBotPill" title="控制台在线护航">
                   <svg class="mini-bot-svg" style="width:18px;height:14px;" viewBox="0 0 28 20" fill="none" aria-hidden="true">
@@ -3385,7 +3385,7 @@
             <button class="cat-pill" type="button" data-filter="小众软件">小众软件</button>
             <button class="cat-pill" type="button" data-filter="网站优选">网站优选</button>
             <button class="cat-pill" type="button" data-filter="技术手记">技术手记</button>
-            <button class="cat-pill" type="button" data-filter="private" hidden>隐秘空间</button>
+
           </nav>
 
           <section class="surface content-panel" id="publicPostsPanel">
@@ -3438,46 +3438,7 @@
               </div>
             </div>
           </section>
-          <section class="surface content-panel" id="blogPrivatePanel" hidden aria-labelledby="blogPrivateHeading">
-            <div class="panel-header"><h2 class="panel-title" id="blogPrivateHeading">隐秘空间 · 私密手记</h2></div>
-            <div id="blogPrivateLocked">
-              <div class="private-lock-box">
-                <button class="robot-buddy private-robot-buddy" id="privateRobotBuddy" type="button" aria-label="和隐秘空间守卫小机器人互动">
-                  <div class="robot-bubble" id="privateRobotBubble">哔哔，输入 VIP 邀请码即可解锁</div>
-                  <svg class="robot-head-svg" viewBox="0 0 108 68" fill="none">
-                    <line x1="54" y1="6" x2="54" y2="16" stroke="var(--robot-ink)" stroke-width="3" stroke-linecap="round" />
-                    <circle cx="54" cy="5" r="4.5" fill="var(--accent)" stroke="var(--robot-ink)" stroke-width="2.5" />
-                    <rect x="7" y="29" width="9" height="22" rx="4.5" fill="var(--robot-accent)" stroke="var(--robot-ink)" stroke-width="2.5" />
-                    <rect x="92" y="29" width="9" height="22" rx="4.5" fill="var(--robot-accent)" stroke="var(--robot-ink)" stroke-width="2.5" />
-                    <rect x="16" y="16" width="76" height="52" rx="14" fill="var(--robot-body)" stroke="var(--robot-ink)" stroke-width="3" />
-                    <rect x="26" y="25" width="56" height="33" rx="8" fill="var(--robot-screen)" stroke="var(--robot-ink)" stroke-width="2" />
-                    <path d="M30 29 H40" stroke="rgba(255,255,255,0.22)" stroke-width="2" stroke-linecap="round" />
-                    <g class="robot-eyes-track" id="privateRobotEyesTrack">
-                      <circle class="robot-eye" cx="43" cy="39" r="5" fill="var(--robot-eye)" />
-                      <circle class="robot-eye" cx="65" cy="39" r="5" fill="var(--robot-eye)" />
-                    </g>
-                    <circle cx="54" cy="49" r="2.2" fill="var(--robot-eye)" />
-                  </svg>
-                </button>
-                <div class="robot-paws private-robot-paws" aria-hidden="true">
-                  <div class="robot-paw"><span></span><span></span><span></span></div>
-                  <div class="robot-paw"><span></span><span></span><span></span></div>
-                </div>
-                <h3>隐秘空间已锁定</h3>
-                <p>仅 VIP 和管理员可阅读。登录后兑换 VIP 邀请码，或在注册时填写对应邀请码。</p>
-                <form id="blogPrivateUnlock">
-                  <label for="blogPrivateCode">邀请码</label>
-                  <input class="auth-input" id="blogPrivateCode" required maxlength="32" autocomplete="off" placeholder="输入 VIP 邀请码" />
-                  <div class="private-unlock-actions">
-                    <button class="tactile-btn private-unlock-login" type="button" id="blogPrivateLogin">登录 / 注册</button>
-                    <button class="auth-submit private-unlock-submit" type="submit" id="blogPrivateSubmit">兑换邀请码</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-            <div id="blogPrivateContent" hidden><nav id="blogPrivateCategoryBar" aria-label="独立分类"></nav><div id="blogPrivateCategoryPages" hidden><button class="tactile-btn" id="blogPrivateCategoriesPrev" type="button">上一组分类</button><button class="tactile-btn" id="blogPrivateCategoriesNext" type="button">下一组分类</button></div><div class="carousel-box" id="blogPrivateCarouselBox" tabindex="0" role="button"><button class="tactile-btn carousel-nav carousel-prev" id="blogPrivateCarouselPrev" type="button" aria-label="上一篇私密手记"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path transform="translate(-1 0)" d="m15 18-6-6 6-6"></path></svg></button><button class="tactile-btn carousel-nav carousel-next" id="blogPrivateCarouselNext" type="button" aria-label="下一篇私密手记"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path transform="translate(1 0)" d="m9 18 6-6-6-6"></path></svg></button><div class="carousel-content"><span class="carousel-badge tabular" id="blogPrivateCarouselBadge">私密手记 · 0 / 0</span><h2 class="carousel-title" id="blogPrivateCarouselTitle">暂无私密手记</h2><p class="carousel-desc" id="blogPrivateCarouselDesc">当前分类下还没有文章，发布后将在此轮播展示。</p><span class="carousel-meta tabular" id="blogPrivateCarouselDate">—</span></div><div class="carousel-visual" aria-hidden="true"><svg viewBox="0 0 260 160" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="16" y1="40" x2="244" y2="40" stroke="currentColor" stroke-opacity="0.08" stroke-width="1" /><line x1="16" y1="80" x2="244" y2="80" stroke="currentColor" stroke-opacity="0.08" stroke-width="1" /><line x1="16" y1="120" x2="244" y2="120" stroke="currentColor" stroke-opacity="0.08" stroke-width="1" /><rect x="36" y="34" width="128" height="92" rx="6" fill="var(--bg-page)" stroke="currentColor" stroke-opacity="0.16" stroke-width="1.2" /><rect x="52" y="52" width="60" height="6" rx="2" fill="currentColor" fill-opacity="0.65" /><rect x="52" y="66" width="94" height="4" rx="2" fill="currentColor" fill-opacity="0.2" /><rect x="52" y="76" width="80" height="4" rx="2" fill="currentColor" fill-opacity="0.2" /><rect x="150" y="80" width="54" height="54" rx="8" fill="var(--accent)" /><circle cx="177" cy="107" r="10" stroke="var(--accent-contrast)" stroke-width="1.5" /></svg></div></div><div class="articles-grid" id="blogPrivateCards"></div><div class="pagination-bar"><button class="tactile-btn page-btn" type="button" id="blogPrivatePrev">上一页</button><span class="tabular" id="blogPrivatePage"></span><button class="tactile-btn page-btn" type="button" id="blogPrivateNext">下一页</button></div></div>
-            <p id="blogPrivateStatus" class="muted-meta" role="status"></p>
-          </section>
+
         </main>
       </div>
 
@@ -3652,7 +3613,7 @@
                   <div class="account-hero-sub" id="accountCardEmail">-</div>
                 </div>
               </div>
-              <span class="account-role-badge" id="accountCardBadge" style="align-self: flex-start; margin-bottom: 4px;">普通用户</span>
+              <span class="account-role-badge" id="accountCardBadge" style="align-self: flex-start; margin-bottom: 4px;">登录用户</span>
 
               <div class="rail-group is-expanded is-active" data-rail-group="account">
                 <button class="rail-group-btn" type="button" data-rail-toggle="account" aria-expanded="true">
@@ -3684,7 +3645,7 @@
                   <div class="settings-section-desc" id="accountInviteStatus">注册时未填写邀请码可在此补填，以解锁更高权限</div>
                 </div>
                 <div class="setting-row"><span class="setting-row-label">当前账号</span><div class="setting-row-control"><span class="setting-row-value" id="authUserName">-</span></div></div>
-                <div class="setting-row"><span class="setting-row-label">账号权限</span><div class="setting-row-control"><span class="setting-row-value" id="authUserRole">普通用户</span></div></div>
+                <div class="setting-row"><span class="setting-row-label">账号权限</span><div class="setting-row-control"><span class="setting-row-value" id="authUserRole">登录用户</span></div></div>
                 <div class="setting-row"><span class="setting-row-label">绑定邮箱</span><div class="setting-row-control"><span class="setting-row-value" id="authUserEmail">-</span></div></div>
                 <div class="setting-row"><span class="setting-row-label">数据同步</span><div class="setting-row-control"><span class="setting-row-value" id="authSyncMode">云端 D1 + GitHub</span></div></div>
                 <div class="setting-row">
@@ -3764,7 +3725,7 @@
               </form>
             </div>
         </div>
-            
+
             </div>
           </div>
         </div>
@@ -4825,12 +4786,7 @@
     }
 
     function renderArticles() {
-      const privateMode = state.filter === "private";
-      if (privateMode) window.blogPrivateSpace?.beginLayout();
-      document.getElementById("publicPostsPanel").hidden = privateMode;
-      document.getElementById("blogPrivatePanel").hidden = !privateMode;
-      if (privateMode) { window.blogPrivateSpace?.show(state.query); return; }
-      window.blogPrivateSpace?.restoreIntro();
+      document.getElementById("publicPostsPanel").hidden = false;
       const q = state.query.trim().toLowerCase();
       const filtered = POSTS.filter((post) => {
         const matchCat = state.filter === "all" || post.category === state.filter;
@@ -5126,13 +5082,6 @@ document.getElementById("readerTitle").textContent = post.title;
     }
     catPills.forEach((pill) => {
       pill.addEventListener("click", () => {
-        if (pill.dataset.filter === "private") {
-          if (!currentUser || !hasLevelPermission("private_read")) {
-            showToast("隐秘空间仅限 VIP 及以上等级访问", true);
-            return;
-          }
-          if (state.filter !== "private") window.blogPrivateSpace?.beginLayout();
-        }
         catPills.forEach((p) => p.classList.remove("is-active"));
         pill.classList.add("is-active");
         moveCatIndicator(pill);
@@ -5249,12 +5198,14 @@ document.getElementById("readerTitle").textContent = post.title;
     // Auth
     let currentUser = null;
 
-    const ACCOUNT_LEVEL_NAMES = { guest: "游客", user: "普通", advanced: "高级", vip: "VIP", admin: "管理员", superadmin: "最高管理员" };
+    const ACCOUNT_LEVEL_NAMES = { guest: "登录用户", user: "登录用户", advanced: "登录用户", vip: "登录用户", admin: "管理员", superadmin: "管理员" };
     const accountLevelName = role => ACCOUNT_LEVEL_NAMES[role] || "普通";
     let levelPermissions = null;
     let levelPermissionIdentity = "";
     let levelPermissionRevision = 0;
     function hasLevelPermission(key) {
+      if (["like","bookmark","share"].includes(key)) return Boolean(currentUser);
+      if (["private_read", "private_export"].includes(key)) return false;
       if (currentUser?.role === "admin" || currentUser?.role === "superadmin") return true;
       if (["private_read", "private_export"].includes(key) && currentUser?.role !== "vip") return false;
       const fallback = currentUser
@@ -5393,19 +5344,7 @@ authTriggerText.textContent = "登录 / 注册";
         syncContentFromServer();
       }
       lastContentAuthState = isLoggedIn;
-      const canViewPrivate = Boolean(currentUser && hasLevelPermission("private_read"));
-      const privatePill = document.querySelector('.cat-pill[data-filter="private"]');
-      if (privatePill) privatePill.hidden = !canViewPrivate;
-      if (!canViewPrivate && state.filter === "private") {
-        state.filter = "all";
-        catPills.forEach((p) => p.classList.toggle("is-active", p.dataset.filter === "all"));
-        renderCarousel();
-        renderArticles();
-      } else if (state.filter === "private") {
-        window.blogPrivateSpace?.show(state.query);
-      } else if (currentProfile && Array.isArray(currentProfile.contacts)) {
-        renderContacts(currentProfile.contacts, "public");
-      }
+      if (currentProfile && Array.isArray(currentProfile.contacts)) renderContacts(currentProfile.contacts, "public");
       requestAnimationFrame(() => moveCatIndicator(document.querySelector(".cat-pill.is-active")));
       const commentButton = document.getElementById("commentSubmitBtn");
       if (commentButton) commentButton.disabled = !currentUser || !hasLevelPermission("comment");
@@ -5917,7 +5856,7 @@ syncAuthUI();
         syncTopAuthBar();
         closeAuthModal();
         setTimeout(() => { authForm.reset(); syncAuthUI(); }, 230);
-        showToast(isDemoAdmin ? "已登录本地预览管理员账号" : "已登录本地预览普通用户账号");
+        showToast(isDemoAdmin ? "已登录本地预览管理员账号" : "已登录本地预览登录用户账号");
         return;
       }
 
@@ -6407,6 +6346,7 @@ syncAuthUI();
     }
 
     document.getElementById("likePostBtn")?.addEventListener("click", (e) => {
+      if (!currentUser) { showToast("请登录后操作", true); openAuthModal("login"); return; }
       if (!state.currentPostId) return;
       const all = getEngageState();
       const info = getPostEngage(state.currentPostId);
@@ -6421,6 +6361,7 @@ syncAuthUI();
     });
 
     document.getElementById("favPostBtn")?.addEventListener("click", (e) => {
+      if (!currentUser) { showToast("请登录后操作", true); openAuthModal("login"); return; }
       if (!state.currentPostId) return;
       const all = getEngageState();
       const info = getPostEngage(state.currentPostId);
@@ -6441,6 +6382,7 @@ syncAuthUI();
     });
 
     document.getElementById("sharePostBtn")?.addEventListener("click", async () => {
+      if (!currentUser) { showToast("请登录后操作", true); openAuthModal("login"); return; }
       if (!state.currentPostId) return;
       const shareUrl = `${location.origin}${location.pathname}#post=${encodeURIComponent(state.currentPostId)}`;
       const all = getEngageState();
@@ -7012,6 +6954,6 @@ syncAuthUI();
       } catch {}
     })();
   </script>
-  <script src="./private-space.js?v=categories14"></script>
+
 </body>
 </html>

@@ -27,31 +27,29 @@ test('registration requires a valid unexpired email code and consumes it on succ
  assert.equal(response.status,201);
  assert.equal(env.DB.sqlite.prepare("SELECT COUNT(*) AS count FROM email_verifications WHERE email=?").get(body.email).count,0);
 });
-test("blog policy changes are validated and only administrators can save",async()=>{
- const {env,cookies}=await setup(),p=defaults();p.user=[];p.admin=[];
- assert.equal((await policy.onRequestPost({env,request:request('/api/permissions',cookies.user,'POST',{policies:p})})).status,403);
- assert.equal((await policy.onRequestPost({env,request:request('/api/permissions',cookies.admin,'POST',{policies:p})})).status,200);
- assert.equal(await can(env,{role:'user'},'comment'),false);assert.equal(await can(env,{role:'admin'},'comment'),true);
- assert.equal((await comments.onRequestPost({env,request:request('/api/comments',cookies.user,'POST',{postId:'p',content:'blocked'})})).status,403);
- assert.equal((await upload.onRequestPost({env,request:request('/api/upload',cookies.user,'POST',{})})).status,403);
- assert.equal((await auth.onRequestPost({env,request:request('/api/auth',cookies.user,'POST',{action:'update_profile',profile:{}})})).status,403);
+test('three fixed blog tiers give guests read access and signed-in members interaction, while policy writes are retired',async()=>{
+ const {env,cookies}=await setup();assert.deepEqual(Object.keys(defaults()),['guest','user','admin']);
+ assert.equal((await policy.onRequestPost({env,request:request('/api/permissions',cookies.user,'POST',{policies:defaults()})})).status,403);
+ assert.equal((await policy.onRequestPost({env,request:request('/api/permissions',cookies.admin,'POST',{policies:defaults()})})).status,410);
+ assert.equal(await can(env,null,'read'),true);assert.equal(await can(env,null,'comment'),false);
+ for(const role of ['guest','user','advanced','vip']){assert.equal(await can(env,{role},'comment'),true);assert.equal(await can(env,{role},'like'),true);}
+ assert.equal(await can(env,{role:'admin'},'comment'),true);
 });
-test("all five invitation levels register without changing existing account roles",async()=>{
+
+test("user and administrator invitations register in the two account tiers",async()=>{
  const {env,cookies}=await setup();
- for(const role of ['guest','user','advanced','vip','admin']){
+ for(const role of ['user','admin']){
   const code='BLOG-'+role.toUpperCase();const created=await invite.onRequestPost({env,request:request('/api/invites',cookies.admin,'POST',{code,role,durationDays:30})});assert.equal(created.status,201);
   const registered=await auth.onRequestPost({env,request:registration(env,{action:'register',username:'new-'+role,email:role+'@test.example',password:'test-pass-123',inviteCode:code})});assert.equal(registered.status,201,await registered.clone().text());assert.equal((await registered.json()).user.role,role);
  }
 });
-test("blog and image policies remain isolated even with a shared D1",async()=>{
- const {env}=await setup();const p=defaults();p.user=[];await savePolicies(env,p);
- env.DB.sqlite.prepare('INSERT INTO access_policies(scope,policies_json) VALUES (?,?)').run('imghub','{}');
- assert.equal(await can(env,{role:'user'},'comment'),false);
+test('blog fixed policies do not introduce image management privileges',async()=>{
+ const {env}=await setup();assert.equal(await can(env,{role:'user'},'comment'),true);assert.equal(await can(env,{role:'user'},'delete'),false);
 });
 
 test("concurrent registrations cannot consume a single invitation twice",async()=>{
  const {env,cookies,DB}=await setup();
- const created=await invite.onRequestPost({env,request:request('/api/invites',cookies.admin,'POST',{code:'ONE-USE',role:'vip',durationDays:30})});assert.equal(created.status,201);
+ const created=await invite.onRequestPost({env,request:request('/api/invites',cookies.admin,'POST',{code:'ONE-USE',role:'user',durationDays:30})});assert.equal(created.status,201);
  const responses=await Promise.all(['one','two'].map(suffix=>auth.onRequestPost({env,request:registration(env,{action:'register',username:'race-'+suffix,email:suffix+'@test.example',password:'test-pass-123',inviteCode:'ONE-USE'})})));
  assert.deepEqual(responses.map(r=>r.status).sort(),[201,409]);
  assert.equal(DB.sqlite.prepare("SELECT COUNT(*) AS count FROM users WHERE username LIKE 'race-%'").get().count,1);
@@ -59,12 +57,12 @@ test("concurrent registrations cannot consume a single invitation twice",async()
 
 test("invite list includes the bound username and current email",async()=>{
  const {env,cookies}=await setup();
- await invite.onRequestPost({env,request:request('/api/invites',cookies.admin,'POST',{code:'BOUND-CODE',role:'vip',durationDays:30})});
+ await invite.onRequestPost({env,request:request('/api/invites',cookies.admin,'POST',{code:'BOUND-CODE',role:'user',durationDays:30})});
  const registered=await auth.onRequestPost({env,request:registration(env,{action:'register',username:'bound-person',email:'bound@test.example',password:'test-pass-123',inviteCode:'BOUND-CODE'})});assert.equal(registered.status,201);
  const response=await invite.onRequestGet({env,request:request('/api/invites',cookies.admin)}),data=await response.json(),row=data.invites.find(item=>item.code==='BOUND-CODE');assert.equal(row.bound_username,'bound-person');assert.equal(row.bound_email,'bound@test.example');
 });
 
-test("existing admin is promoted to superadmin above invite-created admin and frontend/admin sessions are isolated",async()=>{
+test("legacy and invite-created administrators both have administrator access with isolated sessions",async()=>{
  const {env,cookies}=await setup();
  // Initial admin is promoted to superadmin on first getSessionUser; newly registered admin stays 'admin'
  const created=await invite.onRequestPost({env,request:request('/api/invites',cookies.admin,'POST',{code:'SUB-ADMIN',role:'admin',durationDays:30})});assert.equal(created.status,201);
@@ -72,9 +70,9 @@ test("existing admin is promoted to superadmin above invite-created admin and fr
  assert.equal((await reg.clone().json()).user.role,'admin');
  const subCookie=reg.headers.get('set-cookie').split(';')[0];
  // Invite-created admin cannot manage invites or policies
- assert.equal((await invite.onRequestPost({env,request:request('/api/invites',subCookie,'POST',{code:'BLOCKED',role:'user',durationDays:30})})).status,403);
- assert.equal((await policy.onRequestPost({env,request:request('/api/permissions',subCookie,'POST',{policies:defaults()})})).status,403);
+ assert.equal((await invite.onRequestPost({env,request:request('/api/invites',subCookie,'POST',{code:'BLOCKED',role:'user',durationDays:30})})).status,201);
+ assert.equal((await policy.onRequestPost({env,request:request('/api/permissions',subCookie,'POST',{policies:defaults()})})).status,410);
  // Admin login uses blog_admin_session via X-Admin-Session: 1, separate from frontend blog_session
  const adminLoginReq=new Request('https://example.com/api/auth',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Session':'1'},body:JSON.stringify({action:'login',username:'sub-admin',password:'test-pass-123'})});
- assert.equal((await auth.onRequestPost({env,request:adminLoginReq})).status,403);
+ assert.equal((await auth.onRequestPost({env,request:adminLoginReq})).status,200);
 });
