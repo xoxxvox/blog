@@ -8,8 +8,8 @@
   <meta name="darkreader-lock" />
   <title>XXOXOVX  ·  BLOG</title>
   <meta name="description" content="xxoxovx 的个人技术档案：记录软路由折腾、科学网络、小众软件、网站优选与云原生 Serverless 实践。" />
-  <meta name="theme-color" content="#fdf2c8" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#0c0d10" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0e0e10" media="(prefers-color-scheme: dark)" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="XXOXOVX · BLOG" />
   <meta property="og:description" content="记录软路由折腾、科学网络、小众软件、网站优选与云原生 Serverless 实践。" />
@@ -17,7 +17,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png?v=brand1" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&display=swap" />
   <style>
     :root {
       --bg-page: #f5f5f7;
@@ -3093,7 +3093,7 @@
     }
     @media (max-width: 1024px) { .profile-photo-frame { display: none; } }
   </style>
-  <link rel="stylesheet" href="./cream-theme.css?v=categories13" />
+  <link rel="stylesheet" href="./cream-theme.css?v=swiss-editorial1" />
 </head>
 <body>
   <canvas id="appleMeshCanvas" aria-hidden="true"></canvas>
@@ -3222,10 +3222,10 @@
             <div class="popover-section">
               <span class="popover-label">系统主题色</span>
               <div class="swatch-row" role="group">
-                <button class="swatch-btn swatch-blue is-active" type="button" data-palette="blue" title="晴空蓝"></button>
-                <button class="swatch-btn swatch-purple" type="button" data-palette="purple" title="星辰紫"></button>
-                <button class="swatch-btn swatch-green" type="button" data-palette="green" title="生态绿"></button>
-                <button class="swatch-btn swatch-orange" type="button" data-palette="orange" title="活力橙"></button>
+                <button class="swatch-btn swatch-blue is-active" type="button" data-palette="blue" title="晴空蓝" aria-label="晴空蓝"></button>
+                <button class="swatch-btn swatch-purple" type="button" data-palette="purple" title="星辰紫" aria-label="星辰紫"></button>
+                <button class="swatch-btn swatch-green" type="button" data-palette="green" title="生态绿" aria-label="生态绿"></button>
+                <button class="swatch-btn swatch-orange" type="button" data-palette="orange" title="活力橙" aria-label="活力橙"></button>
               </div>
               <div class="custom-color-row">
                 <span class="custom-color-dot" id="customColorDot" aria-hidden="true"></span>
@@ -4677,33 +4677,30 @@
       }
       const contactIcon = (label = "") => {
         const k = label.toLowerCase();
-        if (k.includes("qq")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
-        if (k.includes("wechat") || k.includes("微信")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 17C5.9 17 3 14.5 3 11.5S5.9 6 9.5 6 16 8.5 16 11.5"/><circle cx="7.5" cy="10.5" r=".7" fill="currentColor"/><circle cx="11.5" cy="10.5" r=".7" fill="currentColor"/><path d="M21 15.5c0 2-2.2 3.5-5 3.5-.7 0-1.4-.1-2-.3L12 20l.5-1.7c-1-.7-1.5-1.7-1.5-2.8 0-2 2.2-3.5 5-3.5s5 1.5 5 3.5z"/></svg>';
-        if (k.includes("telegram") || k.includes("tg")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>';
-        if (k.includes("twitter") || k.includes("x")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.7 16h4.3L8.3 4H4z"/><path d="M4 20l6.8-6.8"/><path d="M13.2 10.8L20 4"/></svg>';
-        if (k.includes("mail") || k.includes("邮箱")) return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>';
-        return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>';
+        if (k.includes("qq")) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+        if (k.includes("wechat") || k.includes("微信")) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 17C5.9 17 3 14.5 3 11.5S5.9 6 9.5 6 16 8.5 16 11.5"/><circle cx="7.5" cy="10.5" r=".8" fill="currentColor"/><circle cx="11.5" cy="10.5" r=".8" fill="currentColor"/><path d="M21 15.5c0 2-2.2 3.5-5 3.5-.7 0-1.4-.1-2-.3L12 20l.5-1.7c-1-.7-1.5-1.7-1.5-2.8 0-2 2.2-3.5 5-3.5s5 1.5 5 3.5z"/></svg>';
+        if (k.includes("telegram") || k.includes("tg")) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>';
+        if (k.includes("twitter") || k.includes("x")) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l11.7 16h4.3L8.3 4H4z"/><path d="M4 20l6.8-6.8"/><path d="M13.2 10.8L20 4"/></svg>';
+        if (k.includes("mail") || k.includes("邮箱")) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>';
+        if (k.includes("github") || k.includes("git")) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>';
+        return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>';
       };
       const needsLogin = scope === "public" && !loggedIn;
-      listEl.innerHTML = items
-        .map(
-          (c) => `
-          <div class="contact-row">
-            <span class="contact-left">
-              <span class="contact-icon-badge" aria-hidden="true">${contactIcon(c.label)}</span>
-              <span>${escapeHtml(c.label)}</span>
-            </span>
-            <button class="tactile-btn copy-btn contact-view-btn" type="button"
-              data-scope="${scope}"
-              data-requires-login="${needsLogin || c.requiresLogin ? "1" : "0"}"
-              data-title="${escapeHtml(c.modalTitle || c.label + ' 联系方式')}"
-              data-label="${escapeHtml(c.fieldLabel || '账号')}"
-              data-value="${escapeHtml(needsLogin ? '' : (c.value || ''))}"
-              data-url="${escapeHtml(needsLogin ? '' : (c.url || ''))}"
-              data-qr="${escapeHtml(needsLogin ? '' : (c.qr || ''))}">${needsLogin ? "登录查看" : "查看"}</button>
-          </div>`
-        )
-        .join("");
+      listEl.innerHTML = `<div class="contact-icon-grid">${items
+        .map((c) => {
+          const tip = `${c.label || "联系方式"} · ${needsLogin ? "登录后查看" : "点击查看"}`;
+          return `<button class="tactile-btn contact-icon-btn contact-view-btn" type="button"
+            aria-label="${escapeHtml(tip)}"
+            title="${escapeHtml(tip)}"
+            data-scope="${scope}"
+            data-requires-login="${needsLogin || c.requiresLogin ? "1" : "0"}"
+            data-title="${escapeHtml(c.modalTitle || c.label + ' 联系方式')}"
+            data-label="${escapeHtml(c.fieldLabel || '账号')}"
+            data-value="${escapeHtml(needsLogin ? '' : (c.value || ''))}"
+            data-url="${escapeHtml(needsLogin ? '' : (c.url || ''))}"
+            data-qr="${escapeHtml(needsLogin ? '' : (c.qr || ''))}">${contactIcon(c.label)}</button>`;
+        })
+        .join("")}</div>`;
     }
 
     function updateFooterStats() {
@@ -4796,7 +4793,11 @@
       panelTitleText.textContent = state.filter === "all" ? "最新动态 · 最新发布" : state.filter;
 
       if (filtered.length === 0) {
-        articlesGrid.innerHTML = buildArticlePlaceholders(PAGE_SIZE, true);
+        articlesGrid.innerHTML = `
+          <div class="article-empty-row" role="note" aria-label="暂无匹配文章">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
+            <span>没有找到匹配的文章</span>
+          </div>`;
         document.getElementById("pageIndicatorText").textContent = "0 / 0";
         document.getElementById("prevPageBtn").disabled = true;
         document.getElementById("nextPageBtn").disabled = true;
@@ -4818,21 +4819,30 @@
       jumpInput.max = totalPages;
       jumpInput.value = state.page;
 
-      const baseDelay = isFirstRender ? 220 : 0;
+      const baseDelay = isFirstRender ? 140 : 0;
       isFirstRender = false;
       articlesGrid.innerHTML = pageItems
-        .map((post, idx) => `
-          <article class="article-card is-entering" style="animation-delay: ${baseDelay + Math.min(idx, 12) * 50}ms" data-id="${escapeHtml(post.id)}" tabindex="0" role="button">
-            <div>
+        .map((post, idx) => {
+          const seq = startIdx + idx + 1;
+          const indexNum = seq < 10 ? `0${seq}` : String(seq);
+          const readLabel = post.readTime ? escapeHtml(post.readTime) : "阅读";
+          return `
+          <article class="article-card swiss-index-row is-entering" style="animation-delay: ${baseDelay + Math.min(idx, 12) * 35}ms" data-id="${escapeHtml(post.id)}" tabindex="0" role="button">
+            <span class="article-index-num tabular">${indexNum}</span>
+            <div class="article-index-meta tabular">
+              <span>${escapeHtml(post.date)}</span>
+              <span class="article-tag">${escapeHtml(post.category)}</span>
+            </div>
+            <div class="article-index-body">
               <h3 class="article-card-title">${escapeHtml(post.title)}</h3>
               <p class="article-card-desc">${escapeHtml(post.excerpt)}</p>
             </div>
-            <div class="article-card-footer tabular">
-              <span class="article-tag">${escapeHtml(post.category)}</span>
-              <span>${escapeHtml(post.date)}</span>
+            <div class="article-index-action tabular">
+              <span>${readLabel}</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </div>
-          </article>
-        `).join("") + buildArticlePlaceholders(PAGE_SIZE - pageItems.length);
+          </article>`;
+        }).join("");
 
       articlesGrid.querySelectorAll(".article-card[data-id]").forEach((card) => {
         const open = () => openReader(card.dataset.id);
