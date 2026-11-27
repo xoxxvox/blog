@@ -289,15 +289,28 @@ body {
   box-shadow: var(--shadow-focus);
 }
 
-.tactile-btn {
-  background-color: var(--bg-card);
-  border-color: var(--hairline-strong);
+.tactile-btn,
+.copy-btn,
+[data-theme="dark"] .copy-btn,
+.page-btn,
+.modal-btn:not(.modal-btn-primary) {
+  background-color: transparent;
+  border: 1px solid var(--hairline-strong);
+  color: var(--text-primary);
+  transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
 }
-.tactile-btn:hover {
-  background-color: var(--bg-subcard);
+.tactile-btn:hover,
+.copy-btn:hover,
+.page-btn:hover:not(:disabled),
+.modal-btn:not(.modal-btn-primary):hover {
+  background-color: transparent;
   border-color: var(--line-strong);
+  color: var(--accent);
   transform: none;
   box-shadow: none;
+}
+.tactile-btn:active {
+  transform: scale(0.98);
 }
 
 .surface,
@@ -622,6 +635,10 @@ body {
   color: var(--text-muted);
 }
 
+.contact-list {
+  width: 100%;
+}
+
 .contact-icon-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -630,31 +647,51 @@ body {
 }
 
 .contact-icon-btn {
+  position: relative;
+  overflow: hidden;
   width: 100%;
+  min-width: 0;
   height: auto;
   aspect-ratio: 1 / 1;
   min-height: 36px;
   padding: 0;
   border-radius: 2px;
   border: 1px solid var(--hairline-strong);
-  background-color: var(--bg-subcard);
-  color: var(--text-primary);
+  background-color: transparent;
+  color: var(--text-secondary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: border-color 140ms ease, color 140ms ease, background-color 140ms ease;
+  transition: border-color 160ms ease, color 160ms ease;
 }
-.contact-icon-btn:hover {
-  border-color: var(--accent);
+.contact-icon-btn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: var(--accent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 180ms ease;
+}
+.contact-icon-btn:hover,
+.contact-icon-btn:focus-visible {
+  border-color: var(--line-strong);
   color: var(--accent);
-  background-color: var(--accent-soft);
+  background-color: transparent;
   transform: none;
   box-shadow: none;
 }
+.contact-icon-btn:hover::after,
+.contact-icon-btn:focus-visible::after {
+  transform: scaleX(1);
+}
 .contact-icon-btn svg {
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
   display: block;
 }
 
