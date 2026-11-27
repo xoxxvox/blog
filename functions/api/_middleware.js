@@ -50,6 +50,16 @@ function buildCorsHeaders(allowedOrigin) {
   return headers;
 }
 
+function withSecurityHeaders(headers) {
+  if (!headers.has("X-Content-Type-Options")) {
+    headers.set("X-Content-Type-Options", "nosniff");
+  }
+  if (!headers.has("Referrer-Policy")) {
+    headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  }
+  return headers;
+}
+
 export async function onRequest(context) {
   const { request, env, next } = context;
   const allowedOrigin = resolveCorsOrigin(request, env);
@@ -61,25 +71,32 @@ export async function onRequest(context) {
     }
     return new Response(null, {
       status: 204,
-      headers: buildCorsHeaders(allowedOrigin),
+      headers: withSecurityHeaders(buildCorsHeaders(allowedOrigin)),
+    });
+  }
+
+  // 写操作若携带不在白名单的 Origin，直接拒绝
+  if (["POST", "PUT", "PATCH", "DELETE"].includes(request.method.toUpperCase()) && request.headers.has("Origin") && !allowedOrigin) {
+    return new Response(JSON.stringify({ error: "非法请求来源" }), {
+      status: 403,
+      headers: withSecurityHeaders(new Headers({ "Content-Type": "application/json; charset=utf-8" })),
     });
   }
 
   const response = await next();
-  if (!allowedOrigin) {
-    return response;
-  }
 
   // 克隆响应头，避免覆盖下游接口返回的 Set-Cookie
-  const headers = new Headers(response.headers);
-  const corsHeaders = buildCorsHeaders(allowedOrigin);
-  corsHeaders.forEach((value, key) => {
-    if (key.toLowerCase() === 'vary') {
-      const tokens = new Set((headers.get('Vary') || '').split(',').map(token => token.trim()).filter(Boolean));
-      if (![...tokens].some(token => token.toLowerCase() === 'origin')) tokens.add('Origin');
-      headers.set('Vary', [...tokens].join(', '));
-    } else headers.set(key, value);
-  });
+  const headers = withSecurityHeaders(new Headers(response.headers));
+  if (allowedOrigin) {
+    const corsHeaders = buildCorsHeaders(allowedOrigin);
+    corsHeaders.forEach((value, key) => {
+      if (key.toLowerCase() === 'vary') {
+        const tokens = new Set((headers.get('Vary') || '').split(',').map(token => token.trim()).filter(Boolean));
+        if (![...tokens].some(token => token.toLowerCase() === 'origin')) tokens.add('Origin');
+        headers.set('Vary', [...tokens].join(', '));
+      } else headers.set(key, value);
+    });
+  }
 
   return new Response(response.body, {
     status: response.status,

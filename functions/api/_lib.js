@@ -57,9 +57,22 @@ export async function hashPassword(password) {
   return `${toHex(salt)}:${toHex(derived)}`;
 }
 
+function constantTimeEqual(a, b) {
+  const left = String(a || "");
+  const right = String(b || "");
+  let diff = left.length ^ right.length;
+  const len = Math.max(left.length, right.length);
+  for (let i = 0; i < len; i++) {
+    diff |= (left.charCodeAt(i) || 0) ^ (right.charCodeAt(i) || 0);
+  }
+  return diff === 0;
+}
+
 export async function verifyPassword(password, stored) {
-  const [saltHex, hashHex] = String(stored || "").split(":");
-  if (!saltHex || !hashHex) return false;
+  const parts = String(stored || "").split(":");
+  if (parts.length !== 2) return false;
+  const [saltHex, hashHex] = parts;
+  if (!saltHex || !hashHex || saltHex.length % 2 !== 0 || !/^[0-9a-f]+$/i.test(saltHex)) return false;
   const salt = fromHex(saltHex);
   const key = await crypto.subtle.importKey(
     "raw",
@@ -73,7 +86,7 @@ export async function verifyPassword(password, stored) {
     key,
     256
   );
-  return toHex(derived) === hashHex;
+  return constantTimeEqual(toHex(derived), hashHex);
 }
 
 export function parseCookies(request) {
@@ -84,7 +97,11 @@ export function parseCookies(request) {
     if (idx > 0) {
       const k = part.slice(0, idx).trim();
       const v = part.slice(idx + 1).trim();
-      map[k] = decodeURIComponent(v);
+      try {
+        map[k] = decodeURIComponent(v);
+      } catch {
+        map[k] = v;
+      }
     }
   }
   return map;
@@ -216,8 +233,10 @@ export function requireGitHubEnv(env) {
 export async function githubFetch(env, apiPath, init = {}) {
   requireGitHubEnv(env);
   const url = `https://api.github.com${apiPath}`;
+  const signal = init.signal || (typeof AbortSignal !== "undefined" && AbortSignal.timeout ? AbortSignal.timeout(20000) : undefined);
   return fetch(url, {
     ...init,
+    ...(signal ? { signal } : {}),
     headers: {
       Authorization: `Bearer ${env.GITHUB_TOKEN}`,
       Accept: "application/vnd.github+json",
@@ -237,8 +256,7 @@ export async function githubGetFile(env, filePath) {
   );
   if (res.status === 404) return null;
   if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`GitHub 读取失败 (${res.status}): ${err}`);
+    throw new Error(`GitHub 读取失败 (${res.status})`);
   }
   const data = await res.json();
   const bytes = base64ToBytes(data.content || "");
@@ -277,8 +295,7 @@ export async function githubPutFile(env, filePath, content, message, isBinary = 
     }
   );
   if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`GitHub 写入失败 (${res.status}): ${err}`);
+    throw new Error(`GitHub 写入失败 (${res.status})`);
   }
   return res.json();
 }
@@ -303,8 +320,7 @@ export async function githubDeleteFile(env, filePath, message) {
     }
   );
   if (!res.ok && res.status !== 404) {
-    const err = await res.text();
-    throw new Error(`GitHub 删除失败 (${res.status}): ${err}`);
+    throw new Error(`GitHub 删除失败 (${res.status})`);
   }
   return true;
 }

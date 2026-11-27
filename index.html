@@ -4103,12 +4103,65 @@
       return out;
     }
 
-    // Markdown Renderer (supports legacy HTML + clean Markdown)
+    function safeUrl(raw, extraProtocols = []) {
+      const value = String(raw || "").trim();
+      if (!value) return "";
+      if (/^(?:\/(?!\/)|\.\/|\.\.\/|#)/.test(value)) return value;
+      try {
+        const parsed = new URL(value, window.location.origin);
+        const allowed = new Set(["https:", "http:", "mailto:", ...extraProtocols]);
+        return allowed.has(parsed.protocol.toLowerCase()) ? value : "";
+      } catch {
+        return "";
+      }
+    }
+
+    function safeImgUrl(raw) {
+      const value = String(raw || "").trim();
+      if (/^data:image\/(?:png|jpeg|jpg|webp|gif);base64,[a-z0-9+/=\s]+$/i.test(value)) return value;
+      return safeUrl(value);
+    }
+
+    function sanitizeLegacyHtml(html) {
+      const tpl = document.createElement("template");
+      tpl.innerHTML = String(html || "");
+      const blocked = tpl.content.querySelectorAll("script,iframe,object,embed,style,form,svg,base,meta,link");
+      blocked.forEach((node) => node.remove());
+      tpl.content.querySelectorAll("*").forEach((el) => {
+        for (const attr of Array.from(el.attributes)) {
+          const name = attr.name.toLowerCase();
+          if (name.startsWith("on") || name === "srcdoc" || name === "style") {
+            el.removeAttribute(attr.name);
+            continue;
+          }
+          if (name === "href") {
+            const ok = safeUrl(attr.value);
+            if (!ok) el.removeAttribute(attr.name);
+            else el.setAttribute("href", ok);
+          } else if (name === "src") {
+            const ok = safeImgUrl(attr.value);
+            if (!ok) el.removeAttribute(attr.name);
+            else el.setAttribute("src", ok);
+          }
+        }
+        if (el.tagName === "A" && el.getAttribute("href")) {
+          el.setAttribute("target", "_blank");
+          el.setAttribute("rel", "noopener noreferrer");
+        }
+        if (el.tagName === "IMG") {
+          el.setAttribute("loading", "lazy");
+          el.setAttribute("decoding", "async");
+        }
+      });
+      return tpl.innerHTML;
+    }
+
+    // Markdown Renderer (supports sanitized legacy HTML + clean Markdown + tables)
     function renderMarkdown(raw) {
       const text = String(raw || "").trim();
       if (!text) return "";
       if (/^<(p|h[1-6]|div|blockquote|ul|ol|pre|img)\b/i.test(text)) {
-        return text;
+        return sanitizeLegacyHtml(text);
       }
 
       const codeBlocks = [];
@@ -4124,8 +4177,14 @@
 
       function inlineMd(s) {
         let out = escapeHtml(s);
-        out = out.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, src) => `<img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" />`);
-        out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${label}</a>`);
+        out = out.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, src) => {
+          const cleanSrc = safeImgUrl(src);
+          return cleanSrc ? `<img src="${escapeHtml(cleanSrc)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async" />` : `<span>${alt}</span>`;
+        });
+        out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
+          const cleanHref = safeUrl(href);
+          return cleanHref ? `<a href="${escapeHtml(cleanHref)}" target="_blank" rel="noopener noreferrer">${label}</a>` : `<span>${label}</span>`;
+        });
         out = out.replace(/`([^`]+)`/g, (_, code) => `<code>${code}</code>`);
         out = out.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
         out = out.replace(/\*([^*]+)\*/g, "<em>$1</em>");
@@ -4143,12 +4202,36 @@
         if (inOl) { html.push("</ol>"); inOl = false; }
       };
 
-      for (const line of lines) {
+      const parseTableCells = (row) => row.replace(/^\s*\|/, "").replace(/\|\s*$/, "").split("|").map((c) => c.trim());
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
         const trimmed = line.trim();
         if (!trimmed) { closeLists(); continue; }
 
         const cbMatch = trimmed.match(/^@@CODEBLOCK_(\d+)@@$/);
         if (cbMatch) { closeLists(); html.push(codeBlocks[Number(cbMatch[1])]); continue; }
+
+        if (trimmed.includes("|") && i + 1 < lines.length && /^\s*\|?[\s:-]+\|/.test(lines[i + 1])) {
+          closeLists();
+          const headers = parseTableCells(trimmed);
+          i += 2;
+          const rows = [];
+          while (i < lines.length && lines[i].includes("|") && lines[i].trim() !== "") {
+            rows.push(parseTableCells(lines[i]));
+            i++;
+          }
+          i--;
+          let tableHtml = '<div class="md-table-wrap"><table><thead><tr>';
+          tableHtml += headers.map((h) => `<th>${inlineMd(h)}</th>`).join("");
+          tableHtml += "</tr></thead><tbody>";
+          for (const row of rows) {
+            tableHtml += `<tr>${row.map((cell) => `<td>${inlineMd(cell)}</td>`).join("")}</tr>`;
+          }
+          tableHtml += "</tbody></table></div>";
+          html.push(tableHtml);
+          continue;
+        }
 
         if (/^---+$/.test(trimmed) || /^\*\*\*+$/.test(trimmed)) { closeLists(); html.push("<hr />"); continue; }
         const headingMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
@@ -5157,7 +5240,9 @@ document.getElementById("readerTitle").textContent = post.title;
       contactModalTitle.textContent = title || "联系方式";
       contactModalLabel.textContent = label || "账号";
       contactModalValue.textContent = activeContactValue || "-";
-      contactModalJump.href = url || "#";
+      const safeJump = safeUrl(url, ["tencent:", "weixin:"]);
+      contactModalJump.href = safeJump || "#";
+      contactModalJump.hidden = !safeJump;
       contactModalQr.onerror = () => { contactModalQr.onerror = null; contactModalQr.src = FALLBACK_QR_SVG; };
 
       const qrSource = (qr || "").trim();

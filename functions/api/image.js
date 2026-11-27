@@ -9,6 +9,19 @@ const MIME_MAP = {
   svg: "image/svg+xml",
 };
 
+function buildImageHeaders(contentType, cacheControl, extra = {}) {
+  const headers = {
+    "Content-Type": contentType,
+    "Cache-Control": cacheControl,
+    "X-Content-Type-Options": "nosniff",
+    ...extra,
+  };
+  if (String(contentType).toLowerCase().includes("svg")) {
+    headers["Content-Security-Policy"] = "default-src 'none'; sandbox";
+  }
+  return headers;
+}
+
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
   const proxyUrl = url.searchParams.get("proxy") || "";
@@ -21,18 +34,18 @@ export async function onRequestGet({ request, env }) {
       return errorJson("不允许代理该图片地址", 403);
     }
     try {
-      const upstream = await fetch(proxyUrl);
+      const signal = typeof AbortSignal !== "undefined" && AbortSignal.timeout ? AbortSignal.timeout(15000) : undefined;
+      const upstream = await fetch(proxyUrl, signal ? { signal } : undefined);
       if (!upstream.ok) return errorJson("代理获取图片失败", upstream.status);
+      const upstreamType = upstream.headers.get("Content-Type") || "image/webp";
       return new Response(upstream.body, {
         status: 200,
-        headers: {
-          "Content-Type": upstream.headers.get("Content-Type") || "image/webp",
-          "Cache-Control": "public, max-age=3600",
+        headers: buildImageHeaders(upstreamType, "public, max-age=3600", {
           "Access-Control-Allow-Origin": "*",
-        },
+        }),
       });
-    } catch (err) {
-      return errorJson(err.message || "代理图片异常", 500);
+    } catch {
+      return errorJson("代理图片异常", 500);
     }
   }
 
@@ -55,18 +68,15 @@ export async function onRequestGet({ request, env }) {
     try {
       const obj = await env.IMAGES.get(target);
       if (obj) {
+        const resolvedType = obj.httpMetadata?.contentType || contentType;
         return new Response(obj.body, {
           status: 200,
-          headers: {
-            "Content-Type": obj.httpMetadata?.contentType || contentType,
-            "ETag": obj.httpEtag,
-            "Cache-Control": "public, max-age=31536000, immutable",
-          },
+          headers: buildImageHeaders(resolvedType, "public, max-age=31536000, immutable", obj.httpEtag ? { ETag: obj.httpEtag } : {}),
         });
       }
       if (key) return errorJson("R2 图片不存在", 404);
-    } catch (err) {
-      return errorJson(err.message || "读取 R2 图片失败", 500);
+    } catch {
+      return errorJson("读取 R2 图片失败", 500);
     }
   }
 
@@ -77,12 +87,9 @@ export async function onRequestGet({ request, env }) {
 
     return new Response(file.bytes, {
       status: 200,
-      headers: {
-        "Content-Type": contentType,
-        "Cache-Control": "public, max-age=31536000, immutable",
-      },
+      headers: buildImageHeaders(contentType, "public, max-age=31536000, immutable"),
     });
-  } catch (err) {
-    return errorJson(err.message || "读取图片失败", 500);
+  } catch {
+    return errorJson("读取图片失败", 500);
   }
 }

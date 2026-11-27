@@ -7,7 +7,6 @@ const MIME_MAP = {
   jpeg: "image/jpeg",
   webp: "image/webp",
   gif: "image/gif",
-  svg: "image/svg+xml",
 };
 
 const MAX_R2_BYTES = 10 * 1024 * 1024; // 10 MB when using R2
@@ -33,13 +32,21 @@ export async function onRequestPost({ request, env }) {
   }
 
   const rawExt = filename.split(".").pop()?.toLowerCase() || "";
-  const mimeExt = match[1].toLowerCase().replace("svg+xml", "svg");
+  const mimeExt = match[1].toLowerCase();
   const ext = MIME_MAP[rawExt] ? rawExt : MIME_MAP[mimeExt] ? mimeExt : null;
   if (!ext) {
-    return errorJson("仅支持 png / jpg / webp / gif / svg 图片", 400);
+    return errorJson("仅支持 png / jpg / webp / gif 图片", 400);
   }
 
-  const bytes = base64ToBytes(match[2]);
+  let bytes;
+  try {
+    bytes = base64ToBytes(match[2]);
+  } catch {
+    return errorJson("无效的图片编码", 400);
+  }
+  if (!bytes.byteLength) {
+    return errorJson("图片内容不能为空", 400);
+  }
   const safeBase =
     filename
       .replace(/\.[^.]+$/, "")
@@ -63,8 +70,8 @@ export async function onRequestPost({ request, env }) {
         path: objectKey,
         url: `/api/image?key=${encodeURIComponent(objectKey)}`,
       });
-    } catch (err) {
-      return errorJson(err.message || "图片上传到 R2 失败", 500);
+    } catch {
+      return errorJson("图片上传到 R2 失败", 500);
     }
   }
 
@@ -86,7 +93,7 @@ export async function onRequestPost({ request, env }) {
       path: objectKey,
       url: `/api/image?path=${encodeURIComponent(objectKey)}`,
     });
-  } catch (err) {
-    return errorJson(err.message || "图片上传 GitHub 失败", 500);
+  } catch {
+    return errorJson("图片上传 GitHub 失败", 500);
   }
 }
