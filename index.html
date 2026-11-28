@@ -3635,11 +3635,13 @@
               <div class="account-hero-card">
                 <img class="account-hero-avatar" id="accountCardAvatar" alt="账号头像" onerror="this.onerror=null;this.src=makeDefaultAvatar(currentUser?.username||'U');" />
                 <div class="account-hero-meta">
-                  <div class="account-hero-name" id="accountCardName">-</div>
+                  <div class="account-hero-name-line">
+                    <span class="account-hero-name" id="accountCardName">-</span>
+                    <span class="account-role-badge" id="accountCardBadge">登录用户</span>
+                  </div>
                   <div class="account-hero-sub" id="accountCardEmail">-</div>
                 </div>
               </div>
-              <span class="account-role-badge" id="accountCardBadge" style="align-self: flex-start; margin-bottom: 4px;">登录用户</span>
 
               <div class="rail-group is-expanded is-active" data-rail-group="account">
                 <button class="rail-group-btn" type="button" data-rail-toggle="account" aria-expanded="true">
@@ -3678,7 +3680,7 @@
                   <label class="setting-row-label" for="redeemInviteInput">绑定邀请码</label>
                   <div class="setting-row-control">
                     <input class="auth-input" id="redeemInviteInput" type="text" placeholder="如 XXXX-XXXX-XXXX" style="flex: 1;" />
-                    <button class="tactile-btn modal-btn-primary" id="redeemInviteBtn" type="button" style="height: 34px; padding: 0 12px; border-radius: 9px; font-size: 12px; flex-shrink: 0;">绑定</button>
+                    <button class="tactile-btn modal-btn-primary" id="redeemInviteBtn" type="button" style="height: 36px; padding: 0 16px; border-radius: 2px; font-size: 12.5px; flex-shrink: 0;">绑定</button>
                   </div>
                 </div>
                 <div class="setting-row">
@@ -3687,7 +3689,7 @@
                     <input class="auth-input" id="accOldPwd" type="password" placeholder="当前密码" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" style="flex: 1; min-width: 110px;" />
                     <input class="auth-input" id="accNewPwd" type="password" placeholder="新密码（至少6位）" autocomplete="new-password" style="flex: 1; min-width: 120px;" />
                     <input class="auth-input" id="accNewPwd2" type="password" placeholder="确认新密码" autocomplete="new-password" style="flex: 1; min-width: 110px;" />
-                    <button class="tactile-btn modal-btn-primary" id="accChangePwdBtn" type="button" style="height: 34px; padding: 0 12px; border-radius: 9px; font-size: 12px; flex-shrink: 0;">更新密码</button>
+                    <button class="tactile-btn modal-btn-primary" id="accChangePwdBtn" type="button" style="height: 36px; padding: 0 16px; border-radius: 2px; font-size: 12.5px; flex-shrink: 0;">更新密码</button>
                   </div>
                 </div>
               </div>
@@ -6571,6 +6573,8 @@ syncAuthUI();
       document.querySelectorAll("[data-acc-panel]").forEach((p) => {
         p.style.display = p.dataset.accPanel === name ? "flex" : "none";
       });
+      const profileFooter = document.querySelector("#personalProfileForm .settings-footer-bar");
+      if (profileFooter) profileFooter.style.display = name === "info" ? "none" : "";
     }
     document.querySelectorAll("[data-acc-tab]").forEach((btn) => {
       btn.addEventListener("click", () => switchAccountSubTab(btn.dataset.accTab));

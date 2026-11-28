@@ -1310,3 +1310,188 @@ html.keyboard-input *, html.keyboard-input *::before, html.keyboard-input *::aft
 .toast-bot-feet {
   display: none;
 }
+
+
+/* Swiss Editorial Account Settings (#consolePage) */
+.console-container {
+  border-radius: 2px;
+  border: 1px solid var(--hairline);
+  border-top: 2px solid var(--line-strong);
+  background-color: var(--bg-card);
+  padding: 24px 28px 28px;
+  gap: 20px;
+}
+.console-container > .reader-top {
+  padding-bottom: 14px;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--hairline);
+}
+#consolePageTitle {
+  font-family: var(--font-serif);
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.015em;
+}
+.console-page .site-rail-layout {
+  min-height: 0;
+  grid-template-columns: 248px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.console-page .site-rail-nav {
+  border-radius: 2px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--hairline);
+  padding: 14px;
+  gap: 12px;
+}
+.console-page .account-hero-card {
+  margin-bottom: 0;
+  padding: 12px;
+  border-radius: 2px;
+  border: 1px solid var(--hairline);
+  background-color: var(--bg-subcard);
+  gap: 10px;
+}
+.console-page .account-hero-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+  border: 1px solid var(--line-strong);
+}
+.account-hero-name-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.console-page .account-hero-name {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+}
+.console-page .account-role-badge {
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.console-page .rail-group-btn {
+  min-height: 36px;
+  padding: 7px 10px;
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.console-page .rail-group.is-active > .rail-group-btn {
+  background-color: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 28%, transparent);
+  color: var(--accent);
+}
+.console-page .rail-sublist {
+  margin-left: 10px;
+  padding: 4px 0 2px 10px;
+  border-left: 1px solid var(--hairline-strong);
+  gap: 3px;
+}
+.console-page .site-rail-item {
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: 2px;
+  font-size: 13px;
+}
+.console-page .site-rail-item.is-active {
+  background-color: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 32%, transparent);
+  color: var(--accent);
+}
+.console-page .settings-section {
+  border-radius: 2px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--hairline);
+  padding: 20px 24px 8px;
+  margin-bottom: 0;
+}
+.console-page .settings-section-head {
+  padding-bottom: 12px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--hairline);
+}
+.console-page .settings-section-title {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.console-page .settings-section-desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.console-page .settings-section-code {
+  border-radius: 2px;
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  background-color: var(--accent-soft);
+  color: var(--accent);
+  padding: 2px 8px;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+}
+.console-page .setting-row {
+  min-height: 50px;
+  padding: 11px 0;
+  gap: 18px;
+}
+.console-page .setting-row-label {
+  flex: 0 0 116px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.console-page .setting-row-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.console-page .setting-row-control .auth-input {
+  height: 36px;
+  padding: 0 11px;
+  border-radius: 2px;
+  background-color: var(--bg-page);
+  border: 1px solid var(--hairline-strong);
+  color: var(--text-primary);
+  box-shadow: none;
+  transition: border-color 150ms var(--ease-out), background-color 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
+}
+.console-page .setting-row-control .auth-input:hover {
+  border-color: var(--text-muted);
+}
+.console-page .setting-row-control .auth-input:focus {
+  border-color: var(--line-strong);
+  background-color: var(--bg-card);
+  box-shadow: var(--shadow-focus);
+}
+.console-page .settings-footer-bar {
+  position: static;
+  margin-top: 16px;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--hairline);
+  background-color: transparent;
+}
+.console-page .bot-console-status {
+  border-radius: 2px;
+  border: 1px solid var(--hairline-strong);
+  background-color: var(--bg-subcard);
+  padding: 5px 10px;
+  font-weight: 500;
+}
+.console-page .app-avatar-preview {
+  border-radius: 2px;
+  border: 1px solid var(--line-strong);
+}
+@media (max-width: 900px) {
+  .console-page .site-rail-layout { grid-template-columns: 1fr; gap: 16px; }
+  .console-container { padding: 18px; }
+  .console-page .settings-section { padding: 16px 16px 6px; }
+}
