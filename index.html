@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <script>try{var m=localStorage.getItem("xxoxovx-theme")||"system",d=window.matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.setAttribute("data-theme",m==="system"?(d?"dark":"light"):m);}catch{}</script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="color-scheme" content="light dark" />
   <meta name="darkreader-lock" />
   <title>XXOXOVX  ·  BLOG</title>
@@ -64,7 +64,9 @@
       --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
       --ease: cubic-bezier(0.23, 1, 0.32, 1);
-      --ease-in: cubic-bezier(0.4, 0, 1, 1);
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+      --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
       --spring: cubic-bezier(0.16, 1, 0.3, 1);
       --bounce: cubic-bezier(0.22, 1, 0.36, 1);
       --t-fast: 150ms;
@@ -133,6 +135,7 @@
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
       -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
     }
 
     body {
@@ -171,8 +174,8 @@
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     .skip-link {
       position: fixed;
-      top: -100px;
-      left: 16px;
+      top: calc(14px + env(safe-area-inset-top, 0px));
+      left: calc(16px + env(safe-area-inset-left, 0px));
       z-index: 10000;
       padding: 10px 16px;
       border-radius: var(--radius-md);
@@ -181,9 +184,10 @@
       font-size: 13px;
       font-weight: 600;
       box-shadow: var(--shadow-float);
-      transition: top var(--t-fast) var(--ease);
+      transform: translateY(-160%);
+      transition: transform var(--t-fast) var(--ease-out);
     }
-    .skip-link:focus-visible { top: 14px; }
+    .skip-link:focus-visible { transform: translateY(0); }
     .footer-link, .reader-body a {
       background-image: linear-gradient(currentColor, currentColor);
       background-position: 0 100%;
@@ -228,7 +232,7 @@
       width: 100%;
       max-width: var(--grid-max-width);
       margin: 0 auto;
-      padding: 22px var(--grid-margin) 56px var(--grid-margin);
+      padding: calc(22px + env(safe-area-inset-top, 0px)) calc(var(--grid-margin) + env(safe-area-inset-right, 0px)) calc(56px + env(safe-area-inset-bottom, 0px)) calc(var(--grid-margin) + env(safe-area-inset-left, 0px));
       display: flex;
       flex-direction: column;
       gap: var(--grid-gutter);
@@ -238,8 +242,8 @@
       position: relative;
       background-color: var(--bg-card);
       border: 1px solid var(--ink-border);
-      -webkit-backdrop-filter: blur(26px) saturate(200%);
-      backdrop-filter: blur(26px) saturate(200%);
+      -webkit-backdrop-filter: blur(18px) saturate(200%);
+      backdrop-filter: blur(18px) saturate(200%);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-card);
       transition: background-color var(--t-mid) var(--ease), border-color var(--t-fast) var(--ease), box-shadow var(--t-mid) var(--ease);
@@ -340,15 +344,15 @@
     .toast {
       position: fixed;
       left: 50%;
-      top: 58px;
+      top: calc(58px + env(safe-area-inset-top, 0px));
       transform: translateX(-50%) translateY(-10px) scale(0.96);
       padding: 9px 20px;
       border-radius: 99px;
       background-color: var(--bg-card-solid);
       color: var(--text-primary);
       border: 1px solid var(--ink-border);
-      -webkit-backdrop-filter: saturate(200%) blur(24px);
-      backdrop-filter: saturate(200%) blur(24px);
+      -webkit-backdrop-filter: saturate(200%) blur(18px);
+      backdrop-filter: saturate(200%) blur(18px);
       display: inline-flex;
       align-items: center;
       gap: 9px;
@@ -711,7 +715,6 @@
       transition: color var(--t-fast) var(--ease), transform 90ms var(--ease);
     }
     .cat-pill:hover { color: var(--text-primary); }
-    .cat-pill:active { transform: scale(0.96); }
     .cat-pill:active { transform: scale(0.96); }
     .cat-pill.is-active { color: var(--accent-contrast); }
 
@@ -1127,7 +1130,7 @@
     .popconfirm-box {
       position: absolute; right: 0; bottom: calc(100% + 8px); width: 204px; padding: 12px;
       border-radius: 14px; background-color: var(--bg-popover);
-      -webkit-backdrop-filter: saturate(190%) blur(24px); backdrop-filter: saturate(190%) blur(24px);
+      -webkit-backdrop-filter: saturate(190%) blur(18px); backdrop-filter: saturate(190%) blur(18px);
       border: 1px solid var(--hairline-strong); box-shadow: var(--shadow-float);
       z-index: 45; display: flex; flex-direction: column; gap: 10px;
       animation: fadeRise 160ms var(--spring) both;
@@ -1189,7 +1192,7 @@
     .comment-hover-card {
       position: absolute; left: 0; bottom: calc(100% + 10px); width: 256px; padding: 14px; border-radius: 16px;
       background-color: var(--bg-popover);
-      backdrop-filter: saturate(190%) blur(24px); -webkit-backdrop-filter: saturate(190%) blur(24px);
+      backdrop-filter: saturate(190%) blur(18px); -webkit-backdrop-filter: saturate(190%) blur(18px);
       border: 1px solid var(--hairline);
       box-shadow: 0 18px 40px -10px rgba(15, 23, 42, 0.22), 0 4px 12px rgba(15, 23, 42, 0.08);
       z-index: 60; opacity: 0; visibility: hidden; pointer-events: none;
@@ -1266,7 +1269,7 @@
       position: relative;
       width: 100%; max-width: 340px; max-height: 88dvh; overflow-y: auto; padding: 24px; border-radius: 22px;
       background-color: var(--bg-card-solid);
-      -webkit-backdrop-filter: blur(30px) saturate(210%); backdrop-filter: blur(30px) saturate(210%);
+      -webkit-backdrop-filter: blur(18px) saturate(210%); backdrop-filter: blur(18px) saturate(210%);
       border: 1px solid var(--ink-border);
       box-shadow: var(--shadow-float);
       display: flex; flex-direction: column; align-items: center; gap: 15px;
@@ -1459,7 +1462,7 @@
     .appearance-popover {
       position: absolute; top: calc(100% + 10px); right: 0; width: 256px; padding: 15px;
       border-radius: var(--radius-lg); background-color: var(--bg-popover);
-      -webkit-backdrop-filter: saturate(210%) blur(28px); backdrop-filter: saturate(210%) blur(28px);
+      -webkit-backdrop-filter: saturate(210%) blur(18px); backdrop-filter: saturate(210%) blur(18px);
       border: 1px solid var(--ink-border); box-shadow: var(--shadow-float);
       display: flex; flex-direction: column; gap: 14px;
       opacity: 0; visibility: hidden; transform: translateY(-6px) scale(0.96); filter: blur(2px); transform-origin: top right;
@@ -1584,7 +1587,7 @@
     .account-popover {
       position: absolute; top: calc(100% + 10px); right: 0; width: 292px; padding: 12px;
       border-radius: 20px; background-color: var(--bg-popover);
-      -webkit-backdrop-filter: blur(36px) saturate(210%); backdrop-filter: blur(36px) saturate(210%);
+      -webkit-backdrop-filter: blur(18px) saturate(210%); backdrop-filter: blur(18px) saturate(210%);
       border: 1px solid var(--ink-border); box-shadow: var(--shadow-float);
       display: flex; flex-direction: column; gap: 10px;
       opacity: 0; visibility: hidden; pointer-events: none;
@@ -1621,7 +1624,7 @@
     .apple-popover {
       position: absolute; top: calc(100% + 10px); right: 0; width: 246px; padding: 12px;
       border-radius: 18px; background-color: var(--bg-popover);
-      -webkit-backdrop-filter: blur(28px) saturate(210%); backdrop-filter: blur(28px) saturate(210%);
+      -webkit-backdrop-filter: blur(18px) saturate(210%); backdrop-filter: blur(18px) saturate(210%);
       border: 1px solid var(--ink-border); box-shadow: var(--shadow-float);
       opacity: 0; visibility: hidden; pointer-events: none;
       transform-origin: top right; transform: translateY(-6px) scale(0.96); filter: blur(2px);
@@ -1759,7 +1762,7 @@
     .account-pop-item.is-danger .account-pop-title { color: #dc2626; }
     html[data-theme="dark"] .account-pop-item.is-danger .account-pop-icon { color: #f87171; }
     html[data-theme="dark"] .account-pop-item.is-danger .account-pop-title { color: #f87171; }
-    .contact-modal.is-admin-account { width: 460px; max-height: 86vh; max-width: 94vw; align-items: stretch; overflow: hidden; padding: 20px 22px; transition: width 200ms var(--ease); }
+    .contact-modal.is-admin-account { width: 460px; max-height: 86dvh; max-width: 94vw; align-items: stretch; overflow: hidden; padding: 20px 22px; }
     .contact-modal.is-admin-account.is-wide-page { width: min(820px, 95vw); }
     .site-rail-layout {
       flex: 1;
@@ -2209,8 +2212,8 @@
       inset: 0;
       z-index: 9999;
       background: rgba(220, 231, 247, 0.36);
-      -webkit-backdrop-filter: blur(22px) saturate(185%);
-      backdrop-filter: blur(22px) saturate(185%);
+      -webkit-backdrop-filter: blur(18px) saturate(185%);
+      backdrop-filter: blur(18px) saturate(185%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -2257,7 +2260,7 @@
       height: 540px;
       border-radius: 50%;
       background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 68%);
-      filter: blur(30px);
+      filter: blur(18px);
       animation: introOrbDrift 14s ease-in-out infinite alternate;
     }
     .intro-tech-orb.orb-a { top: -150px; left: -110px; }
@@ -2375,7 +2378,7 @@
       border-radius: 28px;
       background-color: var(--bg-card-solid);
       border: 1px solid var(--ink-border);
-      -webkit-backdrop-filter: blur(32px) saturate(210%); backdrop-filter: blur(32px) saturate(210%);
+      -webkit-backdrop-filter: blur(18px) saturate(210%); backdrop-filter: blur(18px) saturate(210%);
       box-shadow: var(--shadow-float);
       display: flex;
       flex-direction: column;
@@ -2594,8 +2597,9 @@
       display: grid;
       place-items: center;
       box-shadow: 0 4px 10px color-mix(in srgb, var(--accent) 42%, transparent);
-      transform: scale(0) rotate(-20deg);
-      animation: introPenStamp 380ms var(--spring) 480ms forwards;
+      opacity: 0;
+      transform: scale(0.9) rotate(-12deg);
+      animation: introPenStamp 320ms var(--ease-out) 460ms forwards;
     }
 
     @keyframes introSheetLeft { to { opacity: 0.94; transform: translate(-52px, 6px) rotate(-11deg) scale(0.94); } }
@@ -2607,7 +2611,7 @@
     }
     @keyframes introLineGrowTitle { to { width: 76%; } }
     @keyframes introCursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
-    @keyframes introPenStamp { to { transform: scale(1) rotate(0deg); } }
+    @keyframes introPenStamp { to { opacity: 1; transform: scale(1) rotate(0deg); } }
 
     .intro-splash.is-leaving .intro-sheet.s-code {
       transform: translate(-108px, -16px) rotate(-18deg) scale(1.02); opacity: 0;
@@ -3092,6 +3096,28 @@
       .contact-card { margin-top: auto; }
     }
     @media (max-width: 1024px) { .profile-photo-frame { display: none; } }
+
+    /* Global Design-Engineering & Mobile-Native Polish */
+    .popconfirm-box { transform-origin: bottom right; }
+    .contact-modal, .admin-scroll-box, .info-list, .articles-grid, #switchHistoryList { overscroll-behavior: contain; }
+    .contact-modal-backdrop { padding: calc(20px + env(safe-area-inset-top, 0px)) calc(16px + env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) calc(16px + env(safe-area-inset-left, 0px)); }
+    .popconfirm-btn, .follow-sys-btn, .auth-tab, .pwd-toggle, .comment-del-btn, .back-top, .toc-link {
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+      transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out), transform 130ms var(--ease-out);
+    }
+    .popconfirm-btn:active, .follow-sys-btn:active, .auth-tab:active, .pwd-toggle:active, .comment-del-btn:active, .console-close-btn:active {
+      transform: scale(0.97);
+    }
+    @media (hover: none), (pointer: coarse) {
+      .tactile-btn:hover, .modal-btn-primary:hover, .article-card:hover, .swatch-btn:hover,
+      .avatar-ring:hover img, .comment-avatar-wrap:hover .comment-avatar,
+      .robot-buddy:hover .robot-head-svg, .bot-console-status:hover .mini-bot-svg,
+      .app-avatar-preview:hover, .account-pop-item:hover .account-pop-arrow {
+        transform: none;
+      }
+    }
   </style>
   <link rel="stylesheet" href="./cream-theme.css?v=swiss-editorial5" />
 </head>
